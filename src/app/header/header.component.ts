@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ToolbarModule } from 'primeng/toolbar'
 import { ButtonModule } from 'primeng/button'
 
@@ -9,7 +10,8 @@ import { ButtonModule } from 'primeng/button'
   styleUrls: ['./header.component.scss'],
   imports: [
     ToolbarModule,
-    ButtonModule
+    ButtonModule,
+    RouterModule
   ]
 })
 export class HeaderComponent {
