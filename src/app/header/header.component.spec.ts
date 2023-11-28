@@ -31,7 +31,7 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have items for home, daily, weekly, monthly, one-off, account, login, logout, and register', () => {
+  it('should have anchor items for home, daily, weekly, monthly, one-off, account, login, logout, and register', () => {
     const homeElement = fixture.debugElement.query(By.css('#nav-home'));
     expect(homeElement).toBeTruthy();
 
