@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 import { RouterModule } from '@angular/router';
+import { Footer } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +11,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     HomeComponent,
     RouterModule,
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
