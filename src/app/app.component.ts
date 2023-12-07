@@ -3,7 +3,6 @@ import { HomeComponent } from "./home/home.component";
 import { HeaderComponent } from "./header/header.component";
 import { FooterComponent } from "./footer/footer.component";
 import { RouterModule } from "@angular/router";
-import { Footer } from "primeng/api";
 
 @Component({
   selector: "app-root",
