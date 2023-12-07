@@ -21,13 +21,13 @@ describe('FooterComponent', () => {
   });
 
   it('should have items for GitHub, Twitter, and Personal Portfolio', () => {
-    const githubElement = fixture.debugElement.query(By.css('#github-link'));
+    const githubElement = fixture.debugElement.query(By.css('a#github'));
     expect(githubElement).toBeTruthy();
 
-    const twitterElement = fixture.debugElement.query(By.css('#twitter-link'));
+    const twitterElement = fixture.debugElement.query(By.css('a#twitter'));
     expect(twitterElement).toBeTruthy();
 
-    const portfolioElement = fixture.debugElement.query(By.css('#portfolio-link'));
+    const portfolioElement = fixture.debugElement.query(By.css('a#portfolio'));
     expect(portfolioElement).toBeTruthy();
   });
 
