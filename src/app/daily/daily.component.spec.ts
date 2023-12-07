@@ -1,21 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DailyComponent } from './daily.component';
+import { DailyComponent } from "./daily.component";
 
-describe('DailyComponent', () => {
+describe("DailyComponent", () => {
   let component: DailyComponent;
   let fixture: ComponentFixture<DailyComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DailyComponent]
+      declarations: [DailyComponent],
     });
     fixture = TestBed.createComponent(DailyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

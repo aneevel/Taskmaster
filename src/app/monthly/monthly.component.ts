@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-monthly',
-  templateUrl: './monthly.component.html',
-  styleUrls: ['./monthly.component.scss']
+  selector: "app-monthly",
+  templateUrl: "./monthly.component.html",
+  styleUrls: ["./monthly.component.scss"],
 })
-export class MonthlyComponent {
-
-}
+export class MonthlyComponent {}

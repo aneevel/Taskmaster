@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-daily',
-  templateUrl: './daily.component.html',
-  styleUrls: ['./daily.component.scss']
+  selector: "app-daily",
+  templateUrl: "./daily.component.html",
+  styleUrls: ["./daily.component.scss"],
 })
-export class DailyComponent {
-
-}
+export class DailyComponent {}
