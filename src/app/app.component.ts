@@ -10,7 +10,8 @@ import { RouterModule } from "@angular/router";
   imports: [HomeComponent, 
     RouterModule, 
     HeaderComponent, 
-    FooterComponent],
+    FooterComponent,
+  ],
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
