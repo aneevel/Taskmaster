@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TasksComponent } from './tasks.component';
+import { By } from '@angular/platform-browser';
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
@@ -17,5 +18,10 @@ describe('TasksComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have a create task button', () => {
+    const createTaskButton = fixture.debugElement.query(By.css('button#create-task'));
+    expect(createTaskButton).toBeTruthy();
   });
 });
