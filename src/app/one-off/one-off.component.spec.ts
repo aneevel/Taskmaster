@@ -8,7 +8,7 @@ describe("OneOffComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OneOffComponent],
+      imports: [OneOffComponent],
     });
     fixture = TestBed.createComponent(OneOffComponent);
     component = fixture.componentInstance;
