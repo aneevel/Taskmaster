@@ -34,4 +34,13 @@ describe('TasksComponent', () => {
     expect(component.openCreateTask).toHaveBeenCalled();
 
   }));
+
+  it('should have a modal element when openCreateTask is called', fakeAsync(() => {
+    const button = fixture.debugElement.query(By.css('p-button#create-task'));
+    button.nativeElement.click();
+    tick();
+
+    const createTaskModal = fixture.debugElement.query(By.css('p-dynamicdialog'));
+    expect(createTaskModal).toBeTruthy()
+  }));
 });
