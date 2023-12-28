@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateTaskComponent } from './create-task.component';
+import { By } from '@angular/platform-browser';
 
 describe('CreateTaskComponent', () => {
   let component: CreateTaskComponent;
@@ -17,5 +18,22 @@ describe('CreateTaskComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have task description, priority, due date, cancel, and save elements', () => {
+    const descriptionElement = fixture.debugElement.query(By.css('#task-description'))
+    expect(descriptionElement).toBeTruthy();
+
+    const priorityElement = fixture.debugElement.query(By.css('#task-priority'));
+    expect(priorityElement).toBeTruthy();
+
+    const dueDateElement = fixture.debugElement.query(By.css('#task-due-date'));
+    expect(dueDateElement).toBeTruthy();
+
+    const cancelButton = fixture.debugElement.query(By.css('p-button#task-cancel'));
+    expect(cancelButton).toBeTruthy(); 
+
+    const saveButton = fixture.debugElement.query(By.css('p-button#task-save'));
+    expect(saveButton).toBeTruthy();
   });
 });
