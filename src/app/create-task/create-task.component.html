@@ -1,16 +1,47 @@
-<div class="p-inputgroup">
-    <h2>Task Description</h2>
-    <input id="task-description" pInputTextArea placeholder="Task Description"/>
-</div>
-<div>
-    <h2>Task Priority</h2>
-    <p-dropdown id="task-priority" placeholder="Set the Priority"></p-dropdown>
-</div>
-<div>
-    <h2>Due Date</h2>
-    <p-calendar id="task-due-date" dateFormat="dd.mm.yy" [showIcon]="true"></p-calendar>
-</div>
-<div>
-    <p-button id="task-save">Save</p-button>
-    <p-button id="task-cancel">Cancel</p-button>
-</div>
+<form 
+    [formGroup]="taskForm">
+    <div class="p-inputgroup">
+        <label 
+            for="task-description">
+            Description
+        </label>
+        <input 
+            id="task-description" 
+            pInputTextArea 
+            placeholder="Do a thing..."
+            formControlName="description"/>
+    </div>
+    <div>
+        <label 
+            for="task-priority">
+            Task Priority 
+        </label>
+        <p-dropdown 
+            id="task-priority" 
+            placeholder="Set the Priority"
+            formControlName="priority">
+        </p-dropdown>
+    </div>
+    <div>
+        <label 
+            for="task-due-date">
+            Due Date 
+        </label>
+        <p-calendar 
+            id="task-due-date" 
+            dateFormat="dd.mm.yy" 
+            [showIcon]="true"
+            formControlName="dueDate">
+        </p-calendar>
+    </div>
+    <div>
+        <p-button 
+            id="task-save">
+            Save
+        </p-button>
+        <p-button 
+            id="task-cancel">
+            Cancel
+        </p-button>
+    </div>
+</form>
