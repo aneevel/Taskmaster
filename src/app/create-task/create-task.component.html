@@ -1,4 +1,16 @@
 <div class="p-inputgroup">
+    <h2>Task Description</h2>
     <input id="task-description" pInputTextArea placeholder="Task Description"/>
 </div>
-<p-dropdown placeholder="Set the Priority"></p-dropdown>
+<div>
+    <h2>Task Priority</h2>
+    <p-dropdown id="task-priority" placeholder="Set the Priority"></p-dropdown>
+</div>
+<div>
+    <h2>Due Date</h2>
+    <p-calendar id="task-due-date" dateFormat="dd.mm.yy" [showIcon]="true"></p-calendar>
+</div>
+<div>
+    <p-button id="task-save">Save</p-button>
+    <p-button id="task-cancel">Cancel</p-button>
+</div>

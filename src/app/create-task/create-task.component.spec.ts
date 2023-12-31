@@ -21,13 +21,13 @@ describe('CreateTaskComponent', () => {
   });
 
   it('should have task description, priority, due date, cancel, and save elements', () => {
-    const descriptionElement = fixture.debugElement.query(By.css('#task-description'))
+    const descriptionElement = fixture.debugElement.query(By.css('input#task-description'))
     expect(descriptionElement).toBeTruthy();
 
-    const priorityElement = fixture.debugElement.query(By.css('#task-priority'));
+    const priorityElement = fixture.debugElement.query(By.css('p-dropdown#task-priority'));
     expect(priorityElement).toBeTruthy();
 
-    const dueDateElement = fixture.debugElement.query(By.css('#task-due-date'));
+    const dueDateElement = fixture.debugElement.query(By.css('p-calendar#task-due-date'));
     expect(dueDateElement).toBeTruthy();
 
     const cancelButton = fixture.debugElement.query(By.css('p-button#task-cancel'));
