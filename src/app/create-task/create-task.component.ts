@@ -17,4 +17,11 @@ export class CreateTaskComponent {
     dueDate: new FormControl(''), 
   });
 
+  // Eventually should be user-defined, with system fallback
+  priorities = [ 
+    'High',
+    'Medium',
+    'Low'
+  ];
+
 }
