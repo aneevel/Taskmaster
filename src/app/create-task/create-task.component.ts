@@ -33,7 +33,6 @@ export class CreateTaskComponent {
   saveTask() : Task {
 
     // Add validation so we don't add empty tasks
-
     const newTask: Task = { 
       id: 'null',
       description: this.taskForm.controls['description'].value,

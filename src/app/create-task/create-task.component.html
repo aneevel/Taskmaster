@@ -1,5 +1,6 @@
 <form 
-    [formGroup]="taskForm">
+    [formGroup]="taskForm"
+    (ngSubmit)="saveTask">
     <div class="p-inputgroup">
         <label 
             for="task-description">
