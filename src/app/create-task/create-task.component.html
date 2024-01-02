@@ -1,6 +1,5 @@
 <form 
-    [formGroup]="taskForm"
-    (ngSubmit)="saveTask">
+    [formGroup]="taskForm">
     <div class="p-inputgroup">
         <label 
             for="task-description">
@@ -38,6 +37,7 @@
     </div>
     <div>
         <p-button 
+            (onClick)="saveTask()"
             id="task-save"
             label="Save"
             [raised]="true"

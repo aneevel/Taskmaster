@@ -1,21 +1,27 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateTaskComponent } from '../create-task/create-task.component';
+import { UserTasksService } from '../user-tasks.service';
+import { TaskItemComponent } from '../task-item/task-item.component';
 
 @Component({
   standalone: true,
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
-  imports: [ ButtonModule],
+  imports: [ ButtonModule, 
+    CommonModule,
+    TaskItemComponent],
   providers: [DialogService]
 })
 export class TasksComponent {
 
   ref: DynamicDialogRef | undefined;
 
-  constructor(public dialogService: DialogService) {}
+  constructor(public dialogService: DialogService,
+    public userTasksService: UserTasksService) {}
 
   openCreateTask() {
     this.ref = this.dialogService.open(CreateTaskComponent, {

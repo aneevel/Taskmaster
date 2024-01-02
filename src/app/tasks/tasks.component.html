@@ -3,3 +3,15 @@
         <p-button id="create-task" label="Create Task" (click)="openCreateTask()"></p-button>
     </div>
 </div>
+<div id="tasks-container">
+    <ul id="tasks-list">
+        <li *ngFor="let task of this.userTasksService.getTasks()">
+            <app-task-item
+                [description]="task.description"
+                [priority]="task.priority"
+                [dueDate]="task.dueDate"
+                [occurrence]="task.occurrence">
+            </app-task-item>
+        </li>
+    </ul>
+</div>
