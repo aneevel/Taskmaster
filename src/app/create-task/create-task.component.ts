@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
@@ -20,6 +20,8 @@ export class CreateTaskComponent {
     dueDate: new FormControl<Date>(new Date(), { nonNullable: true}), 
   });
 
+  @Input({ required: true }) occurrence!: string;
+
   // Eventually should be user-defined, with system fallback
   priorities = [ 
     'High',
@@ -40,7 +42,7 @@ export class CreateTaskComponent {
       description: this.taskForm.controls['description'].value,
       priority: this.taskForm.controls['priority'].value,
       dueDate: this.taskForm.controls['dueDate'].value,
-      occurrence: 'Daily'
+      occurrence: this.occurrence
     };
     this.userTasks.addTask(newTask);
     this.closeDialog();
