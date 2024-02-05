@@ -4,6 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { UserTasksService } from '../user-tasks.service';
 import { Task } from '../task';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   standalone: true,
@@ -27,21 +28,27 @@ export class CreateTaskComponent {
   ];
 
   constructor(
-    private userTasks: UserTasksService
+    private userTasks: UserTasksService,
+    private readonly dialogRef: DynamicDialogRef
   ) { }
 
   saveTask() : Task {
 
-    // Add validation so we don't add empty tasks
+    // TODO: Add validation so we don't add empty tasks
     const newTask: Task = { 
       id: 'null',
       description: this.taskForm.controls['description'].value,
       priority: this.taskForm.controls['priority'].value,
       dueDate: this.taskForm.controls['dueDate'].value,
       occurrence: 'Daily'
-    }
-    this.userTasks.addTask(newTask)
-    return newTask 
+    };
+    this.userTasks.addTask(newTask);
+    this.closeDialog();
+    return newTask; 
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }
