@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -19,6 +19,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 export class TasksComponent {
 
   ref: DynamicDialogRef | undefined;
+  @Input({ required: true}) occurrence! : string;
 
   constructor(public dialogService: DialogService,
     public userTasksService: UserTasksService) {}
