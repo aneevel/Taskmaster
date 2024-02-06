@@ -16,4 +16,8 @@ export class UserTasksService {
   getTasks(): Task[] {
     return [...this.tasks];
   }
+
+  getTasksOfOccurrence(occurrence: string): Task[] {
+    return [...this.tasks].filter(task => task.occurrence === occurrence);
+  }
 }
