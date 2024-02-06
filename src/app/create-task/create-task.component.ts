@@ -4,7 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { UserTasksService } from '../user-tasks.service';
 import { Task } from '../task';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
   standalone: true,
@@ -31,7 +31,8 @@ export class CreateTaskComponent {
 
   constructor(
     private userTasks: UserTasksService,
-    private readonly dialogRef: DynamicDialogRef
+    private readonly dialogRef: DynamicDialogRef,
+    private config: DynamicDialogConfig,
   ) { }
 
   saveTask() : Task {
@@ -42,7 +43,7 @@ export class CreateTaskComponent {
       description: this.taskForm.controls['description'].value,
       priority: this.taskForm.controls['priority'].value,
       dueDate: this.taskForm.controls['dueDate'].value,
-      occurrence: this.occurrence
+      occurrence: this.config.data.occurrence,
     };
     this.userTasks.addTask(newTask);
     this.closeDialog();
