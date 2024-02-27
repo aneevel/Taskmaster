@@ -7,7 +7,7 @@
     "start": "npm run env && ng serve",
     "build": "npm run env && ng build",
     "watch": "ng build --watch --configuration development",
-    "api": "json-server --host 0.0.0.0 --port 6060 --watch jsonserver/db.json --routes json-server/routes.json",
+    "api": "json-server --host 0.0.0.0 --port 6060 json-server/db.json",
     "test": "ng test"
   },
   "private": true,
