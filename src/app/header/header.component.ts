@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ToolbarModule } from "primeng/toolbar";
@@ -13,6 +14,7 @@ import { AuthService } from "@auth0/auth0-angular";
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
   imports: [
+    CommonModule,
     ToolbarModule, 
     ButtonModule, 
     RouterModule, 

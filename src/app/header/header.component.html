@@ -21,15 +21,13 @@
       <a class="nav-item" id="nav-account" [routerLink]="['/account']"
         ><p-button label="Account"></p-button
       ></a>
-      <a class="nav-item" id="nav-login" [routerLink]="['/login']"
-        ><p-button label="Login"></p-button
-      ></a>
-      <a class="nav-item" id="nav-logout" [routerLink]="['/logout']"
-        ><p-button label="Logout"></p-button
-      ></a>
-      <a class="nav-item" id="nav-register" [routerLink]="['/register']"
-        ><p-button label="Register"></p-button
-      ></a>
+      <ng-container *ngIf="isAuthenticated$ | async; else unAuthenticated">
+        <app-logout-button></app-logout-button>
+      </ng-container>
+      <ng-template #unAuthenticated>
+        <app-signup-button></app-signup-button>
+        <app-login-button></app-login-button>
+      </ng-template>
     </div>
   </p-toolbar>
 </div>
