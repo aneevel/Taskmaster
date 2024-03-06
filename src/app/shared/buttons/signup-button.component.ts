@@ -3,21 +3,24 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
-  selector: 'app-login-button',
+  selector: 'app-signup-button',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <button class="button__login" (click)="handleLogin()">Log In</button>
+    <button class="button__sign-up" (click)="handleSignUp()">Sign Up</button>
   `
 })
-export class LoginButtonComponent {
+export class SignupButtonComponent {
+
   constructor(private auth: AuthService) {}
 
-  handleLogin(): void {
+  handleSignUp(): void {
     this.auth.loginWithRedirect({
       appState: {
-        // Redirects users to home on login, but perhaps it should be an user setting?
-        target: '/',
+        target: "/",
+      },
+      authorizationParams: {
+        screen_hint: 'signup',
       },
     });
   }
