@@ -1,1 +1,33 @@
-<p>register works!</p>
+<div id="signup" class="login-content">
+    <h1 class="main-heading">Sign up to start tracking tasks today</h1>
+    <p class="heading-trailer">Create an account or <a href="/login">log in</a></p>
+    <form action="/signup" id="signup-form">
+        <fieldset>
+            <div class="login-field">
+                <div class="line">
+                    <label for="email">Email Address</label>
+                    <input class="rounded-corners" type="email" id="email" name="email">
+                </div>
+            </div>
+            <div class="login-field">
+                <div class="line">
+                    <label for="new_username">Username</label>
+                    <input class="rounded-corners" type="text" id="username" name="username">
+                </div>
+            </div>
+            <div class="login-field">
+                <div class="line">
+                    <label for="password">Password</label>
+                    <input class="rounded-corners" type="password" id="password" name="password">
+                </div>
+                <div id="password-hint" class="line hint">
+                    <div id="password-requirements">
+                    </div>
+                </div>
+            </div>
+            <div id="button-container">
+                <button id="create-account" type="submit" value="Create Account">Sign up</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
