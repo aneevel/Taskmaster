@@ -1,0 +1,8 @@
+{
+    "users" : [
+        { "id": "1", "display_name": "Alec Neevel" }
+    ],
+    "tasks" : [
+        { "id": "1", "description": "Fold laundry", "priority": "High", "dueDate": "02/28/2024", "occurrence": "Weekly" }
+    ]
+}

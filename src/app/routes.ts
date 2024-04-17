@@ -14,6 +14,10 @@ const routeConfig: Routes = [
     title: "Home page",
   },
   {
+    path: 'callback',
+    loadComponent: () => import('./features/callback/callback.component').then(mod => mod.CallbackComponent)
+  },
+  {
     path: "daily",
     component: DailyComponent,
     title: "Daily Tasks",
