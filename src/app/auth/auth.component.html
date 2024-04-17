@@ -1,0 +1,40 @@
+<div>
+    <div>
+        <div>
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">{{ title }}</h1>
+                <p class="text-xs-center">
+                    <a [routerLink]="['/login']" *ngIf="authType == 'register'">Login as existing user</a>
+                    <a [routerLink]="['/register']" *ngIf="authType = 'login'">Create an account</a>
+                </p>
+
+                <form [formGroup]="authForm" (ngSubmit)="submitForm()">
+                    <fieldset class="form-group">
+                        <input 
+                            formControlName="username"
+                            placeholder="Username"
+                            class="form-control form-control-lg"
+                            type="text"
+                            *ngIf="authType == 'register'" />
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <input 
+                            formControlName="email"
+                            placeholder="Email"
+                            class="form-control form-control-lg"
+                            type="text" />
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <input 
+                            formControlName="password"
+                            placeholder="Password"
+                            class="form-control form-control-lg"
+                            type="password" />
+                    </fieldset>
+                    <button class="btn btn-lg btn-primary" type="submit">
+                        {{ title }}
+                    </button>
+                </form>
+        </div>
+    </div>
+</div>
