@@ -6,11 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <a class="nav-link"
-        routerLink="/register"
-        routerLinkActive="active">
-        Create Account
-    </a>
+    <button>
+        <a class="nav-link"
+            routerLink="/register"
+            routerLinkActive="active">
+            Create Account
+        </a>
+    </button>
   `
 })
 export class SignupButtonComponent {
