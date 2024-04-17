@@ -1,7 +1,7 @@
 <div id="signup" class="login-content">
     <h1 class="main-heading">Sign up to start tracking tasks today</h1>
     <p class="heading-trailer">Create an account or <a href="/login">log in</a></p>
-    <form action="/signup" id="signup-form">
+    <form [formGroup]="signupForm" (submit)="submitForm()" action="/signup" id="signup-form">
         <fieldset>
             <div class="login-field">
                 <div class="line">
