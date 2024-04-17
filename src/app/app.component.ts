@@ -3,7 +3,7 @@ import { HomeComponent } from "./home/home.component";
 import { HeaderComponent } from "./header/header.component";
 import { FooterComponent } from "./footer/footer.component";
 import { RouterModule } from "@angular/router";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthModule } from "./auth/auth.module";
 
 @Component({
   selector: "app-root",
@@ -12,8 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RouterModule, 
     HeaderComponent, 
     FooterComponent,
-    FormsModule,
-    ReactiveFormsModule,
+    AuthModule,
   ],
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],

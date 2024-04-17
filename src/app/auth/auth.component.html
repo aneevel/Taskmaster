@@ -5,7 +5,7 @@
                 <h1 class="text-xs-center">{{ title }}</h1>
                 <p class="text-xs-center">
                     <a [routerLink]="['/login']" *ngIf="authType == 'register'">Login as existing user</a>
-                    <a [routerLink]="['/register']" *ngIf="authType = 'login'">Create an account</a>
+                    <a [routerLink]="['/register']" *ngIf="authType == 'login'">Create an account</a>
                 </p>
 
                 <form [formGroup]="authForm" (ngSubmit)="submitForm()">
