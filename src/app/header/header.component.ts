@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ToolbarModule } from "primeng/toolbar";
+import { LogoutButtonComponent } from '../shared/buttons/logout-button.component'
 import { ButtonModule } from "primeng/button";
 
 @Component({
@@ -13,7 +14,8 @@ import { ButtonModule } from "primeng/button";
     CommonModule,
     ToolbarModule, 
     ButtonModule, 
-    RouterModule
+    RouterModule,
+    LogoutButtonComponent,
   ],
 })
 export class HeaderComponent {

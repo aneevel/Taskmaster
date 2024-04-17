@@ -21,13 +21,9 @@
       <a class="nav-item" id="nav-account" [routerLink]="['/account']"
         ><p-button label="Account"></p-button
       ></a>
-      <ng-container *ngIf="isAuthenticated$ | async; else unAuthenticated">
+      <ng-container>
         <app-logout-button></app-logout-button>
       </ng-container>
-      <ng-template #unAuthenticated>
-        <app-signup-button></app-signup-button>
-        <app-login-button></app-login-button>
-      </ng-template>
     </div>
   </p-toolbar>
 </div>
