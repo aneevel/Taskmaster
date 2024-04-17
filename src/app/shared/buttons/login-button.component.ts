@@ -5,7 +5,13 @@ import { CommonModule } from '@angular/common';
   selector: 'app-login-button',
   standalone: true,
   imports: [CommonModule],
-  template: ``
+  template: `
+    <a class='nav-link'
+        routerLink='/login'
+        routerLinkActive='active'>
+        Log In
+    </a>
+  `
 })
 export class LoginButtonComponent {
 
