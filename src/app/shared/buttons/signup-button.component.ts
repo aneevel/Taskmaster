@@ -8,12 +8,9 @@ import { ButtonModule } from 'primeng/button';
   standalone: true,
   imports: [CommonModule, RouterModule, ButtonModule],
   template: `
-    <p-button>
-        <a class="nav-link"
-            [routerLink]="['/register']">
-            Create Account
-        </a>
-    </p-button>
+    <a id='nav-signup' [routerLink]="['/register']">
+        <p-button label="Create Account" class="mr-2"></p-button>
+    </a>
   `
 })
 export class SignupButtonComponent {
