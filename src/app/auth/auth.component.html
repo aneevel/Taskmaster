@@ -50,6 +50,11 @@
                             >
                                 Password must include at least one lowercase letter.
                             </div>
+                            <div 
+                                *ngIf="password?.errors?.['uppercase']"
+                            >
+                                Password must include at least one uppercase letter
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
