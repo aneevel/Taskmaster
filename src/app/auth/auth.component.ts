@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidationErrors,  FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -29,7 +29,7 @@ export class AuthComponent implements OnInit {
                 specialCharacterValidator
             ]],
             'confirm-password': ['', Validators.required],
-        });
+        }, { validators: passwordsMatchValidator });
     }
 
     ngOnInit() {
@@ -51,13 +51,15 @@ export class AuthComponent implements OnInit {
     }
 }
 
-export function lowercaseValidator(control: FormControl) {
+export function lowercaseValidator(control: FormControl)
+{
     const regex = /[a-z]/g
     const lowercase = regex.test(control.value);
     return lowercase ? null : { lowercase: { value: control.value } };
 }
 
-export function uppercaseValidator(control: FormControl) {
+export function uppercaseValidator(control: FormControl)
+{
     const regex = /[A-Z]/g
     const uppercase = regex.test(control.value)
     return uppercase ? null: { uppercase: { value: control.value } };
@@ -73,4 +75,10 @@ export function specialCharacterValidator(control: FormControl) {
     const regex = /\W/g
     const special = regex.test(control.value)
     return special ? null: { special: { value: control.value } }
+}
+
+export function passwordsMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value 
+    const confirmPassword = group.get('confirm-password')?.value 
+    return password === confirmPassword ? null: { notMatching: true }
 }

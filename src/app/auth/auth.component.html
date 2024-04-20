@@ -74,6 +74,11 @@
                             class="form-control form-control-lg"
                             type="password" />
                     </fieldset>
+                    <div 
+                        *ngIf="authForm.hasError('notMatching')"
+                    >
+                        Passwords must match.
+                    </div>
                     <button class="btn btn-lg btn-primary" type="submit">
                         {{ title }}
                     </button>
