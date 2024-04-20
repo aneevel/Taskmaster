@@ -22,7 +22,8 @@ export class AuthComponent implements OnInit {
             'password': ['', [
                 Validators.required,
                 Validators.minLength(13),
-                Validators.maxLength(64)
+                Validators.maxLength(64),
+                lowercaseValidator
             ]],
             'confirm-password': ['', Validators.required],
         });
@@ -47,3 +48,8 @@ export class AuthComponent implements OnInit {
     }
 }
 
+export function lowercaseValidator(control: FormControl) {
+    const regex = /[a-z]/g
+    const lowercase = regex.test(control.value);
+    return lowercase ? null : { value: control.value };
+}
