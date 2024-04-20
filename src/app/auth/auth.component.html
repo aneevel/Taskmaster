@@ -53,7 +53,17 @@
                             <div 
                                 *ngIf="password?.errors?.['uppercase']"
                             >
-                                Password must include at least one uppercase letter
+                                Password must include at least one uppercase letter.
+                            </div>
+                            <div 
+                                *ngIf="password?.errors?.['number']"
+                            >
+                                Password must include at least one number.
+                            </div>
+                            <div 
+                                *ngIf="password?.errors?.['special']"
+                            >
+                                Password must include at least one special character.
                             </div>
                         </div>
                     </fieldset>
