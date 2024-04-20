@@ -51,5 +51,5 @@ export class AuthComponent implements OnInit {
 export function lowercaseValidator(control: FormControl) {
     const regex = /[a-z]/g
     const lowercase = regex.test(control.value);
-    return lowercase ? null : { value: control.value };
+    return lowercase ? null : { lowercase: { value: control.value } };
 }

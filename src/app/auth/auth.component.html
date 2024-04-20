@@ -44,6 +44,12 @@
                             >
                                 Password must not exceed 64 characters.
                             </div>
+
+                            <div 
+                                *ngIf="password?.errors?.['lowercase']"
+                            >
+                                Password must include at least one lowercase letter.
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset class="form-group">
