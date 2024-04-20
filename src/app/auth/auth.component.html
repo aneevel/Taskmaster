@@ -11,14 +11,6 @@
                 <form [formGroup]="authForm" (ngSubmit)="submitForm()">
                     <fieldset class="form-group">
                         <input 
-                            formControlName="username"
-                            placeholder="Username"
-                            class="form-control form-control-lg"
-                            type="text"
-                            *ngIf="authType == 'register'" />
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <input 
                             formControlName="email"
                             placeholder="Email"
                             class="form-control form-control-lg"
@@ -27,9 +19,32 @@
                     <fieldset class="form-group">
                         <input 
                             formControlName="password"
+                            id="password"
+                            name="password"
                             placeholder="Password"
                             class="form-control form-control-lg"
+                            required
                             type="password" />
+                        <div
+                            *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+                            class="alert alert-danger"
+                        >
+                            <div
+                                *ngIf="password?.errors?.['required']"
+                            >
+                                Password is required.
+                            </div>
+                            <div
+                                *ngIf="password?.errors?.['minlength']"
+                            >
+                                Password must be at least 13 characters long.
+                            </div>
+                            <div 
+                                *ngIf="password?.errors?.['maxlength']"
+                            >
+                                Password must not exceed 64 characters.
+                            </div>
+                        </div>
                     </fieldset>
                     <fieldset class="form-group">
                         <input 

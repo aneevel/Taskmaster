@@ -19,7 +19,11 @@ export class AuthComponent implements OnInit {
     ) {
         this.authForm = this.formBuilder.group({
             'email': ['', Validators.required],
-            'password': ['', Validators.required],
+            'password': ['', [
+                Validators.required,
+                Validators.minLength(13),
+                Validators.maxLength(64)
+            ]],
             'confirm-password': ['', Validators.required],
         });
     }
@@ -30,15 +34,16 @@ export class AuthComponent implements OnInit {
             // The last part of the route is always either 'login', or 'register'
             this.authType = data[data.length - 1].path;
             this.title = (this.authType === 'login') ? 'Log In' : 'Create An Account';
-            if (this.authType === 'register') {
-                this.authForm.addControl('username', new FormControl('', Validators.required));
-            }
         });
     }
 
     submitForm() {
         let credentials = this.authForm.value;
         console.log(credentials);
+    }
+
+    get password() {
+        return this.authForm.get('password');
     }
 }
 
