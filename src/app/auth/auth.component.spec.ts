@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { ReactiveFormsModule } from '@angular/forms'
 
 import { AuthComponent } from './auth.component';
 
@@ -8,7 +11,9 @@ describe('AuthComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthComponent]
+      declarations: [AuthComponent],
+      imports: [RouterTestingModule,
+        ReactiveFormsModule]
     });
     fixture = TestBed.createComponent(AuthComponent);
     component = fixture.componentInstance;
