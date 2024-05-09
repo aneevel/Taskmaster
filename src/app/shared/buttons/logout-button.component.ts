@@ -1,16 +1,19 @@
-import { Component, Inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-logout-button',
   standalone: true,
-  imports: [CommonModule],
-  template: `
+  imports: [CommonModule, RouterModule, ButtonModule],
+  template: `<a id='nav-logout' [routerLink]="['/logout']">
+        <p-button label="Logout" class="mr-2"></p-button>
+    </a>
   `
 })
 export class LogoutButtonComponent {
   constructor(
-    @Inject(DOCUMENT) private doc: Document,
   ) {}
 
 }
