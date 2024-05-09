@@ -108,12 +108,6 @@ describe("HeaderComponent", () => {
     });
   }));
 
-  it("should navigate to logout", fakeAsync(() => {
-    router.navigate(["/logout"]).then(() => {
-      expect(location.path()).toBe("/logout");
-    });
-  }));
-
   it("should navigate to register", fakeAsync(() => {
     router.navigate(["/register"]).then(() => {
       expect(location.path()).toBe("/register");

@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
   selector: 'app-logout-button',
   standalone: true,
   imports: [CommonModule, RouterModule, ButtonModule],
-  template: `<a id='nav-logout' [routerLink]="['/logout']">
+  template: `<a id='nav-logout' [routerLink]="['/login']">
         <p-button label="Logout" class="mr-2"></p-button>
     </a>
   `

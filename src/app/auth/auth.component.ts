@@ -35,7 +35,7 @@ export class AuthComponent implements OnInit {
     ngOnInit() {
         this.route.url.subscribe(data => {
 
-            // The last part of the route is always either 'login', or 'register'
+            // The last part of the route is always either 'login' or 'register'
             this.authType = data[data.length - 1].path;
             this.title = (this.authType === 'login') ? 'Log In' : 'Create An Account';
         });
