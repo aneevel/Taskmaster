@@ -6,6 +6,7 @@
                 <p class="text-xs-center">
                     <a [routerLink]="['/login']" *ngIf="authType == 'register'">Login as existing user</a>
                     <a [routerLink]="['/register']" *ngIf="authType == 'login'">Create an account</a>
+                    <a [routerLink]="['/logout']" *ngIf="authType == 'logout'">Logout</a>
                 </p>
 
                 <form [formGroup]="authForm" (ngSubmit)="submitForm()">
