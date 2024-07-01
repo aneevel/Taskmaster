@@ -5,5 +5,26 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  constructor() { }
+  private isAuth: boolean;
+
+  constructor() { 
+    this.isAuth = false;
+  }
+
+  setAuth(auth: boolean) {
+      this.isAuth = auth;
+  }
+
+  getAuth(): boolean {
+      return this.isAuth;
+  }
+
+  authenticate() {
+      this.setAuth(true);
+  }
+
+  unauthenticate() {
+      this.setAuth(false);
+  }
+
 }

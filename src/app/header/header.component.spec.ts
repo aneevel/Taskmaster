@@ -37,7 +37,7 @@ describe("HeaderComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should have items for home, daily, weekly, monthly, one-off, account, login, logout, and register", () => {
+  it("should have items for home, daily, weekly, monthly, one-off", () => {
     const homeElement = fixture.debugElement.query(By.css("#nav-home"));
     expect(homeElement).toBeTruthy();
 
@@ -52,18 +52,18 @@ describe("HeaderComponent", () => {
 
     const oneOffElement = fixture.debugElement.query(By.css("#nav-one-off"));
     expect(oneOffElement).toBeTruthy();
+  });
 
-    const accountElement = fixture.debugElement.query(By.css("#nav-account"));
-    expect(accountElement).toBeTruthy();
-
+  it("should have login and create account buttons if user is unauthenticated", () => {
     const loginElement = fixture.debugElement.query(By.css("#nav-login"));
     expect(loginElement).toBeTruthy();
 
-    const logoutElement = fixture.debugElement.query(By.css("#nav-logout"));
-    expect(logoutElement).toBeTruthy();
+    const createAccountElement = fixture.debugElement.query(By.css("#nav-register"));
+    expect(createAccountElement).toBeTruthy();
+  });
 
-    const registerElement = fixture.debugElement.query(By.css("#nav-register"));
-    expect(registerElement).toBeTruthy();
+  it("should not have logout or account button if user is not authenticated", () => {
+
   });
 
   it("should navigate to home", fakeAsync(() => {
