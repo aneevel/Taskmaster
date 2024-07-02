@@ -11,19 +11,19 @@ export class AuthService {
     this.isAuth = false;
   }
 
-  setAuth(auth: boolean) {
+  public setAuth(auth: boolean) {
       this.isAuth = auth;
   }
 
-  getAuth(): boolean {
+  public getAuth(): boolean {
       return this.isAuth;
   }
 
-  authenticate() {
+  public authenticate() {
       this.setAuth(true);
   }
 
-  unauthenticate() {
+  public unauthenticate() {
       this.setAuth(false);
   }
 

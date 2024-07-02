@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
 import { HeaderComponent } from "./header.component";
+import { AuthService } from "../auth.service";
 import { By } from "@angular/platform-browser";
 import routes from "../routes";
 
@@ -20,9 +21,12 @@ describe("HeaderComponent", () => {
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(() => {
+
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes(routes), HeaderComponent],
+      providers: [ { AuthService } ]
     });
+
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -55,6 +59,7 @@ describe("HeaderComponent", () => {
   });
 
   it("should have login and create account buttons if user is unauthenticated", () => {
+
     const loginElement = fixture.debugElement.query(By.css("#nav-login"));
     expect(loginElement).toBeTruthy();
 
@@ -71,8 +76,7 @@ describe("HeaderComponent", () => {
       expect(location.path()).toBe("/");
     });
   }));
-
-  it("should navigate to daily", fakeAsync(() => {
+it("should navigate to daily", fakeAsync(() => {
     router.navigate(["/daily"]).then(() => {
       expect(location.path()).toBe("/daily");
     });
