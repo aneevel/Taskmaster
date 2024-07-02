@@ -11,7 +11,7 @@ export class AuthService {
     this.isAuth = false;
   }
 
-  public setAuth(auth: boolean) {
+  setAuth(auth: boolean) {
       this.isAuth = auth;
   }
 
