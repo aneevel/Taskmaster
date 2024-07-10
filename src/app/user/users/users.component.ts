@@ -1,20 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, } from '@angular/core';
 import { User } from '../user';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({ selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  template: `<ul>
+    <li *ngFor="let user of users$ | async">
+        User #{{ user.id }}: {{ user.lname }}, {{ user.fname }} - Email: {{ user.email }}
+    </li>
+</ul>`,
+  styleUrls: ['./users.component.scss'],
+  standalone: true,
+  imports: [
+      CommonModule
+  ]
 })
-export class UsersComponent {
-    //users$: Observable<User[]>;
+export class UsersComponent implements OnDestroy {
+    users$: Observable<User[]>;
 
     constructor(private httpClient: HttpClient) {
-        this.httpClient
+        this.users$ = this.httpClient
             .get<User[]>('assets/sample-users.json')
-            .subscribe((res) => {
-                console.log('--- result :: ', res);
-            });
+    }
+
+    ngOnDestroy() {
     }
 }
