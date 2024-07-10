@@ -1,6 +1,6 @@
 import { Task } from '../task'
 
-interface User {
+export interface User {
     id: number,
     lname: string,
     fname: string,

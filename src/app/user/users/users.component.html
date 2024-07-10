@@ -1,0 +1,5 @@
+<ul>
+    <li *ngFor="let user of users$ | async">
+        User #{{ user.id }}: {{ user.lname }}, {{ user.fname }} - Email: {{ user.email }}
+    </li>
+</ul>

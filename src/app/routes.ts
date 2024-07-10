@@ -6,6 +6,7 @@ import { MonthlyComponent } from "./monthly/monthly.component";
 import { OneOffComponent } from "./one-off/one-off.component";
 import { AccountComponent } from "./account/account.component";
 import { AuthComponent } from "./auth/auth.component";
+import { UsersComponent } from "./user/users/users.component";
 
 const routeConfig: Routes = [
   {
@@ -49,7 +50,12 @@ const routeConfig: Routes = [
   {
     path: 'login',
     component: AuthComponent,
+  },
+  {
+    path: 'users',
+    component: UsersComponent,
   }
+
 ];
 
 export default routeConfig;
