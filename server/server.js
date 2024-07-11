@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express();
 
+const db = require('./data/database');
+
 let users = [
     { id: 0,
         lname: "Neevel",
@@ -30,6 +32,9 @@ app.get('/api/users/:id', function (req, res) {
     res.json(getUserById(parseInt(req.params.id)));
 });
 
-const server = app.listen(8000, "localhost", function () {
-    console.log("Listening on localhost:8000");
+db.connectToDatabase().then(() => {
+    app.listen(8000, "localhost");
+}).catch((error) => {
+    console.log('Failed to connect to the database!');
+    console.log(error);
 });
