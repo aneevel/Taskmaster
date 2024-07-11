@@ -6,7 +6,6 @@ import { LogoutButtonComponent } from '../shared/buttons/logout-button.component
 import { LoginButtonComponent } from '../shared/buttons/login-button.component'
 import { SignupButtonComponent } from '../shared/buttons/signup-button.component'
 import { ButtonModule } from "primeng/button";
-import { AuthService } from '../auth.service';
 
 @Component({
   selector: "app-header",
@@ -26,7 +25,6 @@ import { AuthService } from '../auth.service';
 export class HeaderComponent {
 
 
-  constructor(private authService: AuthService) {
-      this.authService = authService;
+  constructor() {
   }
 }

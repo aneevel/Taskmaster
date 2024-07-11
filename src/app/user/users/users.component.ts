@@ -21,7 +21,7 @@ export class UsersComponent implements OnDestroy {
 
     constructor(private httpClient: HttpClient) {
         this.users$ = this.httpClient
-            .get<User[]>('assets/sample-users.json')
+            .get<User[]>('assets/sample-users.json');
     }
 
     ngOnDestroy() {

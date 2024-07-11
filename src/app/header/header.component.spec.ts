@@ -10,7 +10,6 @@ import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
 import { HeaderComponent } from "./header.component";
-import { AuthService } from "../auth.service";
 import { By } from "@angular/platform-browser";
 import routes from "../routes";
 
@@ -24,7 +23,6 @@ describe("HeaderComponent", () => {
 
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes(routes), HeaderComponent],
-      providers: [ { AuthService } ]
     });
 
     fixture = TestBed.createComponent(HeaderComponent);

@@ -5,7 +5,6 @@ import { WeeklyComponent } from "./weekly/weekly.component";
 import { MonthlyComponent } from "./monthly/monthly.component";
 import { OneOffComponent } from "./one-off/one-off.component";
 import { AccountComponent } from "./account/account.component";
-import { AuthComponent } from "./auth/auth.component";
 import { UsersComponent } from "./user/users/users.component";
 
 const routeConfig: Routes = [
@@ -42,14 +41,6 @@ const routeConfig: Routes = [
     path: "account",
     component: AccountComponent,
     title: "Account Overview",
-  },
-  {
-    path: 'register',
-    component: AuthComponent, 
-  },
-  {
-    path: 'login',
-    component: AuthComponent,
   },
   {
     path: 'users',
