@@ -1,4 +1,5 @@
 const db = require('../data/database');
+const mongodb = require('mongodb');
 const bcrypt = require('bcrypt');
 
 class User {
@@ -13,12 +14,12 @@ class User {
     }
 
     static findAll() {
-        console.log(db.getDatabase().collection('users'));
-        return db.getDatabase().collection('users').find( { projection: { password: 0 } }).toArray();
+        return db.getDatabase().collection('users').find({}, { projection: { password: 0 } }).toArray();
     }
 
     static findById(userID) {
-        return db.getDatabase().collection('users').findOne({id: userID}, { projection: { password: 0 } });
+        const uuid = mongodb.ObjectId.createFromHexString(userID);
+        return db.getDatabase().collection('users').findOne({_id: uuid}, { projection: { password: 0 } });
     }
 
     getUserWithSameEmail() {
