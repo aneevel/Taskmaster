@@ -29,12 +29,12 @@ const signup = async (req, res, next) => {
         return res.status(400).send("Improper params supplied!");
     }
 
-    const user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        lname: req.body.lname,
-        fname: req.body.fname
-    });
+    const user = new User(
+        req.body.email,
+        req.body.password,
+        req.body.lname,
+        req.body.fname
+    );
 
     if (
         !ValidationUtil.userDetailsAreValid(
