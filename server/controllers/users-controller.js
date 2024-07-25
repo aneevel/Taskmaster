@@ -39,11 +39,19 @@ const signup = async (req, res, next) => {
     if (
         !ValidationUtil.userDetailsAreValid(
             req.body.email,
-            req.body.password
-        ) || !ValidationUtil.emailIsConfirmed(req.body.email, req.body.confirmEmail)
+            req.body.password,
+            req.body.lname,
+            req.body.fname
+        ) 
     ) {
         return res.status(400).send("Unable to validate user details!");
     }
+
+    if ( 
+        !ValidationUtil.emailIsConfirmed(req.body.email, req.body.confirmEmail))
+        {
+            return res.status(400).send("Email and confirm email do not match!");
+        }
 
     try {
         const existsAlready = await user.existsAlready();
