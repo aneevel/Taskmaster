@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express();
+const bodyParser = require('body-parser');
 
 const db = require('./data/database');
 
 const userRoutes = require('./routes/users-routes');
+
+app.use(bodyParser.json());
 
 app.get('/api', function (req, res) { return res.send('Hello from Express!'); });
 

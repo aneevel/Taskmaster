@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const ValidationUtil = require('../utility/validation');
 
 const getAllUsers = async (req, res, next) => {
     try {
@@ -20,9 +21,12 @@ const getUserById = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
 
-    if (req.body == null) {
-        console.log("No request body provided!");
-        return;
+    if (req.body.email == null 
+        || req.body.confirmEmail == null
+        || req.body.password == null 
+        || req.body.lname == null 
+        || req.body.fname == null) {
+        return res.status(400).send("Improper params supplied!");
     }
 
     const user = new User({
@@ -36,28 +40,29 @@ const signup = async (req, res, next) => {
         !ValidationUtil.userDetailsAreValid(
             req.body.email,
             req.body.password
-        ) || !ValidationUtil.emailIsConfirmed(req.body.email, req.body['confirm-email'])
+        ) || !ValidationUtil.emailIsConfirmed(req.body.email, req.body.confirmEmail)
     ) {
-        console.log("Invalid user details!");
-        return;
+        return res.status(400).send("Unable to validate user details!");
     }
 
     try {
         const existsAlready = await user.existsAlready();
 
         if (existsAlready) {
-            console.log("User exists already!");
-            return;
+            return res.status(400).send("User exists already!");
         }
 
         await user.signup();
     } catch (error) {
         return next(error);
     }
+
+    return res.status(200).send("User created!");
 }
 
 
 module.exports = {
     getAllUsers: getAllUsers,
-    getUserById: getUserById 
+    getUserById: getUserById,
+    signup: signup
 };

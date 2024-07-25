@@ -6,7 +6,7 @@
     "env": "ts-node set-env.ts",
     "start": "npm run env && ng serve",
     "build": "npm run env && ng build",
-    "api": "json-server --host 0.0.0.0 --port 6060 json-server/db.json",
+    "api": "node server/server.js",
     "test": "ng test"
   },
   "private": true,
