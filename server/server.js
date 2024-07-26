@@ -39,7 +39,7 @@ app.get('/api', function (req, res) { return res.send('Hello from Express!'); })
 app.use(userRoutes);
 
 db.connectToDatabase().then(() => {
-    app.listen(8000, "localhost");
+    app.listen(process.env.API_PORT, "localhost");
 }).catch((error) => {
     console.log('Failed to connect to the database!');
     console.log(error);

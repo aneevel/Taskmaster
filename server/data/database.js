@@ -6,7 +6,7 @@ let database;
 let port = 27017;
 
 const connectToDatabase = async() => {
-    const client = await MongoClient.connect(`mongodb://127.0.0.1:${port}`);
+    const client = await MongoClient.connect(`mongodb://${process.env.MONGO_URL}:${process.env.MONGO_DB_PORT}`);
     database = client.db('taskmaster')
 }
 
