@@ -6,6 +6,7 @@ import { MonthlyComponent } from "./monthly/monthly.component";
 import { OneOffComponent } from "./one-off/one-off.component";
 import { AccountComponent } from "./account/account.component";
 import { UsersComponent } from "./user/users/users.component";
+import { LoginComponent } from "./login/login.component";
 
 const routeConfig: Routes = [
   {
@@ -41,6 +42,11 @@ const routeConfig: Routes = [
     path: "account",
     component: AccountComponent,
     title: "Account Overview",
+  },
+  { 
+    path: "login",
+    component: LoginComponent,
+    title: "Login",
   },
   {
     path: 'users',
