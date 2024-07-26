@@ -3,7 +3,6 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
 let database;
-let port = 27017;
 
 const connectToDatabase = async() => {
     const client = await MongoClient.connect(`mongodb://${process.env.MONGO_URL}:${process.env.MONGO_DB_PORT}`);

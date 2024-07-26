@@ -6,7 +6,7 @@
     "env": "ts-node set-env.ts",
     "start": "npm run env && ng serve",
     "build": "npm run env && ng build",
-    "api": "nodemon server/server.js",
+    "api": "nodemon --env-file=server/.env server/server.js",
     "test": "ng test"
   },
   "private": true,
