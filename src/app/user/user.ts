@@ -1,17 +1,7 @@
 import { Task } from '../task'
 
-interface IUser {
-    id: number,
-    lname: string,
-    fname: string,
-    email: string,
-    confirmed: boolean,
-    admin: boolean,
-    tasks: Task[]
-}
-
-export class User implements IUser {
-    id: number;
+export class User {
+    id: string;
     lname: string;
     fname: string;
     email: string;
@@ -19,7 +9,7 @@ export class User implements IUser {
     admin: boolean;
     tasks: Task[];
 
-    constructor(id: number, lname: string, fname: string, email: string, confirmed: boolean, admin: boolean, tasks: Task[]) {
+    constructor(id: string, lname: string, fname: string, email: string, confirmed: boolean, admin: boolean, tasks: Task[]) {
         this.id = id;
         this.lname = lname;
         this.fname = fname;
