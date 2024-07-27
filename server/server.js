@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const expressSession = require('express-session');
 const passport = require('passport');
+const cors = require('cors');
 
 const createSessionConfig = require('./config/session');
 const db = require('./data/database');
@@ -23,6 +24,8 @@ app.use(bodyParser.json());
 
 app.use(morgan('combined'));
 
+var corsOptions;
+
 if (process.env.NODE_ENV !== 'development') {
     app.use(morgan('dev', {
         stream: fs.createWriteStream(path.join(__dirname, 'logs', 'error.log'), { flags: 'a' }),
@@ -32,7 +35,18 @@ if (process.env.NODE_ENV !== 'development') {
     app.use(morgan('common', {
         stream: fs.createWriteStream(path.join(__dirname, 'logs', 'access.log'), { flags: 'a' })
     }));
+
+   corsOptions = {
+       origin: 'http://localhost:4200',
+   };
+       
+} else if (process.env.NODE_ENV === 'development') {
+    corsOptions = {
+        origin: 'http://localhost:4200'
+    };
 }
+
+app.use(cors(corsOptions));
 
 app.get('/api', function (req, res) { return res.send('Hello from Express!'); });
 
