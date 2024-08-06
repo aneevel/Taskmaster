@@ -7,6 +7,7 @@ import { OneOffComponent } from "./one-off/one-off.component";
 import { AccountComponent } from "./account/account.component";
 import { UsersComponent } from "./user/users/users.component";
 import { LoginComponent } from "./login/login.component";
+import { AuthGuard } from "./auth.guard";
 
 const routeConfig: Routes = [
   {
@@ -22,26 +23,31 @@ const routeConfig: Routes = [
     path: "daily",
     component: DailyComponent,
     title: "Daily Tasks",
+    canActivate: [AuthGuard]
   },
   {
     path: "weekly",
     component: WeeklyComponent,
     title: "Weekly Tasks",
+    canActivate: [AuthGuard]
   },
   {
     path: "monthly",
     component: MonthlyComponent,
     title: "Monthly Tasks",
+    canActivate: [AuthGuard]
   },
   {
     path: "one-off",
     component: OneOffComponent,
     title: "One-Off Tasks",
+    canActivate: [AuthGuard]
   },
   {
     path: "account",
     component: AccountComponent,
     title: "Account Overview",
+    canActivate: [AuthGuard]
   },
   { 
     path: "login",
@@ -51,6 +57,8 @@ const routeConfig: Routes = [
   {
     path: 'users',
     component: UsersComponent,
+    // TODO: AdminGuard?
+    canActivate: [AuthGuard]
   }
 
 ];
