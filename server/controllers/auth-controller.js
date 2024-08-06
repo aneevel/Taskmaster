@@ -1,6 +1,5 @@
 const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
-const AuthUtil = require('../utility/authentication');
 
 const signup = async (req, res, next) => {
 
@@ -58,7 +57,7 @@ const login = async (req, res, next) => {
     try {
         existingUser = await user.getUserWithSameEmail();
     } catch (error) {
-        return next(error);
+        return res.status(400).send("Unable to find user with same email!");
     }
 
     const sessionErrorData = {
@@ -68,7 +67,7 @@ const login = async (req, res, next) => {
     }
 
     if (!existingUser) {
-        return sessionErrorData;
+        return res.status(400).send({ code: "ENU", data: sessionErrorData });
     }
 
     const passwordIsCorrect = await user.hasMatchingPassword(
@@ -76,15 +75,13 @@ const login = async (req, res, next) => {
     );
 
     if (!passwordIsCorrect) {
-        return sessionErrorData;
+        return res.status(400).send({ code: "EIP", data: sessionErrorData });
     }
     
-    AuthUtil.createUserSession(req, existingUser);
-    return existingUser;
+    return res.status(200).send({ code: "OK", data: existingUser });
 }
 
 const logout = async (req, res, next) => {
-    AuthUtil.resetUserSession(req);
     res.redirect("/login");
 }
 

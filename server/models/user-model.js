@@ -46,7 +46,10 @@ class User {
             tasks: this.tasks 
         });
     }
-            
+
+    hasMatchingPassword(hashedPassword) {
+        return bcrypt.compare(this.password, hashedPassword);
+    }
 }
 
 module.exports = User;
