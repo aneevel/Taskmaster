@@ -6,8 +6,7 @@ import { UserService } from '../user.service';
 import { first } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
+  selector: 'app-login', standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -48,6 +47,7 @@ export class LoginComponent {
                 },
                 error => {
                     // Replace with some sort of alert/alarm system
+                    console.log(error);
                     console.log("Error logging on!");
                     this.loading = false;
                 });

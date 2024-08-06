@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
     }
 
     if (!existingUser) {
-        return res.status(400).send({ code: "ENU", data: sessionErrorData });
+        return res.status(400).send({ code: "ENU", errordata: sessionErrorData });
     }
 
     const passwordIsCorrect = await user.hasMatchingPassword(
@@ -75,10 +75,10 @@ const login = async (req, res, next) => {
     );
 
     if (!passwordIsCorrect) {
-        return res.status(400).send({ code: "EIP", data: sessionErrorData });
+        return res.status(400).send({ code: "EIP", errordata: sessionErrorData });
     }
     
-    return res.status(200).send({ code: "OK", data: existingUser });
+    return res.status(200).send(existingUser );
 }
 
 const logout = async (req, res, next) => {
