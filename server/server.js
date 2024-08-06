@@ -12,6 +12,7 @@ const createSessionConfig = require('./config/session');
 const db = require('./data/database');
 
 const userRoutes = require('./routes/users-routes');
+const authRoutes = require('./routes/auth-routes');
 
 const sessionConfig = createSessionConfig();
 
@@ -51,6 +52,7 @@ app.use(cors(corsOptions));
 app.get('/api', function (req, res) { return res.send('Hello from Express!'); });
 
 app.use(userRoutes);
+app.use(authRoutes);
 
 db.connectToDatabase().then(() => {
     app.listen(process.env.API_PORT, "localhost");

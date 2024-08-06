@@ -1,0 +1,95 @@
+const User = require('../models/user-model');
+const ValidationUtil = require('../utility/validation');
+const AuthUtil = require('../utility/authentication');
+
+const signup = async (req, res, next) => {
+
+    if (req.body.email == null 
+        || req.body.confirmEmail == null
+        || req.body.password == null 
+        || req.body.lname == null 
+        || req.body.fname == null) {
+        return res.status(400).send("Improper params supplied!");
+    }
+
+    const user = new User(
+        req.body.email,
+        req.body.password,
+        req.body.lname,
+        req.body.fname
+    );
+
+    if (
+        !ValidationUtil.userDetailsAreValid(
+            req.body.email,
+            req.body.password,
+            req.body.lname,
+            req.body.fname
+        ) 
+    ) {
+        return res.status(400).send("Unable to validate user details!");
+    }
+
+    if ( 
+        !ValidationUtil.emailIsConfirmed(req.body.email, req.body.confirmEmail))
+        {
+            return res.status(400).send("Email and confirm email do not match!");
+        }
+
+    try {
+        const existsAlready = await user.existsAlready();
+
+        if (existsAlready) {
+            return res.status(400).send("User exists already!");
+        }
+
+        await user.signup();
+    } catch (error) {
+        return next(error);
+    }
+
+    return res.status(200).send("User created!");
+}
+
+const login = async (req, res, next) => {
+    const user = new User(req.body.email, req.body.password);
+    let existingUser;
+
+    try {
+        existingUser = await user.getUserWithSameEmail();
+    } catch (error) {
+        return next(error);
+    }
+
+    const sessionErrorData = {
+        errorMessage: 'Invalid credentials - please double-check your credentials and try again.',
+        email: user.email,
+        password: user.password
+    }
+
+    if (!existingUser) {
+        return sessionErrorData;
+    }
+
+    const passwordIsCorrect = await user.hasMatchingPassword(
+        existingUser.password
+    );
+
+    if (!passwordIsCorrect) {
+        return sessionErrorData;
+    }
+    
+    AuthUtil.createUserSession(req, existingUser);
+    return existingUser;
+}
+
+const logout = async (req, res, next) => {
+    AuthUtil.resetUserSession(req);
+    res.redirect("/login");
+}
+
+module.exports = {
+    signup: signup,
+    login: login,
+    logout: logout
+};
