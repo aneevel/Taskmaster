@@ -54,6 +54,7 @@ const routeConfig: Routes = [
     component: LoginComponent,
     title: "Login",
   },
+
   {
     path: 'users',
     component: UsersComponent,
