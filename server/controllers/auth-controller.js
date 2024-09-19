@@ -1,5 +1,6 @@
 const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
+const { jwt } = require('jsonwebtoken');
 
 const signup = async (req, res, next) => {
 
@@ -77,8 +78,19 @@ const login = async (req, res, next) => {
     if (!passwordIsCorrect) {
         return res.status(400).send({ code: "EIP", errordata: sessionErrorData });
     }
-    
-    return res.status(200).send(existingUser );
+
+    const RSA_PRIVATE_KEY = fs.readFileSync('../private.key');
+
+    const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+        algorithm: 'RS256',
+        expiresIn: 120,
+        subject: existingUser.id
+    });
+
+    return res.status(200).json({
+        idToken: jwtBearerToken,
+        expiresIn: 120
+    });
 }
 
 const logout = async (req, res, next) => {

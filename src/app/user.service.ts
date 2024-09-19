@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import * as moment from "moment";
 import { environment } from '../environments/environment';
 
 import { User } from './user/user';
@@ -27,11 +27,8 @@ export class UserService {
 
     login(email: string, password: string) {
         return this.http.post<User>(`${environment.api.serverUrl}/login`, { email, password })
-            .pipe(map(user => {
-                localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
-                return user;
-            }));
+            .pipe(
+                tap(res => this.setSession));
     }
 
     logout() {
@@ -43,7 +40,26 @@ export class UserService {
     register(user: User) {
     }
 
+    private setSession(result: { idToken: string, expiresIn: string}) {
+        const expiresAt = moment().add(result.expiresIn, 'second');
 
+        localStorage.setItem('id_token', result.idToken);
+        localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()) );
+    }
+
+    public isLoggedIn() {
+        return moment().isBefore(this.getExpiration());
+    }
+
+    isLoggedOut() {
+        return !this.isLoggedIn();
+    }
+
+    getExpiration() {
+        const expiration = localStorage.getItem("expires_at");
+        const expiresAt = JSON.parse(expiration!);
+        return moment(expiresAt);
+    }
 
 
 }
