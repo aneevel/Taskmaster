@@ -60,6 +60,4 @@ export class UserService {
         const expiresAt = JSON.parse(expiration!);
         return moment(expiresAt);
     }
-
-
 }
