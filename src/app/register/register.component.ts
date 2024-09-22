@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-register', standalone: true,
@@ -15,6 +16,9 @@ export class RegisterComponent {
         username: ['', Validators.required],
         password: ['', Validators.required],
         confirmPassword: ['', Validators.required],
+    },
+    {
+        validator: this.PasswordsMatchValidator('password', 'confirmPassword'),
     });
     loading = false;
     submitted = false;
@@ -37,12 +41,37 @@ export class RegisterComponent {
         if (this.registerForm.invalid) {
             return;
         }
+
+        this.loading = true;
+        this.userService.register(this.form['username'].value, this.form['password'].value)
+            .pipe(first())
+            .subscribe(
+                data => {
+                    this.router.navigate([this.returnUrl]);
+                },
+                error => {
+                    //Replace with some sort of alert/alarm system
+                    console.log(error);
+                    console.log("Error creating account!");
+                    this.loading = false;
+                });
     }
-
-    passwordsMatch() {
-        const password = this.form['password'];
-        const confirmPassword = this.form['confirmPassword'];
-
-        return (password === confirmPassword);
+    
+    PasswordsMatchValidator(controlName: string, matchingControlName: string) {
+        return (formGroup: FormGroup) => {
+            const control = formGroup.controls[controlName];
+            const matchingControl = formGroup.controls[matchingControlName];
+            if (
+                matchingControl.errors &&
+                !matchingControl.errors['passwordsMatchValidator']
+            ) {
+                return;
+            }
+            if (control.value !== matchingControl.value) {
+                matchingControl.setErrors({ passwordsMatchValidator: true });
+            } else {
+                matchingControl.setErrors(null);
+            }
+        };
     }
 }

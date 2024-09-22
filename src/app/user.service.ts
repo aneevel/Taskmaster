@@ -37,7 +37,10 @@ export class UserService {
         this.router.navigate(['/login']);
     }
 
-    register(user: User) {
+    register(email: string, password: string) {
+        return this.http.post<User>(`${environment.api.serverUrl}/register`, { email, password })
+            .pipe(
+                tap(res => this.setSession));
     }
 
     private setSession(result: { idToken: string, expiresIn: string}) {
