@@ -17,8 +17,8 @@
                 </div>
                 <label for="confirm-password">Confirm Password: </label>
                 <input id="confirm-password" type="password" formControlName="confirm-password" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['confirm-password'].errors }"/>
-                <div *ngIf="submitted && form['confirm-password'].errors" class="invalid-feedback">
-                    <div *ngIf="form['confirm-password'].errors['required']">You must confirm your password!</div>
+                <div *ngIf="submitted && form['confirmPassword'].errors" class="invalid-feedback">
+                    <div *ngIf="form['confirmPassword'].errors['required']">You must confirm your password!</div>
                     <div *ngIf="!passwordsMatch()">Your password does not match!</div>
                 </div>
             </div>
