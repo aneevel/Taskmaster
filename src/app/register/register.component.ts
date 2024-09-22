@@ -38,4 +38,11 @@ export class RegisterComponent {
             return;
         }
     }
+
+    passwordsMatch() {
+        const password = this.form['password'];
+        const confirmPassword = this.form['confirmPassword'];
+
+        return (password === confirmPassword);
+    }
 }
