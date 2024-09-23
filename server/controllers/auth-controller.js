@@ -1,6 +1,7 @@
 const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
 const { jwt } = require('jsonwebtoken');
+const fs = require('fs');
 
 const signup = async (req, res, next) => {
 
@@ -29,12 +30,6 @@ const signup = async (req, res, next) => {
         return res.status(400).send("Unable to validate user details!");
     }
 
-    if ( 
-        !ValidationUtil.emailIsConfirmed(req.body.email, req.body.confirmEmail))
-        {
-            return res.status(400).send("Email and confirm email do not match!");
-        }
-
     try {
         const existsAlready = await user.existsAlready();
 
@@ -47,7 +42,7 @@ const signup = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send("User created!");
+    return res.status(200).send({ message: "User created!"});
 }
 
 const login = async (req, res, next) => {
@@ -78,7 +73,7 @@ const login = async (req, res, next) => {
         return res.status(400).send({ code: "EIP", errordata: sessionErrorData });
     }
 
-    const RSA_PRIVATE_KEY = fs.readFileSync('../private.key');
+    const RSA_PRIVATE_KEY = fs.readFileSync('./private.key');
 
     const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
         algorithm: 'RS256',
