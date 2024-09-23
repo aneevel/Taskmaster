@@ -5,7 +5,6 @@ const { jwt } = require('jsonwebtoken');
 const signup = async (req, res, next) => {
 
     if (req.body.email == null 
-        || req.body.confirmEmail == null
         || req.body.password == null 
         || req.body.lname == null 
         || req.body.fname == null) {

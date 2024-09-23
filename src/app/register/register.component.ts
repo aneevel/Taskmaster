@@ -16,6 +16,8 @@ export class RegisterComponent {
         username: ['', Validators.required],
         password: ['', Validators.required],
         confirmPassword: ['', Validators.required],
+        fname: ['', Validators.required],
+        lname: ['', Validators.required],
     },
     {
         validator: this.PasswordsMatchValidator('password', 'confirmPassword'),
@@ -43,7 +45,7 @@ export class RegisterComponent {
         }
 
         this.loading = true;
-        this.userService.register(this.form['username'].value, this.form['password'].value)
+        this.userService.register(this.form['username'].value, this.form['password'].value, this.form['fname'].value, this.form['lname'].value)
             .pipe(first())
             .subscribe(
                 data => {
