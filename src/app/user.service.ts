@@ -26,9 +26,9 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<User>(`${environment.api.serverUrl}/login`, { email, password })
+        return this.http.post<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/login`, { email, password })
             .pipe(
-                tap(res => this.setSession));
+                tap(res => this.setSession(res)));
     }
 
     logout() {
@@ -38,9 +38,9 @@ export class UserService {
     }
 
     register(email: string, password: string, fname: string, lname: string) {
-        return this.http.post<User>(`${environment.api.serverUrl}/register`, { email, password, fname, lname })
+        return this.http.post<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/register`, { email, password, fname, lname })
             .pipe(
-                tap(res => this.setSession));
+                tap(res => this.setSession(res)));
     }
 
     private setSession(result: { idToken: string, expiresIn: string}) {

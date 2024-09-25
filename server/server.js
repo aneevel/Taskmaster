@@ -7,7 +7,7 @@ const fs = require('fs');
 const expressSession = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
-const expressJwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 
 const createSessionConfig = require('./config/session');
 const db = require('./data/database');
@@ -17,10 +17,11 @@ const authRoutes = require('./routes/auth-routes');
 
 const sessionConfig = createSessionConfig();
 
-const RSA_PUBLIC_KEY = fs.readFileSync('./public.key');
+const RSA_PUBLIC_KEY = fs.readFileSync('./public.pem');
 
-const checkIfAuthenticated = expressJwt({
-    secret: RSA_PUBLIC_KEY
+const checkIfAuthenticated = jwt({
+    secret: RSA_PUBLIC_KEY,
+    algorithms: ["HS256"]
 });
 
 app.use(expressSession(sessionConfig));
