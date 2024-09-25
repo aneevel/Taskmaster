@@ -7,8 +7,8 @@ import { OneOffComponent } from "./one-off/one-off.component";
 import { AccountComponent } from "./account/account.component";
 import { UsersComponent } from "./user/users/users.component";
 import { LoginComponent } from "./login/login.component";
-import { authGuard } from "./guards/auth.guard";
 import { RegisterComponent } from "./register/register.component";
+import { authGuard } from "./guards/auth.guard";
 
 const routeConfig: Routes = [
   {
@@ -21,31 +21,31 @@ const routeConfig: Routes = [
     loadComponent: () => import('./features/callback/callback.component').then(mod => mod.CallbackComponent)
   },
   {
-    path: "/tasks/daily",
+    path: "tasks/daily",
     component: DailyComponent,
     title: "Daily Tasks",
     canActivate: [authGuard]
   },
   {
-    path: "/tasks/weekly",
+    path: "tasks/weekly",
     component: WeeklyComponent,
     title: "Weekly Tasks",
     canActivate: [authGuard]
   },
   {
-    path: "/tasks/monthly",
+    path: "tasks/monthly",
     component: MonthlyComponent,
     title: "Monthly Tasks",
     canActivate: [authGuard]
   },
   {
-    path: "/tasks/one-off",
+    path: "tasks/one-off",
     component: OneOffComponent,
     title: "One-Off Tasks",
     canActivate: [authGuard]
   },
   {
-    path: "/user/account",
+    path: "user/account",
     component: AccountComponent,
     title: "Account Overview",
     canActivate: [authGuard]
@@ -59,7 +59,6 @@ const routeConfig: Routes = [
   {
     path: "signup",
     component: RegisterComponent,
-    title: "Register",
   },
   {
     path: 'users',
