@@ -32,7 +32,8 @@ export class UserService {
     }
 
     logout() {
-        localStorage.removeItem('user');
+        localStorage.removeItem('id_token');
+        localStorage.removeItem('expires_at');
         this.userSubject.next(null!);
         this.router.navigate(['/login']);
     }
