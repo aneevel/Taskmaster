@@ -14,15 +14,11 @@ const db = require('./data/database');
 
 const userRoutes = require('./routes/users-routes');
 const authRoutes = require('./routes/auth-routes');
+const tasksRoutes = require('./routes/tasks-routes');
 
 const sessionConfig = createSessionConfig();
 
 const RSA_PUBLIC_KEY = fs.readFileSync('./public.pem');
-
-const checkIfAuthenticated = jwt({
-    secret: RSA_PUBLIC_KEY,
-    algorithms: ["HS256"]
-});
 
 app.use(expressSession(sessionConfig));
 
@@ -61,6 +57,7 @@ app.get('/api', function (req, res) { return res.send('Hello from Express!'); })
 
 app.use(userRoutes);
 app.use(authRoutes);
+app.use(tasksRoutes);
 
 db.connectToDatabase().then(() => {
     app.listen(process.env.API_PORT, "localhost");

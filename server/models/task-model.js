@@ -17,4 +17,4 @@ class Task {
     }
 }
        
-module.exports = User;
+module.exports = Task;
