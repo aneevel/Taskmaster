@@ -3,20 +3,22 @@ const ValidationUtil = require('../utility/validation');
 
 const createTask = async (req, res, next) => {
     
-    if (req.body.description == null ||
+    if (
+        req.body == null ||
+        req.body.description == null ||
         req.body.priority == null ||
         req.body.dueDate == null ||
         req.body.occurrence == null ||
         req.body.userID == null 
     ) {
-        return res.status(400).send("Improper params supplied!");
+        return res.status(400).send({ message: "Improper params supplied"});
     }
 }
 
 const getTasks = async (req, res, next) => {
 
     if (req.params.id == null) {
-        return res.status(400).send("Improper params supplied!");
+        return res.status(400).send("Improper params supplied");
     }
 
     // TODO: We need to check for JWT here, don't we?

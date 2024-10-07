@@ -1,15 +1,39 @@
-const tasks = require('../controllers/tasks-controller');
-const mongodb = require('mongodb');
+const request = require('supertest');
+const app = require('../server.js');
+const Task = require('../models/task-model.js');
 
-test('should get back a confirmation message with task id when creating', () => {
-    expect(tasks.createTask({
-        description: "Test Description", 
-        priority: "High",
-        dueDate: Date.now(),
-        occurrence: "Daily",
-        userID: mongodb.ObjectId.createFromHexString(1)
-    }).toBe(
-        { message: "Success"}
-    ));
-});
+describe('POST /tasks/new', () => {
+    it('should return a 400 error when providing an empty body', async () => {
+        const response = await request(app).post('/tasks/new').send({});
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("message", "Improper params supplied");
+    });
+
+    it('should return a 400 error when provided an incorrect amount of params', async () => {
+       const task = new Task(
+            "Test Description",
+            "High",
+            Date.now(),
+            "Daily",
+        );
+
+        const response = await request(app).post('/tasks/new').send(task);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("message", "Improper params supplied");
+    });
+
+    it('should return a 200 code when provided the correct params', async () => {
+       const task = new Task(
+            "Test Description",
+            "High",
+            Date.now(),
+            "Daily",
+            1
+        );
         
+        const response = await request(app).post('/tasks/new').send(task);
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("message", "Success");
+        expect(response.body).toHaveProperty("id").toBeDefined();
+    });
+});
