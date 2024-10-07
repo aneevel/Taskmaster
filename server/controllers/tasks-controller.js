@@ -2,7 +2,15 @@ const Task = require('../models/task-model');
 const ValidationUtil = require('../utility/validation');
 
 const createTask = async (req, res, next) => {
-
+    
+    if (req.body.description == null ||
+        req.body.priority == null ||
+        req.body.dueDate == null ||
+        req.body.occurrence == null ||
+        req.body.userID == null 
+    ) {
+        return res.status(400).send("Improper params supplied!");
+    }
 }
 
 const getTasks = async (req, res, next) => {
