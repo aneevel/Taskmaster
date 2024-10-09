@@ -53,7 +53,7 @@ const getTasks = async (req, res, next) => {
    
     let tasks;
     try {
-        tasks = await tasks.findAll();
+        tasks = await Task.findAll();
     } catch (error) {
         return next(error);
     }

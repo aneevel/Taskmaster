@@ -25,9 +25,9 @@ class Task {
         console.log(`
             ${this.description}
             ${this.priority}
-            ${JSON.stringify(this.dueDate)}
+            ${this.dueDate}
             ${this.occurrence}
-            ${parseInt(this.userID)}
+            ${this.userID}
         `);
 
         return await db.getDatabase().collection('tasks').insertOne({
