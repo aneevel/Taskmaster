@@ -34,6 +34,14 @@ describe('POST /tasks/new', () => {
         const response = await request(app).post('/tasks/new').send(task);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("message", "Task created");
-        expect(response.body).toHaveProperty("id").toBeDefined();
+        expect(response.body).toHaveProperty("id");
     });
+});
+
+describe('POST /tasks', () => {
+   it('should return a collection of tasks', async () => {
+       const response = await request(app).get('/tasks');
+       expect(response.status).toBe(200);
+       expect(response.body.tasks).toBeDefined();
+   });
 });

@@ -32,7 +32,7 @@ const createTask = async (req, res, next) => {
     return res.status(200).send({ message: "Task created", id: taskID });
 }
 
-const getTasks = async (req, res, next) => {
+const getTask = async (req, res, next) => {
 
     if (req.params.id == null) {
         return res.status(400).send("Improper params supplied");
@@ -44,12 +44,25 @@ const getTasks = async (req, res, next) => {
     try {
         tasks = await tasks.findByUserId(req.body.userID);
     } catch (error) {
-        return res.status(400).send("Unable to find tasks with userID");
+        return next(error);
     }
 
 }
 
+const getTasks = async (req, res, next) => {
+   
+    let tasks;
+    try {
+        tasks = await tasks.findAll();
+    } catch (error) {
+        return next(error);
+    }
+
+    return res.status(200).send({ tasks: tasks });
+}
+
 module.exports = {
+    getTask: getTask,
     getTasks: getTasks,
     createTask: createTask
 };

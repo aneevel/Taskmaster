@@ -2,6 +2,7 @@ const db = require('../data/database');
 const mongodb = require('mongodb');
 
 class Task {
+
     constructor(description, priority, dueDate, occurrence, userID) {
         this.description = description;
         this.priority = priority;
@@ -17,12 +18,20 @@ class Task {
     }
 
     async create() {
-        await db.getDatabase().collection('tasks').insertOne({
+        console.log(`
+            ${this.description}
+            ${this.priority}
+            ${JSON.stringify(this.dueDate)}
+            ${this.occurrence}
+            ${parseInt(this.userID)}
+        `);
+
+        return await db.getDatabase().collection('tasks').insertOne({
             description: this.description,
             priority: this.priority,
-            dueDate: this.dueDate,
+            dueDate: JSON.stringify(this.dueDate),
             occurrence: this.occurrence,
-            userID: this.userID
+            userID: parseInt(this.userID)
         });
     }
 }
