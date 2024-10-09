@@ -11,6 +11,10 @@ class Task {
         this.userID = userID;
     }
 
+    static findAll() {
+        return db.getDatabase().collection('tasks').find();
+    }
+
     static findByUserId(userID) {
         const uuid = mongodb.ObjectId.createFromHexString(userID);
         return db.getDatabase().collection('tasks').findOne({userID: uuid});
