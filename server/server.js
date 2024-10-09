@@ -65,3 +65,5 @@ db.connectToDatabase().then(() => {
     console.log('Failed to connect to the database!');
     console.log(error);
 });
+
+module.exports = app

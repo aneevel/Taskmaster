@@ -13,6 +13,23 @@ const createTask = async (req, res, next) => {
     ) {
         return res.status(400).send({ message: "Improper params supplied"});
     }
+
+    const task = new Task(
+        req.body.description,
+        req.body.priority,
+        req.body.dueDate,
+        req.body.occurrence,
+        req.body.userID
+    );
+
+    let taskID;
+    try {
+        taskID = await task.create();
+    } catch (error) {
+        return next(error);
+    }
+
+    return res.status(200).send({ message: "Task created", id: taskID });
 }
 
 const getTasks = async (req, res, next) => {

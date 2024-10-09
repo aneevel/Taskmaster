@@ -33,7 +33,7 @@ describe('POST /tasks/new', () => {
         
         const response = await request(app).post('/tasks/new').send(task);
         expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty("message", "Success");
+        expect(response.body).toHaveProperty("message", "Task created");
         expect(response.body).toHaveProperty("id").toBeDefined();
     });
 });

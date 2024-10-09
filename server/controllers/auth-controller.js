@@ -9,7 +9,7 @@ const signup = async (req, res, next) => {
         || req.body.password == null 
         || req.body.lname == null 
         || req.body.fname == null) {
-        return res.status(400).send("Improper params supplied!");
+        return res.status(400).send("Improper params supplied");
     }
 
     const user = new User(
@@ -27,14 +27,14 @@ const signup = async (req, res, next) => {
             req.body.fname
         ) 
     ) {
-        return res.status(400).send("Unable to validate user details!");
+        return res.status(400).send("Unable to validate user details");
     }
 
     try {
         const existsAlready = await user.existsAlready();
 
         if (existsAlready) {
-            return res.status(400).send("User exists already!");
+            return res.status(400).send("User exists already");
         }
 
         await user.signup();
@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send({ message: "User created!"});
+    return res.status(200).send({ message: "User created"});
 }
 
 const login = async (req, res, next) => {

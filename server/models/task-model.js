@@ -15,6 +15,16 @@ class Task {
         return db.getDatabase().collection('tasks').findOne({userID: uuid});
         
     }
+
+    async create() {
+        await db.getDatabase().collection('tasks').insertOne({
+            description: this.description,
+            priority: this.priority,
+            dueDate: this.dueDate,
+            occurrence: this.occurrence,
+            userID: this.userID
+        });
+    }
 }
        
 module.exports = Task;
