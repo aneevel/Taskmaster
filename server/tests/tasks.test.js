@@ -42,6 +42,6 @@ describe('POST /tasks', () => {
    it('should return a collection of tasks', async () => {
        const response = await request(app).get('/tasks');
        expect(response.status).toBe(200);
-       expect(response.body.tasks).toBeDefined();
+       expect(response.body).toEqual(expect.any(Array));
    });
 });
