@@ -39,14 +39,16 @@ const getTask = async (req, res, next) => {
     }
 
     // TODO: We need to check for JWT here, don't we?
-    console.log(`looking for tasks for user ${req.body.userID}`);
     let tasks;
     try {
-        tasks = await tasks.findByUserId(req.body.userID);
+        tasks = await Task.findByUserId(req.params.id);
     } catch (error) {
         return next(error);
     }
 
+    console.log(tasks);
+
+    return res.status(200).send(tasks);
 }
 
 const getTasks = async (req, res, next) => {

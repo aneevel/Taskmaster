@@ -17,8 +17,7 @@ class Task {
 
     static findByUserId(userID) {
         const uuid = mongodb.ObjectId.createFromHexString(userID);
-        return db.getDatabase().collection('tasks').findOne({userID: uuid});
-        
+        return db.getDatabase().collection('tasks').findOne({'_id': uuid});
     }
 
     async create() {
