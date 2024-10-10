@@ -12,7 +12,7 @@ class Task {
     }
 
     static findAll() {
-        return db.getDatabase().collection('tasks').find();
+        return db.getDatabase().collection('tasks').find().toArray();
     }
 
     static findByUserId(userID) {

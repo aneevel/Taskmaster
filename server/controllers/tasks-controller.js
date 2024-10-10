@@ -58,7 +58,7 @@ const getTasks = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send({ tasks: tasks });
+    return res.status(200).send(tasks);
 }
 
 module.exports = {
