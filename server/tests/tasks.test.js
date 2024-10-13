@@ -1,11 +1,15 @@
+const supertest = require('supertest');
+const app = require('../server');
+
 describe('Tasks', () => {
     
     describe('GET All Tasks', () => {
         
-        describe('Given tasks do not exists', () => {
+        describe('Given tasks do not exist', () => {
             
-            it('Should return a 200 code', () => {
-
+            it('Should return a 200 code', async () => {
+                
+                await supertest(app).get(`/tasks/`).expect(200);
             });
 
             it('Should return an empty collection of tasks', () => {
@@ -218,7 +222,7 @@ describe('Tasks', () => {
 
                 describe('Given request has a non-existing userID', () => {
                     
-                    it('Should return a 400 code', () => {
+                    it('Should return a 404 code', () => {
                     
                     });
 
