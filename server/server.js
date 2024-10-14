@@ -20,6 +20,8 @@ const sessionConfig = createSessionConfig();
 
 const RSA_PUBLIC_KEY = fs.readFileSync('./public.pem');
 
+const error = require('./middleware/error');
+
 app.use(expressSession(sessionConfig));
 
 app.use(passport.initialize());
@@ -65,5 +67,7 @@ db.connectToDatabase().then(() => {
     console.log('Failed to connect to the database!');
     console.log(error);
 });
+
+app.use(error.error);
 
 module.exports = app

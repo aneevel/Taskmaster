@@ -20,7 +20,7 @@ class Task {
         try {
             uuid = mongodb.ObjectId.createFromHexString(userID);
         } catch (error) {
-            return null;
+            throw error;
         }
         return db.getDatabase().collection('tasks').findOne({'_id': uuid});
     }
