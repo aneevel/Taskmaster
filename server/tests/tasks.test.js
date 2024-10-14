@@ -5,26 +5,15 @@ describe('Tasks', () => {
     
     describe('GET All Tasks', () => {
         
-        describe('Given tasks do not exist', () => {
-            
-            it('Should return a 200 code', async () => {
-                
-                await supertest(app).get(`/tasks/`).expect(200);
-            });
-
-            it('Should return an empty collection of tasks', () => {
-
-            });
-        });
-
         describe('Given tasks do exist', () => {
 
-            it('Should a return a 200 code', () => {
-
-            });
-
-            it('Should return a collection of valid tasks', () => {
-
+            it('Should a return a 200 code and a collection of valid tasks', async () => {
+                await supertest(app)
+                    .get('/tasks/')
+                    .expect(200)
+                    .then((response) => {
+                        expect(Array.isArray(response.body)).toBeTruthy();
+                    });
             });
         });
     });
@@ -33,12 +22,13 @@ describe('Tasks', () => {
 
         describe('Given task with ID does not exist', () => {
 
-            it('Should return a 400 code', () => {
-
-            });
-
-            it('Should return an error message stating task does not exist', () => {
-
+            it('Should return a 400 code and an error message stating task does not exist', async () => {
+                await supertest(app)
+                    .get('/tasks/0')
+                    .expect(400)
+                    .then((response) => {
+                        expect(response.body[0].message).toBe("Task with ID does not exist")
+                    });
             });
         });
 
