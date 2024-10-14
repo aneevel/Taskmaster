@@ -20,14 +20,15 @@ describe('Tasks', () => {
 
     describe('GET Task with ID', () => {
 
-        describe('Given task with ID does not exist', () => {
+        describe('Given task with ID is invalid', () => {
 
-            it('Should return a 400 code and an error message stating task does not exist', async () => {
+            it('Should return a 500 code and an error message stating hex string must be 24 characters', async () => {
                 await supertest(app)
                     .get('/tasks/0')
-                    .expect(400)
+                    .expect(500)
                     .then((response) => {
-                        expect(response.body[0].message).toBe("Task with ID does not exist")
+                        expect(response.body.message).toBe("hex string must be 24 characters")
+                        expect(response.body.success).toBeFalsy();
                     });
             });
         });
