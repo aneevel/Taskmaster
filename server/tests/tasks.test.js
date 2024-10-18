@@ -37,8 +37,16 @@ describe('Tasks', () => {
 
             describe('Given request does not have a valid JWT Token', () => {
 
-                it('Should return a 401 code', () => {
+                // TODO: Probably should insert a task, not rely on a previously supplied one
 
+                it('Should return a 401 code', async () => {
+                    await supertest(app)
+                        .get('/tasks/67097d642f7acbe7864f9ff5')
+                        .expect(401)
+                        .then((response) => {
+                            expect(response.body.message).toBe("must provide valid JWT Token");
+                            expect(response.body.success).toBeFalsy();
+                        });
                 });
 
                 it('Should return an error message stating request does not have authentication', () => {

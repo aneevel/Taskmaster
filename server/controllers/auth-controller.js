@@ -2,6 +2,8 @@ const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
 
 const signup = async (req, res, next) => {
 
@@ -42,7 +44,7 @@ const signup = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send({ message: "User created"});
+    res.status(200).send({ message: "User created"});
 }
 
 const login = async (req, res, next) => {
@@ -52,7 +54,7 @@ const login = async (req, res, next) => {
     try {
         existingUser = await user.getUserWithSameEmail();
     } catch (error) {
-        return res.status(400).send("Unable to find user with same email!");
+        return next(error);
     }
 
     const sessionErrorData = {
@@ -73,17 +75,24 @@ const login = async (req, res, next) => {
         return res.status(400).send({ code: "EIP", errordata: sessionErrorData });
     }
 
-    const RSA_PRIVATE_KEY = fs.readFileSync('./private.pem');
 
-    const jwtBearerToken = jwt.sign({ username: user.email, role: 'user'}, RSA_PRIVATE_KEY, {
-        algorithm: 'RS256',
-        expiresIn: 120,
-        subject: String(existingUser.id),
-    });
+    const accessToken = jwt.sign(
+            { username: user.email, role: 'user'}, 
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '30s' }       
+    );
 
-    return res.status(200).json({
-        idToken: jwtBearerToken,
-        expiresIn: 120
+    const refreshToken = jwt.sign(
+            { username: user.email, role: 'user'}, 
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '1d' }       
+    );
+
+    // await WRITE TO DB SESSIONS
+
+    res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.status(200).json({
+        idToken: accessToken,
     });
 }
 
