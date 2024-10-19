@@ -16,6 +16,7 @@ const db = require('./data/database');
 const userRoutes = require('./routes/users-routes');
 const authRoutes = require('./routes/auth-routes');
 const tasksRoutes = require('./routes/tasks-routes');
+const refreshRoutes = require('./routes/refresh-routes');
 
 const sessionConfig = createSessionConfig();
 
@@ -61,6 +62,7 @@ app.get('/api', function (req, res) { return res.send('Hello from Express!'); })
 app.use(userRoutes);
 app.use(authRoutes);
 app.use(tasksRoutes);
+app.use('/refresh', refreshRoutes);
 
 db.connectToDatabase().then(() => {
     app.listen(process.env.API_PORT, "localhost");

@@ -49,8 +49,6 @@ const signup = async (req, res, next) => {
 
 const login = async (req, res, next) => {
 
-    console.log("hi");
-
     const user = new User(req.body.email, req.body.password);
     let existingUser;
 
@@ -100,7 +98,25 @@ const login = async (req, res, next) => {
 }
 
 const logout = async (req, res, next) => {
-    res.redirect("/login");
+
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204);
+
+    const refreshToken = cookies.jwt;
+
+    try {
+        const user = User.findByCookie(refreshToken);
+        if (!user) {
+            res.clearCookie('jwt', { httpOnly: true });
+            return res.sendStatus(204);
+        }
+    } catch (error) {
+        return next(error);
+    }
+
+    // Remove token
+    // await user.removeJwtToken
+    res.sendStatus(204);
 }
 
 module.exports = {
