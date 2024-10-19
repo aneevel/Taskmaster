@@ -22,6 +22,10 @@ class User {
         return db.getDatabase().collection('users').findOne({_id: uuid}, { projection: { password: 0 } });
     }
 
+    static findByCookie(cookieID) {
+
+    }
+
     getUserWithSameEmail() {
         return db.getDatabase().collection('users').findOne({ email: this.email });
     }
