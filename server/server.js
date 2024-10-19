@@ -7,6 +7,7 @@ const fs = require('fs');
 const expressSession = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const { expressjwt: jwt } = require('express-jwt');
 
 const createSessionConfig = require('./config/session');
@@ -18,14 +19,14 @@ const tasksRoutes = require('./routes/tasks-routes');
 
 const sessionConfig = createSessionConfig();
 
-const RSA_PUBLIC_KEY = fs.readFileSync('./public.pem');
-
 const error = require('./middleware/error');
 
 app.use(expressSession(sessionConfig));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cookieParser());
 
 app.use(bodyParser.json());
 
