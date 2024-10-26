@@ -29,16 +29,15 @@ const createTask = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send({ message: "Task created", id: taskID });
+    return res.send(200).send({ message: "Task created", id: taskID });
 }
 
 const getTask = async (req, res, next) => {
 
     if (req.params.id == null) {
-        return res.status(400).send("Improper params supplied");
+        return res.send(400).send("Improper params supplied");
     }
 
-    // TODO: We need to check for JWT here, don't we?
     let task;
     try {
         task = await Task.findByUserId(req.params.id);
@@ -46,8 +45,7 @@ const getTask = async (req, res, next) => {
         return next(error);
     }
 
-
-    return res.status(200).send(task);
+    return res.sendStatus(200).send(task);
 }
 
 const getTasks = async (req, res, next) => {
@@ -59,7 +57,7 @@ const getTasks = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(200).send(tasks);
+    return res.json(tasks);
 }
 
 module.exports = {

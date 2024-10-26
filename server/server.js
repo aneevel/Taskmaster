@@ -63,6 +63,7 @@ app.use(userRoutes);
 app.use(authRoutes);
 app.use(tasksRoutes);
 app.use('/refresh', refreshRoutes);
+app.use(error.error);
 
 db.connectToDatabase().then(() => {
     app.listen(process.env.API_PORT, "localhost");
@@ -71,6 +72,5 @@ db.connectToDatabase().then(() => {
     console.log(error);
 });
 
-app.use(error.error);
 
 module.exports = app

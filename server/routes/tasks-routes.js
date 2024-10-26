@@ -1,14 +1,14 @@
 const express = require('express');
 
 const tasksController = require('../controllers/tasks-controller');
-const validateJWT = require('../middleware/validate-jwt');
+const verifyJWT = require('../middleware/validate-jwt');
 
 const router = express.Router();
 
-router.post('/tasks/new', validateJWT, tasksController.createTask);
+router.post('/tasks/new', verifyJWT,  tasksController.createTask)
 
-router.get('/tasks/:id', validateJWT, tasksController.getTask);
+router.get('/tasks/:id', verifyJWT, tasksController.getTask);
 
-router.get('/tasks', validateJWT, tasksController.getTasks);
+router.get('/tasks', verifyJWT, tasksController.getTasks);
 
 module.exports = router;

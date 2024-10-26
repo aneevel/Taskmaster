@@ -8,7 +8,14 @@ import { LoginButtonComponent } from '../shared/buttons/login-button.component';
 import { SignupButtonComponent } from '../shared/buttons/signup-button.component';
 import { ButtonModule } from "primeng/button";
 let HeaderComponent = class HeaderComponent {
-    constructor() {
+    constructor(userService) {
+        this.userService = userService;
+    }
+    logout() {
+        this.userService.logout();
+    }
+    isLoggedIn() {
+        return this.userService.isLoggedIn();
     }
 };
 HeaderComponent = __decorate([

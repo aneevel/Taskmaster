@@ -8,7 +8,7 @@ export const environment = {
         },
     },
     api: {
-        serverUrl: 'undefined',
+        serverUrl: 'http://localhost:8000',
     },
 };
 //# sourceMappingURL=environment.js.map

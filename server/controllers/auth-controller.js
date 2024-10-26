@@ -86,15 +86,14 @@ const login = async (req, res, next) => {
     const refreshToken = jwt.sign(
             { username: user.email, role: 'user'}, 
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }       
+            { expiresIn: '12h' }       
     );
+
 
     // await WRITE TO DB SESSIONS
 
     res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-    res.status(200).json({
-        idToken: accessToken,
-    });
+    res.status(200).json({ accessToken });
 }
 
 const logout = async (req, res, next) => {
