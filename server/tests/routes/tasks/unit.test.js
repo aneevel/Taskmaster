@@ -238,7 +238,8 @@ describe('Tasks', () => {
                         })
                         .expect(201)
                         .then((response)=> {
-                            expect(response.id).toBeTruthy();  
+                            console.log(response);
+                            expect(response.body["id"]).toBeTruthy();  
                         });
                 });
             });

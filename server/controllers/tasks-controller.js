@@ -1,5 +1,4 @@
 const Task = require('../models/task-model');
-const ValidationUtil = require('../utility/validation');
 
 const createTask = async (req, res, next) => {
     
@@ -11,7 +10,7 @@ const createTask = async (req, res, next) => {
         req.body.occurrence == null ||
         req.body.userID == null 
     ) {
-        return res.status(400).send({ message: "Improper params supplied"});
+        return res.json({ message: "Improper params supplied"}).sendStatus(400);
     }
 
     const task = new Task(
@@ -29,13 +28,13 @@ const createTask = async (req, res, next) => {
         return next(error);
     }
 
-    return res.send(201).send({ message: "Task created", id: taskID });
+    return res.status(201).json({ message: "Task created", id: taskID });
 }
 
 const getTask = async (req, res, next) => {
 
     if (req.params.id == null) {
-        return res.send(400).send("Improper params supplied");
+        return res.send(400).json({message: "Improper params supplied"});
     }
 
     let task;
