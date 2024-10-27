@@ -26,13 +26,6 @@ class Task {
     }
 
     async create() {
-        console.log(`
-            ${this.description}
-            ${this.priority}
-            ${this.dueDate}
-            ${this.occurrence}
-            ${this.userID}
-        `);
 
         return await db.getDatabase().collection('tasks').insertOne({
             description: this.description,

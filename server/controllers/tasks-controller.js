@@ -29,7 +29,7 @@ const createTask = async (req, res, next) => {
         return next(error);
     }
 
-    return res.send(200).send({ message: "Task created", id: taskID });
+    return res.send(201).send({ message: "Task created", id: taskID });
 }
 
 const getTask = async (req, res, next) => {

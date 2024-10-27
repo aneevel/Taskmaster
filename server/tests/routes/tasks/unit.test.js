@@ -74,24 +74,10 @@ describe('Tasks', () => {
         });
     });
 
-    /**
+    
     describe('POST Create New Task', () => {
         
-        describe('Given request does not have a valid JWT Token', () => {
-            
-            it('Should return a 401 code', () => {
-
-            });
-
-            it('Should return an error message stating request does not have authentication', () => {
-
-            });
-
-        });
-
-        describe('Given request does have a valid JWT Token', () => {
-
-            describe('Given request does not provide a body of params', () => {
+            /**describe('Given request does not provide a body of params', () => {
 
                 it('Should return a 400 code', () => {
 
@@ -236,19 +222,25 @@ describe('Tasks', () => {
 
                     });
                 });
-            });
+            });*/
 
             describe('Given request is a valid Task', () => {
                 
-                it('Should return a 200 code', () => {
-
-                });
-
-                it('Should return a valid Task object', () => {
-
+                it('Should return a 201 code and a valid Task object', async () => {
+                    await supertest(app)
+                        .post('/tasks/new')
+                        .send({
+                            "description": "Test",
+                            "priority": "High",
+                            "dueDate": 11012024,
+                            "occurrence": "Daily",
+                            "userID": 1 
+                        })
+                        .expect(201)
+                        .then((response)=> {
+                            expect(response.id).toBeTruthy();  
+                        });
                 });
             });
         });
-    });
-    });*/
 });
