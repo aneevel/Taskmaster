@@ -1,9 +1,35 @@
 const supertest = require('supertest');
 const app = require('../../../server');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const mongoose = require('mongoose');
+
+const mockTask = require('./mock');
 
 jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
         return next(null);
 }));
+
+let mongodb;
+
+beforeAll(async () => {
+    mongodb = await MongoMemoryServer.create();
+    const uri = mongodb.getUri();
+    await mongoose.connect(uri);
+});
+
+afterAll(async () => {
+    await mongoose.connection.dropDatabase();
+    await mongoose.connection.close();
+    await mongodb.stop();
+});
+
+afterEach(async () => {
+    const collections = mongoose.connection.collections;
+    for (const key in collections) {
+        const collection = collections[key];
+        await collection.deleteMany();
+    }
+});
 
 describe('Tasks', () => {
     
@@ -35,27 +61,7 @@ describe('Tasks', () => {
             });
         });
 
-        /**describe('Given task with ID does exist', () => {
-
-            describe('Given request does not have a valid JWT Token', () => {
-
-                // TODO: Probably should insert a task, not rely on a previously supplied one
-
-                it('Should return a 401 code', async () => {
-                    await supertest(app)
-                        .get('/tasks/67097d642f7acbe7864f9ff5')
-                        .expect(401)
-                        .then((response) => {
-                            expect(response.body.message).toBe("must provide valid JWT Token");
-                        });
-                });
-
-                it('Should return an error message stating request does not have authentication', () => {
-
-                });
-            });
-
-            describe('Given request does have a valid JWT Token', () => {
+        describe('Given task with ID does exist', () => {
 
                 it('Should return a 200 code', () => {
                     
@@ -65,8 +71,7 @@ describe('Tasks', () => {
 
                 });
 
-            });
-        });*/
+        });
     });
 
     /**
