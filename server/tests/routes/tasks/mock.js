@@ -1,7 +1,9 @@
 const Task = require('../../../models/task-model')
 
-/**jest.mock(Task, () => {
-    createTask: jest.fn(() => {
-        return 1;
-    });
-});*/
+jest.mock('../../../models/task-model');
+
+Task.create = jest.fn();
+
+module.exports = {
+    create: Task.create
+};

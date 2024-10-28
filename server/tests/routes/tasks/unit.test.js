@@ -3,13 +3,13 @@ const app = require('../../../server');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
-const mockTask = require('./mock');
-
-jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
-        return next(null);
-}));
+const Task = require('../../../models/task-model');
 
 let mongodb;
+
+jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
+    return next(null);
+}));
 
 beforeAll(async () => {
     mongodb = await MongoMemoryServer.create();
@@ -227,6 +227,7 @@ describe('Tasks', () => {
             describe('Given request is a valid Task', () => {
                 
                 it('Should return a 201 code and a valid Task object', async () => {
+
                     await supertest(app)
                         .post('/tasks/new')
                         .send({
@@ -238,8 +239,8 @@ describe('Tasks', () => {
                         })
                         .expect(201)
                         .then((response)=> {
-                            console.log(response);
                             expect(response.body["id"]).toBeTruthy();  
+                            expect(response.body["message"]).toEqual("Task created");
                         });
                 });
             });
