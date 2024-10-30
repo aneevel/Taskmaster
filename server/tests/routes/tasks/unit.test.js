@@ -90,6 +90,7 @@ describe('Tasks', () => {
                     describe('Given request has empty description', () => {
                         
                         it('Should return a 400 code and an error message stating tasks must have a non-empty description', async () => {
+                            
                             await supertest(app)
                                 .post('/tasks/new')
                             .send({
@@ -109,12 +110,21 @@ describe('Tasks', () => {
 
                     describe('Given request has a description exceeding maximum length', () => {
 
-                        it('Should return a 400 code', () => {
+                        it('Should return a 400 code and an error message stating description should not exceed 100 characters', async () => {
 
-                        });
-
-                        // TODO: What is the maximum length?
-                        it('Should return an error message stating task description has exceed maximum length of ???', () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                                    "priority": "High",
+                                    "dueDate": 11012024,
+                                    "occurrence": "Daily",
+                                    "userID": 1 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Task descriptions must not exceed 100 characters");
+                                });
 
                         });
                     });

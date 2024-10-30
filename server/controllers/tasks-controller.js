@@ -1,4 +1,7 @@
+const { MAX } = require('uuid');
 const Task = require('../models/task-model');
+
+const MAX_DESCRIPTION_LENGTH = 100;
 
 const createTask = async (req, res, next) => {
     
@@ -15,6 +18,10 @@ const createTask = async (req, res, next) => {
 
     if (req.body.description.trim() === "") {
         return res.status(400).json({ message: "Tasks must have a non-empty description" });
+    }
+
+    if (req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+        return res.status(400).json({ message: "Task descriptions must not exceed 100 characters" });
     }
 
     const task = new Task(
