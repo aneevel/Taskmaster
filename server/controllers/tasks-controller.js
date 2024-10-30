@@ -13,6 +13,10 @@ const createTask = async (req, res, next) => {
         return res.status(400).json({ message: "Improper params supplied"});
     }
 
+    if (req.body.description.trim() === "") {
+        return res.status(400).json({ message: "Tasks must have a non-empty description" });
+    }
+
     const task = new Task(
         req.body.description,
         req.body.priority,

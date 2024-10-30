@@ -82,18 +82,27 @@ describe('Tasks', () => {
 
                 });
             });
-            /**
+
             describe('Given request does not provide valid params', () => {
                 
                 describe('Given request has malformed description', () => {
                    
                     describe('Given request has empty description', () => {
                         
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating tasks must have a non-empty description', () => {
+                        it('Should return a 400 code and an error message stating tasks must have a non-empty description', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                            .send({
+                                "description": "",
+                                "priority": "High",
+                                "dueDate": 11012024,
+                                "occurrence": "Daily",
+                                "userID": 1 
+                             })
+                            .expect(400)
+                            .then((response) => {
+                                expect(response.body["message"]).toEqual("Tasks must have a non-empty description");
+                            });
 
                         });
                     });
@@ -206,7 +215,7 @@ describe('Tasks', () => {
 
                     });
                 });
-            });*/
+            });
 
             describe('Given request is a valid Task', () => {
                 
@@ -229,4 +238,5 @@ describe('Tasks', () => {
                 });
             });
         });
+    });
 });
