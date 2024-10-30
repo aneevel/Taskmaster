@@ -10,7 +10,7 @@ const createTask = async (req, res, next) => {
         req.body.occurrence == null ||
         req.body.userID == null 
     ) {
-        return res.json({ message: "Improper params supplied"}).sendStatus(400);
+        return res.status(400).json({ message: "Improper params supplied"});
     }
 
     const task = new Task(

@@ -1,35 +1,11 @@
 const supertest = require('supertest');
 const app = require('../../../server');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongoose = require('mongoose');
 
 const Task = require('../../../models/task-model');
-
-let mongodb;
 
 jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
     return next(null);
 }));
-
-beforeAll(async () => {
-    mongodb = await MongoMemoryServer.create();
-    const uri = mongodb.getUri();
-    await mongoose.connect(uri);
-});
-
-afterAll(async () => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-    await mongodb.stop();
-});
-
-afterEach(async () => {
-    const collections = mongoose.connection.collections;
-    for (const key in collections) {
-        const collection = collections[key];
-        await collection.deleteMany();
-    }
-});
 
 describe('Tasks', () => {
     
@@ -61,7 +37,7 @@ describe('Tasks', () => {
             });
         });
 
-        describe('Given task with ID does exist', () => {
+        /**describe('Given task with ID does exist', () => {
 
                 it('Should return a 200 code', () => {
                     
@@ -71,34 +47,42 @@ describe('Tasks', () => {
 
                 });
 
-        });
+        });*/
     });
 
     
     describe('POST Create New Task', () => {
         
-            /**describe('Given request does not provide a body of params', () => {
+            describe('Given request does not provide a body of params', () => {
 
-                it('Should return a 400 code', () => {
-
-                });
-
-                it('Should return an error message stating request did not provide params', () => {
-
+                it('Should return a 400 code and an error message stating request provided improper params', async () => {
+                    await supertest(app)
+                        .post('/tasks/new')
+                        .send({})
+                        .expect(400)
+                        .then((response)=> {
+                            expect(response.body["message"]).toEqual("Improper params supplied");
+                        });
                 });
             });
-
+            
             describe('Given request does not provide the proper number of params', () => {
                 
-                it('Should return a 400 code', () => {
-
-                });
-
-                it('Should return an error message stating request did not provide the specified number of params', () => {
+                it('Should return a 400 code and an error message stating requested provided improper params', async () => {
+                    await supertest(app)
+                        .post('/tasks/new')
+                        .send({
+                            "foo": "bar",
+                            "bar": "foo"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body["message"]).toEqual("Improper params supplied");
+                        });
 
                 });
             });
-
+            /**
             describe('Given request does not provide valid params', () => {
                 
                 describe('Given request has malformed description', () => {
