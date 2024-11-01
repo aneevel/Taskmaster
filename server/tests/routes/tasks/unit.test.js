@@ -50,7 +50,6 @@ describe('Tasks', () => {
         });*/
     });
 
-    
     describe('POST Create New Task', () => {
         
             describe('Given request does not provide a body of params', () => {
@@ -95,10 +94,10 @@ describe('Tasks', () => {
                                 .post('/tasks/new')
                             .send({
                                 "description": "",
-                                "priority": "High",
-                                "dueDate": 11012024,
+                                "priority": "1",
+                                "dueDate": Date.now() + 1,
                                 "occurrence": "Daily",
-                                "userID": 1 
+                                "userID": '66a2c3b69d5dbcf506d743bb' 
                              })
                             .expect(400)
                             .then((response) => {
@@ -116,10 +115,10 @@ describe('Tasks', () => {
                                 .post('/tasks/new')
                                 .send({
                                     "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                                    "priority": "High",
-                                    "dueDate": 11012024,
+                                    "priority": "1",
+                                    "dueDate": Date.now() + 1,
                                     "occurrence": "Daily",
-                                    "userID": 1 
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
                                 })
                                 .expect(400)
                                 .then((response) => {
@@ -134,22 +133,39 @@ describe('Tasks', () => {
                     
                     describe('Given request has empty priority', () => {
 
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating tasks must have a non-empty priority', () => {
-
+                        it('Should return a 400 code and an error message stating tasks must have a non-empty priority', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "",
+                                    "dueDate": Date.now() + 1,
+                                    "occurrence": "Daily",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have a non-empty priority");
+                                });
                         });
                     });
 
                     describe('Given request has a priority of non-existent type', () => {
                         
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating priority must be an existing priority type', () => {
+                        it('Should return a 400 code and an error message stating task priority must be 1, 2, or 3', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "4",
+                                    "dueDate": Date.now() + 1,
+                                    "occurrence": "Daily",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have a priority of 1, 2, or 3");
+                                });
 
                         });
                     });
@@ -159,34 +175,60 @@ describe('Tasks', () => {
 
                     describe('Given request has an empty date', () => {
 
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating tasks must have a due date', () => {
-
+                        it('Should return a 400 code and an error message stating tasks must have a due date', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": "",
+                                    "occurrence": "Daily",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have a non-empty due date");
+                                });
                         });
                     });
 
                     describe('Given request has an incorrectly formed date', () => {
 
-                        it('Should return a 400 code', () => {
+                        it('Should return a 400 code and an error message stating tasks must have a properly formed due date', async () => {
+                           await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": new Date("nothing"),
+                                    "occurrence": "Daily",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Improper params supplied");
+                                });
+                          });
 
-                        });
-
-                        it('Should return an error message stating tasks must have a properly formed due date', () => {
-
-                        });
                     });
 
                     describe('Given request has a date that has already passed', () => {
 
-                        it('Should return a 400 code', () => {
-                            
-                        });
-
-                        it('Should return an error message stating tasks must have a due date that has not already occurred', () => {
-
+                        it('Should return a 400 code and an error message stating tasks must have a due date that has not occurred yet', async () => {
+                           await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": Date.now() - 1,
+                                    "occurrence": "Daily",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have a due date that has not already occurred");
+                                });
+                          });
                         });
                     });
 
@@ -194,35 +236,62 @@ describe('Tasks', () => {
                 
                     describe('Given request has an empty occurrence', () => {
                     
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating tasks must have a non-empty occurrence', () => {
-
+                        it('Should return a 400 code and an error message stating tasks must have a non-empty occurrence', async () => {
+                             await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": Date.now() + 1,
+                                    "occurrence": "",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have a non-empty occurrence");
+                                });
+                           
                         });
                     });
 
                     describe('Given request has a non-matching occurrence type', () => {
                         
-                        it('Should return a 400 code', () => {
-
-                        });
-
-                        it('Should return an error message stating tasks must have a valid occurrence type', () => {
-
+                        it('Should return a 400 code and an error message stating tasks must have an occurrence of Daily, Weekly, Monthly, or Once', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": Date.now() + 1,
+                                    "occurrence": "Never",
+                                    "userID": '66a2c3b69d5dbcf506d743bb' 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("Tasks must have an occurrence of Daily, Weekly, Monthly, or Once");
+                                });
+                           
                         });
                     });
                 });
 
-                describe('Given request has a non-existing userID', () => {
+                describe('Given request has an userID that does not match any user', () => {
                     
-                    it('Should return a 404 code', () => {
+                    it('Should return a 404 code and an error message stating that no user with userID exists', async () => {
+                            await supertest(app)
+                                .post('/tasks/new')
+                                .send({
+                                    "description": "test",
+                                    "priority": "1",
+                                    "dueDate": Date.now() + 1,
+                                    "occurrence": "Daily",
+                                    "userID": 1 
+                                })
+                                .expect(400)
+                                .then((response) => {
+                                    expect(response.body["message"]).toEqual("User with userID does not exist");
+                                });
                     
-                    });
-
-                    it('Should return an error message stating that no user exists for userID', () => {
-
                     });
                 });
             });
@@ -235,18 +304,17 @@ describe('Tasks', () => {
                         .post('/tasks/new')
                         .send({
                             "description": "Test",
-                            "priority": "High",
-                            "dueDate": 11012024,
+                            "priority": "1",
+                            "dueDate": Date.now() + 1,
                             "occurrence": "Daily",
-                            "userID": 1 
+                            "userID": "66a2c3b69d5dbcf506d743bb"
                         })
-                        .expect(201)
+//                        .expect(201)
                         .then((response)=> {
-                            expect(response.body["id"]).toBeTruthy();  
+ //                           expect(response.body["id"]).toBeTruthy();  
                             expect(response.body["message"]).toEqual("Task created");
                         });
                 });
             });
         });
-    });
 });

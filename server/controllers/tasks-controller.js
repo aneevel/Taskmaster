@@ -1,5 +1,6 @@
 const { MAX } = require('uuid');
 const Task = require('../models/task-model');
+const User = require('../models/user-model');
 
 const MAX_DESCRIPTION_LENGTH = 100;
 
@@ -22,6 +23,36 @@ const createTask = async (req, res, next) => {
 
     if (req.body.description.length > MAX_DESCRIPTION_LENGTH) {
         return res.status(400).json({ message: "Task descriptions must not exceed 100 characters" });
+    }
+
+    if (req.body.priority.trim() === "") {
+        return res.status(400).json({ message: "Tasks must have a non-empty priority" });
+    }
+
+    if (parseInt(req.body.priority) !== 3 && parseInt(req.body.priority) !== 2 && parseInt(req.body.priority) !== 1) {
+        return res.status(400).json({ message: "Tasks must have a priority of 1, 2, or 3" });
+    }
+
+    if (req.body.dueDate === "") {
+        return res.status(400).json({ message: "Tasks must have a non-empty due date" });
+    }
+
+    if (req.body.dueDate < Date.now()) {
+        return res.status(400).json({ message: "Tasks must have a due date that has not already occurred" });
+    }
+
+    if (req.body.occurrence.trim() === "") {
+        return res.status(400).json({ message: "Tasks must have a non-empty occurrence" });
+    }
+
+    if (!(new Array("Daily", "Weekly", "Monthly", "Once").includes(req.body.occurrence))) {
+        return res.status(400).json({ message: "Tasks must have an occurrence of Daily, Weekly, Monthly, or Once" });
+    }
+
+    try {
+        User.findById(req.body.userID)
+    } catch (error) {
+        return res.status(400).json({ message: "User with userID does not exist" });
     }
 
     const task = new Task(
