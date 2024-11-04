@@ -76,17 +76,17 @@ const createTask = async (req, res, next) => {
 const getTask = async (req, res, next) => {
 
     if (req.params.id == null) {
-        return res.send(400).json({message: "Improper params supplied"});
+        return res.status(400).json({message: "Improper params supplied"});
     }
 
-    let task;
+    let tasks;
     try {
-        task = await Task.findByUserId(req.params.id);
+        tasks = await Task.findByUserId(req.params.id);
     } catch (error) {
         return next(error);
     }
 
-    return res.sendStatus(200).send(task);
+    return res.status(200).send(tasks);
 }
 
 const getTasks = async (req, res, next) => {

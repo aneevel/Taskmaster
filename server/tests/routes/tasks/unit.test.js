@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const app = require('../../../server');
+const mongodb = require('mongodb')
 
 const Task = require('../../../models/task-model');
 
@@ -25,7 +26,7 @@ describe('Tasks', () => {
 
     describe('GET Task with ID', () => {
 
-        describe('Given task with ID is invalid', () => {
+        describe('Given task with user ID is invalid', () => {
 
             it('Should return a 500 code and an error message stating hex string must be 24 characters', async () => {
                 await supertest(app)
@@ -37,17 +38,17 @@ describe('Tasks', () => {
             });
         });
 
-        /**describe('Given task with ID does exist', () => {
+        describe('Given task with user ID does exist', () => {
 
-                it('Should return a 200 code', () => {
-                    
+                it('Should return a 200 code and a valid set of tasks', async () => {
+                    await supertest(app)
+                        .get('/tasks/1')
+                        .expect(200)
+                        .then((response) => {
+                            expect(Array.isArray(response.body)).toBeTruthy()
+                        });
                 });
-
-                it('Should return a valid task matching ID', () => {
-
-                });
-
-        });*/
+        });
     });
 
     describe('POST Create New Task', () => {

@@ -16,13 +16,7 @@ class Task {
     }
 
     static findByUserId(userID) {
-        let uuid;
-        try {
-            uuid = mongodb.ObjectId.createFromHexString(userID);
-        } catch (error) {
-            throw error;
-        }
-        return db.getDatabase().collection('tasks').findOne({'_id': uuid});
+        return db.getDatabase().collection('tasks').find({ userID: userID}).toArray();
     }
 
     async create() {
