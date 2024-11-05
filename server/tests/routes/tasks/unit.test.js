@@ -38,11 +38,23 @@ describe('Tasks', () => {
             });
         });
 
+        describe('Given task with a non-existent user ID', () => {
+
+            it('Should return a 400 code and an error message stating no user with ID was found', async () => {
+                await supertest(app)
+                    .get('/tasks/000000000000000000000000')
+                    .expect(400)
+                    .then((response) => {
+                        expect(response.body.message).toBe("No tasks associated with user ID");
+                    });
+            });
+        });
+
         describe('Given task with user ID does exist', () => {
 
                 it('Should return a 200 code and a valid set of tasks', async () => {
                     await supertest(app)
-                        .get('/tasks/1')
+                        .get('/tasks/66a2c3b69d5dbcf506d743bb')
                         .expect(200)
                         .then((response) => {
                             expect(Array.isArray(response.body)).toBeTruthy()

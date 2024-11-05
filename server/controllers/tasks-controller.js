@@ -86,6 +86,12 @@ const getTask = async (req, res, next) => {
         return next(error);
     }
 
+    // Empty array means there is no user associated with any tasks, business
+    // logic is that this fails
+    if (!Array.isArray(tasks) || !tasks.length) {
+        return res.status(400).json({ message: "No tasks associated with user ID" });
+    }
+
     return res.status(200).send(tasks);
 }
 
