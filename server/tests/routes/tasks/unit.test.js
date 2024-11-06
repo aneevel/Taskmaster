@@ -40,10 +40,10 @@ describe('Tasks', () => {
 
         describe('Given task with a non-existent user ID', () => {
 
-            it('Should return a 400 code and an error message stating no user with ID was found', async () => {
+            it('Should return a 404 code and an error message stating no user with ID was found', async () => {
                 await supertest(app)
                     .get('/tasks/000000000000000000000000')
-                    .expect(400)
+                    .expect(404)
                     .then((response) => {
                         expect(response.body.message).toBe("No tasks associated with user ID");
                     });
@@ -299,7 +299,7 @@ describe('POST Create New Task', () => {
                                     "occurrence": "Daily",
                                     "userID": 1 
                                 })
-                                .expect(400)
+                                .expect(404)
                                 .then((response) => {
                                     expect(response.body["message"]).toEqual("User with userID does not exist");
                                 });
@@ -334,7 +334,7 @@ describe('POST Create New Task', () => {
 
         describe('Given sent data is invalid in some manner', () => {
            
-            describe('Given invalid task ID was given', () => {
+            describe('Given non existent task ID was given', () => {
                 
                 it('Should return a 404 code and an error message stating no task with ID was found', async () => {
                     await supertest(app)

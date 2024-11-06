@@ -52,7 +52,7 @@ const createTask = async (req, res, next) => {
     try {
         User.findById(req.body.userID)
     } catch (error) {
-        return res.status(400).json({ message: "User with userID does not exist" });
+        return res.status(404).json({ message: "User with userID does not exist" });
     }
 
     const task = new Task(
@@ -89,7 +89,7 @@ const getTask = async (req, res, next) => {
     // Empty array means there is no user associated with any tasks, business
     // logic is that this fails
     if (!Array.isArray(tasks) || !tasks.length) {
-        return res.status(400).json({ message: "No tasks associated with user ID" });
+        return res.status(404).json({ message: "No tasks associated with user ID" });
     }
 
     return res.status(200).send(tasks);
@@ -117,6 +117,10 @@ const patchTask = async (req, res, next) => {
     try {
         task = Task.findByTaskId(req.params.id);
     } catch (error) {
+        return next(error);
+    }
+
+    if (!Array.isArray(task) || !task.length) {
         return res.status(404).json({ message: "No task with ID was found" });
     }
 }
