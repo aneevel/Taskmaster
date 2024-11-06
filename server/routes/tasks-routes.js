@@ -11,4 +11,6 @@ router.get('/tasks/:id', verifyJWT, tasksController.getTask);
 
 router.get('/tasks', verifyJWT, tasksController.getTasks);
 
+router.patch('/tasks/:id', verifyJWT, tasksController.patchTask);
+
 module.exports = router;

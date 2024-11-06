@@ -10,7 +10,6 @@ class User {
         this.fname = fname;
         this.confirmed = false;
         this.admin = false;
-        this.tasks = [];
     }
 
     static findAll() {

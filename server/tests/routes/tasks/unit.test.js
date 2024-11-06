@@ -62,8 +62,7 @@ describe('Tasks', () => {
                 });
         });
     });
-
-    describe('POST Create New Task', () => {
+describe('POST Create New Task', () => {
         
             describe('Given request does not provide a body of params', () => {
 
@@ -322,12 +321,35 @@ describe('Tasks', () => {
                             "occurrence": "Daily",
                             "userID": "66a2c3b69d5dbcf506d743bb"
                         })
-//                        .expect(201)
+                        .expect(201)
                         .then((response)=> {
- //                           expect(response.body["id"]).toBeTruthy();  
+                            expect(response.body["id"]).toBeTruthy();  
                             expect(response.body["message"]).toEqual("Task created");
                         });
                 });
             });
         });
+
+    describe('PATCH Tasks', () => {
+
+        describe('Given sent data is invalid in some manner', () => {
+           
+            describe('Given description exceeds 100 characters', () => {
+                
+                it('Should return a 400 code and an error message stating description should not exceed 100 characters', async () => {
+                    
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({
+                            "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        })
+                        .expect(400)
+                        .then((response) => { 
+                            expect(response.body["message"]).toEqual("Task descriptions must not exceed 100 characters");
+                        });
+                });
+            });
+        });
+
+    });
 });
