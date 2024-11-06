@@ -334,6 +334,18 @@ describe('POST Create New Task', () => {
 
         describe('Given sent data is invalid in some manner', () => {
            
+            describe('Given invalid task ID was given', () => {
+                
+                it('Should return a 404 code and an error message stating no task with ID was found', async () => {
+                    await supertest(app)
+                        .patch('/tasks/000000000000000000000000')
+                        .expect(404)
+                        .then((response) => {
+                            expect(response.body["message"]).toEqual("No task with ID was found");
+                        });
+                })
+            });
+
             describe('Given description exceeds 100 characters', () => {
                 
                 it('Should return a 400 code and an error message stating description should not exceed 100 characters', async () => {

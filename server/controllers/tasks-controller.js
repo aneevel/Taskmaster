@@ -107,8 +107,23 @@ const getTasks = async (req, res, next) => {
     return res.json(tasks);
 }
 
+const patchTask = async (req, res, next) => {
+    
+    if (req.params.id == null) {
+        return res.status(400).json({message: "Improper params supplied"});
+    }
+
+    let task 
+    try {
+        task = Task.findByTaskId(req.params.id);
+    } catch (error) {
+        return res.status(404).json({ message: "No task with ID was found" });
+    }
+}
+
 module.exports = {
     getTask: getTask,
     getTasks: getTasks,
-    createTask: createTask
+    createTask: createTask,
+    patchTask: patchTask
 };
