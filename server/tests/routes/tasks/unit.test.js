@@ -340,8 +340,7 @@ describe('POST Create New Task', () => {
                     await supertest(app)
                         .patch('/tasks/000000000000000000000000')
                         .send({
-                            "description": "",
-                            "priority": ""
+                            "description": "Test"
                         })
                         .expect(404)
                         .then((response) => {
@@ -358,7 +357,6 @@ describe('POST Create New Task', () => {
                         .patch('/tasks/672aea2f7fefc75284d45931')
                         .send({
                             "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                            "priority": ""
                         })
                         .expect(400)
                         .then((response) => { 
@@ -373,12 +371,26 @@ describe('POST Create New Task', () => {
                     await supertest(app)
                         .patch('/tasks/672aea2f7fefc75284d45931')
                         .send({
-                            "description": "",
                             "priority": "4"
                         })
                         .expect(400)
                         .then((response) => {
                             expect(response.body["message"]).toEqual('Tasks must have a priority of 1, 2, or 3');
+                        });
+                });
+            });
+
+            describe('Given due date has already passed', () => {
+
+                it('Should return a 400 code and an error message stating due date must not preceed current date', async () => {
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({
+                            "dueDate": Date.now() - 1 
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body["message"]).toEqual('Due date must not preceed current date');
                         });
                 });
             });
