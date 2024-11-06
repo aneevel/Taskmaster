@@ -109,13 +109,26 @@ const getTasks = async (req, res, next) => {
 
 const patchTask = async (req, res, next) => {
     
-    if (req.params.id == null) {
+    if (req.params.id === null) 
+    {
         return res.status(400).json({message: "Improper params supplied"});
     }
 
-    let task 
+    if (Object.keys(req.body).length === 0) {
+        return res.status(204).json({ message: "No parameters provided to patch" });
+    }
+
+    if (req.body.description !== "" && req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+        return res.status(400).json({ message: "Task description must not exceed 100 characters" }); 
+    }
+
+    if (req.body.priority !== null && req.body.priority.trim().length !== 0 && parseInt(req.body.priority) !== 3 && parseInt(req.body.priority) !== 2 && parseInt(req.body.priority) !== 1) {
+        return res.status(400).json({ message: "Tasks must have a priority of 1, 2, or 3" });
+    }
+
+    let task;
     try {
-        task = Task.findByTaskId(req.params.id);
+        task = await Task.findByTaskId(req.params.id);
     } catch (error) {
         return next(error);
     }
@@ -123,6 +136,9 @@ const patchTask = async (req, res, next) => {
     if (!Array.isArray(task) || !task.length) {
         return res.status(404).json({ message: "No task with ID was found" });
     }
+
+    return res.status(200).json({ task: task });
+
 }
 
 module.exports = {

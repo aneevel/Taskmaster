@@ -339,6 +339,10 @@ describe('POST Create New Task', () => {
                 it('Should return a 404 code and an error message stating no task with ID was found', async () => {
                     await supertest(app)
                         .patch('/tasks/000000000000000000000000')
+                        .send({
+                            "description": "",
+                            "priority": ""
+                        })
                         .expect(404)
                         .then((response) => {
                             expect(response.body["message"]).toEqual("No task with ID was found");
@@ -353,12 +357,42 @@ describe('POST Create New Task', () => {
                     await supertest(app)
                         .patch('/tasks/672aea2f7fefc75284d45931')
                         .send({
-                            "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                            "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                            "priority": ""
                         })
                         .expect(400)
                         .then((response) => { 
-                            expect(response.body["message"]).toEqual("Task descriptions must not exceed 100 characters");
+                            expect(response.body["message"]).toEqual("Task description must not exceed 100 characters");
                         });
+                });
+            });
+
+            describe('Given priority is not one of 1, 2, or 3', () => {
+                
+                it('Should return a 400 code and an error message stating priority must be one of 1, 2, or 3', async () => {
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({
+                            "description": "",
+                            "priority": "4"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body["message"]).toEqual('Tasks must have a priority of 1, 2, or 3');
+                        });
+                });
+            });
+        });
+
+        describe('Given sent data is valid', () => {
+
+            describe('Given empty body is provided', () => {
+
+                it('Should return a 204 status', async () => {
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .expect(204)
+                        .send();
                 });
             });
         });
