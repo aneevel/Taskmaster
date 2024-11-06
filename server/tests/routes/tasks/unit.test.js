@@ -394,6 +394,21 @@ describe('POST Create New Task', () => {
                         });
                 });
             });
+
+            describe('Given occurrence is not one of Daily, Weekly, Monthly, or Once', () => {
+
+                it('Should return a 400 code and an error message stating that occurrence must be one of Daily, Weekly, Monthly, or Once', async () => {
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({
+                            "occurrence": "Never"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body["message"]).toEqual("Occurrence must be one of Daily, Weekly, Monthly, or Once");
+                        });
+                });
+            });
         });
 
         describe('Given sent data is valid', () => {

@@ -130,6 +130,10 @@ const patchTask = async (req, res, next) => {
         return res.status(400).json({ message: "Due date must not preceed current date" });
     }
 
+    if (req.body.occurrence != null && req.body.occurrence !== "" && req.body.occurrence !== "Daily" && req.body.occurrence !== "Weekly" && req.body.occurrence !== "Monthly" && req.body.occurrence !== "Once") {
+        return res.status(400).json({ message: "Occurrence must be one of Daily, Weekly, Monthly, or Once" });
+    }
+
     let task;
     try {
         task = await Task.findByTaskId(req.params.id);
