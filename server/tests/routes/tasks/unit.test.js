@@ -431,8 +431,21 @@ describe('POST Create New Task', () => {
                         .send({ "description" : "A Test Description" })
                         .expect(200)
                         .then((response) => {
-                            console.log(response.body);
                             expect(response.body["task"].description).toEqual("A Test Description")
+                        });
+                });
+            });
+
+            describe('Given a proper priority', () => {
+
+                it('Should return a 200 status and an updated Task with priority', async () => {
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({ "priority" : 3 })
+                        //.expect(200)
+                        .then((response) => {
+                            console.log(response.body);
+                            expect(response.body["task"].priority).toEqual("3")
                         });
                 });
             });
