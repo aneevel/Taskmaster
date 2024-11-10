@@ -45,6 +45,16 @@ class Task {
             userID: parseInt(this.userID)
         });
     }
+
+    async patch(body, id) { 
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(id);
+        } catch (error) {
+            throw error;
+        }
+        return await db.getDatabase().collection('tasks').findOneAndUpdate({ "_id": uuid}, {$set: body }, { returnNewDocument: true});
+    }
 }
        
 module.exports = Task;

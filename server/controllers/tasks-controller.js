@@ -145,7 +145,16 @@ const patchTask = async (req, res, next) => {
         return res.status(404).json({ message: "No task with ID was found" });
     }
 
-    return res.status(200).json({ task: task });
+    let createdTask = new Task(
+        task.description,
+        task.priority,
+        task.dueDate,
+        task.occurrence,
+        task.userID
+    );
+    createdTask = await createdTask.patch(req.body, req.params.id);
+
+    return res.status(200).json({ task: createdTask });
 
 }
 
