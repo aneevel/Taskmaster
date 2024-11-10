@@ -442,10 +442,9 @@ describe('POST Create New Task', () => {
                     await supertest(app)
                         .patch('/tasks/672aea2f7fefc75284d45931')
                         .send({ "priority" : 3 })
-                        //.expect(200)
+                        .expect(200)
                         .then((response) => {
-                            console.log(response.body);
-                            expect(response.body["task"].priority).toEqual("3")
+                            expect(response.body["task"].priority).toEqual(3)
                         });
                 });
             });
