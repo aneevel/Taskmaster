@@ -8,6 +8,9 @@ jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => 
     return next(null);
 }));
 
+
+let updateTaskId = '672aea2f7fefc75284d45931';
+
 describe('Tasks', () => {
     
     describe('GET All Tasks', () => {
@@ -354,7 +357,7 @@ describe('POST Create New Task', () => {
                 it('Should return a 400 code and an error message stating description should not exceed 100 characters', async () => {
                     
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({
                             "description": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                         })
@@ -369,7 +372,7 @@ describe('POST Create New Task', () => {
                 
                 it('Should return a 400 code and an error message stating priority must be one of 1, 2, or 3', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({
                             "priority": "4"
                         })
@@ -384,7 +387,7 @@ describe('POST Create New Task', () => {
 
                 it('Should return a 400 code and an error message stating due date must not preceed current date', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({
                             "dueDate": Date.now() - 1 
                         })
@@ -399,7 +402,7 @@ describe('POST Create New Task', () => {
 
                 it('Should return a 400 code and an error message stating that occurrence must be one of Daily, Weekly, Monthly, or Once', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({
                             "occurrence": "Never"
                         })
@@ -417,7 +420,7 @@ describe('POST Create New Task', () => {
 
                 it('Should return a 204 status', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .expect(204)
                         .send();
                 });
@@ -427,7 +430,7 @@ describe('POST Create New Task', () => {
 
                 it('Should return a 200 status and an updated Task with description', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({ "description" : "A Test Description" })
                         .expect(200)
                         .then((response) => {
@@ -440,7 +443,7 @@ describe('POST Create New Task', () => {
 
                 it('Should return a 200 status and an updated Task with priority', async () => {
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({ "priority" : 3 })
                         .expect(200)
                         .then((response) => {
@@ -455,11 +458,25 @@ describe('POST Create New Task', () => {
                     let newDate = new Date("2050-12-30T12:00:00").toISOString();
 
                     await supertest(app)
-                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .patch(`/tasks/${updateTaskId}`)
                         .send({ "dueDate" : newDate })
                         .expect(200)
                         .then((response) => {
                             expect(response.body["task"].dueDate).toEqual(`${newDate}`)
+                        });
+                });
+            });
+
+            describe('Given a proper occurrence', () => {
+
+                it('Should return a 200 status and an updated Task with occurrence', async () => {
+
+                    await supertest(app)
+                        .patch(`/tasks/${updateTaskId}`)
+                        .send({ "occurrence" : "Weekly" })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body["task"].occurrence).toEqual("Weekly");
                         });
                 });
             });
