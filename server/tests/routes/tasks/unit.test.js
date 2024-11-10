@@ -448,6 +448,21 @@ describe('POST Create New Task', () => {
                         });
                 });
             });
+
+            describe('Given a proper due date', () => {
+
+                it('Should return a 200 status and an updated Task with due date', async () => {
+                    let newDate = new Date("2050-12-30T12:00:00").toISOString();
+
+                    await supertest(app)
+                        .patch('/tasks/672aea2f7fefc75284d45931')
+                        .send({ "dueDate" : newDate })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body["task"].dueDate).toEqual(`${newDate}`)
+                        });
+                });
+            });
         });
 
     });
