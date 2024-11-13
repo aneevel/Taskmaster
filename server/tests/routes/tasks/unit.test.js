@@ -485,6 +485,19 @@ describe('POST Create New Task', () => {
 
     describe('DELETE Tasks', () => {
 
+        describe('Given an invalid task ID', () => {
+            
+            it('Should return a 500 status and an error message stating hex string must be 24 characters', async () => {
+                
+                await supertest(app)
+                    .delete(`/tasks/0`)
+                    .expect(500)
+                    .then((response) => {
+                        expect(response.body.message).toBe('hex string must be 24 characters') 
+                    });
+            });
+        });
+
         describe('Given an existing task ID', () => {
             
             it('Should return a 204 status and delete the task', async () => {
