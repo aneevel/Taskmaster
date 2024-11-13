@@ -16,6 +16,19 @@ describe('Tasks', () => {
         
         it('Should a return a 200 code and a collection of valid tasks', async () => {
 
+            // TODO: Should probably mock this
+            await supertest(app)
+                .post('/tasks/new')
+                .send({     
+                    "description": "Test",
+                    "priority": "1",
+                    "dueDate": Date.now() + 1,
+                    "occurrence": "Daily",
+                    "userID": "66a2c3b69d5dbcf506d743bb"
+                })
+
+
+
             await supertest(app)
                 .get('/tasks') 
                 .expect(200)
@@ -55,6 +68,17 @@ describe('Tasks', () => {
         describe('Given task with user ID does exist', () => {
 
                 it('Should return a 200 code and a valid set of tasks', async () => {
+
+                    await supertest(app)
+                        .post('/tasks/new')
+                        .send({     
+                            "description": "Test",
+                            "priority": "1",
+                            "dueDate": Date.now() + 1,
+                            "occurrence": "Daily",
+                            "userID": "66a2c3b69d5dbcf506d743bb"
+                        })
+
                     await supertest(app)
                         .get('/tasks/66a2c3b69d5dbcf506d743bb')
                         .expect(200)
@@ -299,7 +323,7 @@ describe('POST Create New Task', () => {
                                     "priority": "1",
                                     "dueDate": Date.now() + 1,
                                     "occurrence": "Daily",
-                                    "userID": 1 
+                                    "userID": "1"
                                 })
                                 .expect(404)
                                 .then((response) => {
@@ -559,6 +583,19 @@ describe('POST Create New Task', () => {
                     .expect(404)
                     .then((response) => {
                         expect(response.body.message).toBe("No tasks associated with user ID");
+                    });
+            });
+        });
+
+        describe('Given an invalid userID', () => {
+            
+            it('Should return a 500 status and an error message stating hex string must be 24 characters', async () => {
+                
+                await supertest(app)
+                    .delete(`/tasks/0`)
+                    .expect(500)
+                    .then((response) => {
+                        expect(response.body.message).toBe("hex string must be 24 characters");
                     });
             });
         });

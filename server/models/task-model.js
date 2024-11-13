@@ -57,12 +57,19 @@ class Task {
 
     async create() {
 
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(this.userID);
+        } catch (error) {
+            throw error;
+        }
+
         return await db.getDatabase().collection('tasks').insertOne({
             description: this.description,
             priority: this.priority,
             dueDate: JSON.stringify(this.dueDate),
             occurrence: this.occurrence,
-            userID: parseInt(this.userID)
+            userID: uuid
         });
     }
 
