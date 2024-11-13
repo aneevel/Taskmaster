@@ -525,5 +525,15 @@ describe('POST Create New Task', () => {
                         .expect(404);
             });
         });
+
+        describe('Given a non existing but valid task ID', () => {
+
+            it ('Should return a 204 status', async () => {
+                
+                await supertest(app)
+                    .delete(`/tasks/000000000000000000000000`)
+                    .expect(204);
+            });
+        });
     });
 });
