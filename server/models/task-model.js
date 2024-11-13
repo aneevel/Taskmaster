@@ -45,6 +45,16 @@ class Task {
         return db.getDatabase().collection('tasks').deleteMany({ _id: uuid});
     }
 
+    static deleteByUserId(userID) {
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(userID);
+        } catch (error) {
+            throw error 
+        }
+        return db.getDatabase().collection('tasks').deleteMany({ userID: uuid });
+    }
+
     async create() {
 
         return await db.getDatabase().collection('tasks').insertOne({

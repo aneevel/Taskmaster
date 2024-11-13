@@ -169,10 +169,22 @@ const deleteTask = async (req, res, next) => {
     return res.status(204).send();
 }
 
+const deleteTasks = async (req, res, next) => {
+
+    try {
+        await Task.deleteByUserId(req.params.id);
+    } catch (error) {
+        return next(error);
+    }
+
+    return res.status(204).send();
+}
+
 module.exports = {
     getTask: getTask,
     getTasks: getTasks,
     createTask: createTask,
     patchTask: patchTask,
-    deleteTask: deleteTask
+    deleteTask: deleteTask,
+    deleteTasks: deleteTasks
 };

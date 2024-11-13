@@ -535,5 +535,32 @@ describe('POST Create New Task', () => {
                     .expect(204);
             });
         });
+
+        describe('Given an existing userID', () => {
+            
+            it('Should return a 204 status and delete all tasks associated with user ID', async () => {
+
+                await supertest(app)
+                        .post('/tasks/new')
+                        .send({
+                            "description": "Test",
+                            "priority": "1",
+                            "dueDate": Date.now() + 1,
+                            "occurrence": "Daily",
+                            "userID": "66a2c3b69d5dbcf506d743bb"
+                        });
+
+                await supertest(app)
+                    .delete(`/tasks/user/66a2c3b69d5dbcf506d743bb`)
+                    .expect(204);
+
+                await supertest(app)
+                    .get(`/tasks/66a2c3b69d5dbcf506d743bb`)
+                    .expect(404)
+                    .then((response) => {
+                        expect(response.body.message).toBe("No tasks associated with user ID");
+                    });
+            });
+        });
     });
 });
