@@ -503,8 +503,6 @@ describe('POST Create New Task', () => {
                             task = response.body
                         });
 
-                    console.log(task.id.insertedId);
-
                     await supertest(app)
                         .delete(`/tasks/${task.id.insertedId}`)
                         .expect(204);

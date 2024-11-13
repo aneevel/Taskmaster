@@ -160,9 +160,13 @@ const patchTask = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
     
-    await Task.delete(req.params.id);
+    try {
+        await Task.deleteByTaskId(req.params.id);
+    } catch (error) {
+        return next(error);
+    }
 
-    return res.status(200);
+    return res.status(204).send();
 }
 
 module.exports = {
