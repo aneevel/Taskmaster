@@ -158,9 +158,17 @@ const patchTask = async (req, res, next) => {
 
 }
 
+const deleteTask = async (req, res, next) => {
+    
+    await Task.delete(req.params.id);
+
+    return res.status(200);
+}
+
 module.exports = {
     getTask: getTask,
     getTasks: getTasks,
     createTask: createTask,
-    patchTask: patchTask
+    patchTask: patchTask,
+    deleteTask: deleteTask
 };

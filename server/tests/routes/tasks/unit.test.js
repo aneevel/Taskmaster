@@ -1,7 +1,6 @@
 const supertest = require('supertest');
 const app = require('../../../server');
 const mongodb = require('mongodb')
-
 const Task = require('../../../models/task-model');
 
 jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
@@ -482,5 +481,38 @@ describe('POST Create New Task', () => {
             });
         });
 
+    });
+
+    describe('DELETE Tasks', () => {
+
+        describe('Given an existing task ID', () => {
+            
+            it('Should return a 204 status and delete the task', async () => {
+                    
+                    let task;
+                    await supertest(app)
+                        .post('/tasks/new')
+                        .send({
+                            "description": "Test",
+                            "priority": "1",
+                            "dueDate": Date.now() + 1,
+                            "occurrence": "Daily",
+                            "userID": "66a2c3b69d5dbcf506d743bb"
+                        })
+                        .then((response) => {
+                            task = response.body
+                        });
+
+                    console.log(task.id.insertedId);
+
+                    await supertest(app)
+                        .delete(`/tasks/${task.id.insertedId}`)
+                        .expect(204);
+
+                    await supertest(app)
+                        .get(`/tasks/${task.id.insertedId}`)
+                        .expect(404);
+            });
+        });
     });
 });

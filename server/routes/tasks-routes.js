@@ -13,4 +13,6 @@ router.get('/tasks', verifyJWT, tasksController.getTasks);
 
 router.patch('/tasks/:id', verifyJWT, tasksController.patchTask);
 
+router.delete('/tasks/:id', verifyJWT, tasksController.deleteTask);
+
 module.exports = router;
