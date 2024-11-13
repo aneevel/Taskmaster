@@ -592,11 +592,21 @@ describe('POST Create New Task', () => {
             it('Should return a 500 status and an error message stating hex string must be 24 characters', async () => {
                 
                 await supertest(app)
-                    .delete(`/tasks/0`)
+                    .delete(`/tasks/user/0`)
                     .expect(500)
                     .then((response) => {
                         expect(response.body.message).toBe("hex string must be 24 characters");
                     });
+            });
+        });
+
+        describe('Given a nonexistent but valid userID', () => {
+
+            it('Should return a 204 status', async () => {
+                
+                await supertest(app)
+                    .delete(`/tasks/user/000000000000000000000000`)
+                    .expect(204);
             });
         });
     });
