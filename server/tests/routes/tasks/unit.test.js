@@ -14,7 +14,7 @@ describe('Tasks', () => {
     
     describe('GET All Tasks', () => {
         
-        it('Should a return a 200 code and a collection of valid tasks', async () => {
+        it('Should return a 200 code and a collection of valid tasks', async () => {
 
             // TODO: Should probably mock this
             await supertest(app)
