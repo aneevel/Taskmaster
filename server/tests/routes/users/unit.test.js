@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const app = require('../../../server');
 
 const existingUserID = '66a2c3b69d5dbcf506d743bb';
+const nonexistingUserID = '000000000000000000000000';
 
 describe('Users', () => {
 
@@ -33,6 +34,19 @@ describe('Users', () => {
                         expect(response.body).toHaveProperty('fname');
                         expect(response.body).toHaveProperty('confirmed');
                         expect(response.body).toHaveProperty('admin');
+                    });
+            });
+        });
+
+        describe('Given ID is valid, but does not match any user', () => {
+            
+            it('Should return a 404 error and an error message stating no user with ID exists', async () => {
+                
+                await supertest(app)
+                    .get(`/users/${nonexistingUserID}`)
+                    .expect(404)
+                    .then((response) => {
+                        expect(response.body.message).toBe("No user with ID exists");
                     });
             });
         });
