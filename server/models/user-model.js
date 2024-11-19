@@ -17,7 +17,12 @@ class User {
     }
 
     static findById(userID) {
-        const uuid = mongodb.ObjectId.createFromHexString(userID);
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(userID);
+        } catch (error) {
+            throw error;
+        }
         return db.getDatabase().collection('users').findOne({_id: uuid}, { projection: { password: 0 } });
     }
 

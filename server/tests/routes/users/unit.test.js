@@ -3,6 +3,7 @@ const app = require('../../../server');
 
 const existingUserID = '66a2c3b69d5dbcf506d743bb';
 const nonexistingUserID = '000000000000000000000000';
+const invalidUserID = '0';
 
 describe('Users', () => {
 
@@ -47,6 +48,19 @@ describe('Users', () => {
                     .expect(404)
                     .then((response) => {
                         expect(response.body.message).toBe("No user with ID exists");
+                    });
+            });
+        });
+
+        describe('Given ID is invalid', () => {
+            
+            it('Should return a 500 error and an error message stating hex string must be 24 characters', async () => {
+                
+                await supertest(app)
+                    .get(`/users/${invalidUserID}`)
+                    .expect(500)
+                    .then((response) => {
+                        expect(response.body.message).toBe("hex string must be 24 characters");
                     });
             });
         });
