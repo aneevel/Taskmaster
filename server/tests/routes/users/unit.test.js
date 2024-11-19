@@ -28,12 +28,11 @@ describe('Users', () => {
                     .get(`/users/${existingUserID}`)
                     .expect(200)
                     .then((response) => {
-                        expect(response.body.user).toHaveProperty('email');
-                        expect(response.body.user).toHaveProperty('password');
-                        expect(response.body.user).toHaveProperty('lname');
-                        expect(response.body.user).toHaveProperty('fname');
-                        expect(response.body.user).toHaveProperty('confirmed');
-                        expect(response.body.user).toHaveProperty('admin');
+                        expect(response.body).toHaveProperty('email');
+                        expect(response.body).toHaveProperty('lname');
+                        expect(response.body).toHaveProperty('fname');
+                        expect(response.body).toHaveProperty('confirmed');
+                        expect(response.body).toHaveProperty('admin');
                     });
             });
         });
