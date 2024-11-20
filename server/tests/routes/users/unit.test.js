@@ -5,6 +5,10 @@ const existingUserID = '66a2c3b69d5dbcf506d743bb';
 const nonexistingUserID = '000000000000000000000000';
 const invalidUserID = '0';
 
+jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => {
+    return next(null);
+}));
+
 describe('Users', () => {
 
     describe('GET ALL Users', () => {
@@ -62,6 +66,26 @@ describe('Users', () => {
                     .then((response) => {
                         expect(response.body.message).toBe("hex string must be 24 characters");
                     });
+            });
+        });
+    });
+
+    describe('POST User', () => {
+        
+        describe('Given invalid parameters', () => {
+            
+            describe('Given no parameters were provided', () => {
+
+                it('Should return a 400 error and an error message stating no parameters were provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send()
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Invalid params supplied");
+                        });
+                });
             });
         });
     });

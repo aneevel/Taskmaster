@@ -1,5 +1,12 @@
 const User = require('../models/user-model');
-const ValidationUtil = require('../utility/validation');
+
+const createUser = async (req, res, next) => {
+
+    if (req.body.length === undefined) {
+        return res.status(400).json({ message: "Invalid params supplied" });
+    }
+    return res.status(200).send();
+}
 
 const getAllUsers = async (req, res, next) => {
 
@@ -32,4 +39,5 @@ const getUserById = async (req, res, next) => {
 module.exports = {
     getAllUsers: getAllUsers,
     getUserById: getUserById,
+    createUser: createUser,
 };

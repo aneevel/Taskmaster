@@ -8,7 +8,6 @@ const expressSession = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { expressjwt: jwt } = require('express-jwt');
 
 const createSessionConfig = require('./config/session');
 const db = require('./data/database');
@@ -57,11 +56,9 @@ if (process.env.NODE_ENV !== 'development') {
 
 app.use(cors(corsOptions));
 
-app.get('/api', function (req, res) { return res.send('Hello from Express!'); });
-
-app.use(userRoutes);
 app.use(authRoutes);
 app.use(tasksRoutes);
+app.use(userRoutes);
 app.use('/refresh', refreshRoutes);
 app.use(error.error);
 
