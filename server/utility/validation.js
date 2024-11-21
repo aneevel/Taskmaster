@@ -20,7 +20,14 @@ const emailIsConfirmed = (email, confirmEmail) => {
     return email === confirmEmail;
 }
 
+const isValidEmailAddress = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
 module.exports = {
     userDetailsAreValid: userDetailsAreValid,
-    emailIsConfirmed: emailIsConfirmed 
+    emailIsConfirmed: emailIsConfirmed,
+    isValidEmailAddress: isValidEmailAddress
 }
