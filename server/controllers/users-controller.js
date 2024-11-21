@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const ValidationUtil = require('../utility/validation');
 
 const createUser = async (req, res, next) => {
 
@@ -7,7 +8,9 @@ const createUser = async (req, res, next) => {
         return res.status(400).json({ message: "Invalid params supplied" });
     }
 
-    if (req.body.email.trim() == "") {
+    if (req.body.email.trim() == "" ||
+        !ValidationUtil.isValidEmailAddress(req.body.email)) 
+    {
         return res.status(400).json({ message: "A valid, non-existing email must be provided" });
     }
     return res.status(200).send();
