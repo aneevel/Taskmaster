@@ -2,8 +2,13 @@ const User = require('../models/user-model');
 
 const createUser = async (req, res, next) => {
 
-    if (req.body.length === undefined) {
+    if (req.body == null ||
+        req.body.email == null) {
         return res.status(400).json({ message: "Invalid params supplied" });
+    }
+
+    if (req.body.email.trim() == "") {
+        return res.status(400).json({ message: "A valid, non-existing email must be provided" });
     }
     return res.status(200).send();
 }

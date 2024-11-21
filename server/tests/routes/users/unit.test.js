@@ -87,6 +87,22 @@ describe('Users', () => {
                         });
                 });
             });
+
+            describe('Given no email was provided', () => {
+                
+                it('Should return a 400 error and an error message stating an email must be specified', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": ""
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A valid, non-existing email must be provided");
+                        });
+                });
+            });
         });
     });
 });
