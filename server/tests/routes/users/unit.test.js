@@ -239,6 +239,25 @@ describe('Users', () => {
                         });
                 });
             });
+
+            describe('Given too long first name provided', () => {
+                
+                it('Should return a 400 error and an error message stating a non-empty first name of less than 50 characters must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "testpassword",
+                            "lname": "McTest",
+                            "fname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A non-empty first name of less than 50 characters must be provided");
+                        });
+                });
+            });
         });
     });
 });
