@@ -23,6 +23,11 @@ const createUser = async (req, res, next) => {
         return res.status(400).json({ message: "A non-empty last name of less than 50 characters must be provided" });
     }
 
+    if (!ValidationUtil.isValidName(req.body.fname))
+    {
+        return res.status(400).json({ message: "A non-empty first name of less than 50 characters must be provided" });
+    }
+
     let user = new User(req.body.email);
     if (user.existsAlready()) 
         return res.status(400).json({ message: "User with email already exists" });

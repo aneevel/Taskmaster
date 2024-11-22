@@ -97,7 +97,8 @@ describe('Users', () => {
                         .send({
                             "email": "",
                             "password": "testpassword",
-                            "lname" : "McTest"
+                            "lname" : "McTest",
+                            "fname" : "Davey"
                         })
                         .expect(400)
                         .then((response) => {
@@ -115,7 +116,8 @@ describe('Users', () => {
                         .send({
                             "email": "test",
                             "password": "testpassword",
-                            "lname" : "McTest"
+                            "lname" : "McTest",
+                            "fname" : "Davey"
                         })
                         .expect(400)
                         .then((response) => {
@@ -133,7 +135,8 @@ describe('Users', () => {
                         .send({
                             "email": "aneevel15@gmail.com",
                             "password": "testpassword",
-                            "lname" : "McTest"
+                            "lname" : "McTest",
+                            "fname" : "Davey"
                         })
                         .expect(400)
                         .then((response) => {
@@ -151,7 +154,8 @@ describe('Users', () => {
                         .send({
                             "email": "test@mctest.com",
                             "password": "",
-                            "lname": "McTest"
+                            "lname": "McTest",
+                            "fname": "Davey"
                         })
                         .expect(400)
                         .then((response) => {
@@ -169,7 +173,8 @@ describe('Users', () => {
                         .send({
                             "email": "test@mctest.com",
                             "password": "short",
-                            "lname": "McTest"
+                            "lname": "McTest",
+                            "fname": "Davey"
                         })
                         .expect(400)
                         .then((response) => {
@@ -187,11 +192,50 @@ describe('Users', () => {
                         .send({
                             "email": "test@mctest.com",
                             "password": "testpassword",
-                            "lname": ""
+                            "lname": "",
+                            "fname": "Davey"
                         })
                         .expect(400)
                         .then((response) => {
                             expect(response.body.message).toBe("A non-empty last name of less than 50 characters must be provided");
+                        });
+                });
+            });
+
+            describe('Given too long of a last name provided', () => {
+                
+                it('Should return a 400 error and an error message stating a non-empty last name of less than 50 characters must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "testpassword",
+                            "lname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                            "fname": "Davey"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A non-empty last name of less than 50 characters must be provided");
+                        });
+                });
+            });
+
+            describe('Given no first name provided', () => {
+                
+                it('Should return a 400 error and an error message stating a non-empty first name of less than 50 characters must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "testpassword",
+                            "lname": "McTest",
+                            "fname": ""
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A non-empty first name of less than 50 characters must be provided");
                         });
                 });
             });
