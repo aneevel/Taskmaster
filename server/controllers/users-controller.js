@@ -3,20 +3,19 @@ const ValidationUtil = require('../utility/validation');
 
 const createUser = async (req, res, next) => {
 
-    if (req.body == null ||
-        req.body.email == null) {
+    if (req.body === null || req.body === undefined || Object.keys(req.body).length === 0) {
         return res.status(400).json({ message: "Invalid params supplied" });
     }
 
-    if (req.body.email.trim() == "" ||
+    if (ValidationUtil.isEmpty(req.body.email) ||
         !ValidationUtil.isValidEmailAddress(req.body.email))
     {
         return res.status(400).json({ message: "A valid, non-existing email must be provided" });
     }
 
-    if (req.body.password.trim() == "")
+    if (!ValidationUtil.isValidPassword(req.body.password))
     {
-        return res.status(400).json({ message: "A password must be provided" });
+        return res.status(400).json({ message: "A password of at least 8 characters must be provided" });
     }
 
     let user = new User(req.body.email);

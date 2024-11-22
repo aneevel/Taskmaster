@@ -5,7 +5,11 @@ const isEmpty = (value) => {
 }
 
 const userCredentialsAreValid = (email, password) => {
-    return email && email.includes("@") && password && password.trim().length >= MIN_PASSWORD_LENGTH;
+    return isValidEmailAddress(email) && isValidPassword(password);
+};
+
+const isValidPassword = (password) => {
+    return password && password.trim().length >= MIN_PASSWORD_LENGTH;
 };
 
 const userDetailsAreValid = (email, password, lname, fname) => {
@@ -29,7 +33,9 @@ const isValidEmailAddress = (email) => {
 };
 
 module.exports = {
+    isEmpty: isEmpty,
     userDetailsAreValid: userDetailsAreValid,
     emailIsConfirmed: emailIsConfirmed,
-    isValidEmailAddress: isValidEmailAddress
+    isValidEmailAddress: isValidEmailAddress,
+    isValidPassword: isValidPassword
 }

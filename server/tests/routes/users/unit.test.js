@@ -80,7 +80,7 @@ describe('Users', () => {
                     
                     await supertest(app)
                         .post(`/users/new`)
-                        .send()
+                        .send({})
                         .expect(400)
                         .then((response) => {
                             expect(response.body.message).toBe("Invalid params supplied");
@@ -96,7 +96,7 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "",
-                            "test": "test"
+                            "password": "testpassword"
                         })
                         .expect(400)
                         .then((response) => {
@@ -113,7 +113,7 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "test",
-                            "password": "test"
+                            "password": "testpassword"
                         })
                         .expect(400)
                         .then((response) => {
@@ -130,7 +130,7 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "aneevel15@gmail.com",
-                            "password": "test"
+                            "password": "testpassword"
                         })
                         .expect(400)
                         .then((response) => {
@@ -141,7 +141,7 @@ describe('Users', () => {
 
             describe('Given no password was provided', () => {
                 
-                it('Should return a 400 error and an error message stating a password must be provided', async () => {
+                it('Should return a 400 error and an error message stating a password of at least 8 characters must be provided', async () => {
                     
                     await supertest(app)
                         .post(`/users/new`)
@@ -151,7 +151,24 @@ describe('Users', () => {
                         })
                         .expect(400)
                         .then((response) => {
-                            expect(response.body.message).toBe("A password must be provided");
+                            expect(response.body.message).toBe("A password of at least 8 characters must be provided");
+                        });
+                });
+            });
+
+            describe('Given a too short password was provided', () => {
+                
+                it('Should return a 400 error and an error message stating a password of at least 8 characters must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "short",
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A password of at least 8 characters must be provided");
                         });
                 });
             });
