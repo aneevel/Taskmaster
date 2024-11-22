@@ -28,11 +28,15 @@ const createUser = async (req, res, next) => {
         return res.status(400).json({ message: "A non-empty first name of less than 50 characters must be provided" });
     }
 
-    let user = new User(req.body.email);
-    if (user.existsAlready()) 
+    let user = new User(req.body.email, req.body.password, req.body.lname, req.body.fname);
+    if (await user.existsAlready()) {
+        console.log(user);
         return res.status(400).json({ message: "User with email already exists" });
+    }
 
-    return res.status(200).send();
+    await user.signup();
+
+    return res.status(201).json({ "message": "User created", id: user});
 }
 
 const getAllUsers = async (req, res, next) => {

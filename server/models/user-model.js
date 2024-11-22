@@ -32,9 +32,10 @@ class User {
 
     async existsAlready() {
         const existingUser = await this.getUserWithSameEmail();
-        if (existingUser)
-            return true;
-        return false;
+        if (existingUser == null) {
+            return false;
+        }
+        return true;
     }
 
     async signup() {

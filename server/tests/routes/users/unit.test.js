@@ -259,5 +259,25 @@ describe('Users', () => {
                 });
             });
         });
+
+        describe('Given valid parameters', () => {
+            
+            it('Should return a 201 code and a valid User object', async () => {
+                
+                await supertest(app)
+                    .post(`/users/new`)
+                    .send({
+                        "email": "valid@email.com",
+                        "password": "validpassword",
+                        "lname": "User",
+                        "fname": "Valid"
+                    })
+                    .expect(201)
+                    .then((response) => {
+                        expect(response.body.id).toBeTruthy();
+                        expect(response.body.message).toBe("User created");
+                    });
+            });
+        });
     });
 });
