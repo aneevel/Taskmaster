@@ -95,7 +95,8 @@ describe('Users', () => {
                     await supertest(app)
                         .post(`/users/new`)
                         .send({
-                            "email": ""
+                            "email": "",
+                            "test": "test"
                         })
                         .expect(400)
                         .then((response) => {
@@ -111,11 +112,46 @@ describe('Users', () => {
                     await supertest(app)
                         .post(`/users/new`)
                         .send({
-                            "email": "test"
+                            "email": "test",
+                            "password": "test"
                         })
                         .expect(400)
                         .then((response) => {
                             expect(response.body.message).toBe("A valid, non-existing email must be provided");
+                        });
+                });
+            });
+
+            describe('Given an email that already exists for an user', () => {
+
+                it('Should return a 400 error and an error message stating user with email exists already', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "aneevel15@gmail.com",
+                            "password": "test"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("User with email already exists");
+                        });
+                });
+            });
+
+            describe('Given no password was provided', () => {
+                
+                it('Should return a 400 error and an error message stating a password must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "",
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A password must be provided");
                         });
                 });
             });

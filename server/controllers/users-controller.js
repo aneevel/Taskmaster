@@ -9,10 +9,20 @@ const createUser = async (req, res, next) => {
     }
 
     if (req.body.email.trim() == "" ||
-        !ValidationUtil.isValidEmailAddress(req.body.email)) 
+        !ValidationUtil.isValidEmailAddress(req.body.email))
     {
         return res.status(400).json({ message: "A valid, non-existing email must be provided" });
     }
+
+    if (req.body.password.trim() == "")
+    {
+        return res.status(400).json({ message: "A password must be provided" });
+    }
+
+    let user = new User(req.body.email);
+    if (user.existsAlready()) 
+        return res.status(400).json({ message: "User with email already exists" });
+
     return res.status(200).send();
 }
 
