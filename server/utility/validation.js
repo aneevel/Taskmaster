@@ -1,4 +1,5 @@
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_NAME_LENGTH = 50;
 
 const isEmpty = (value) => {
     return !value || value.trim() === "";
@@ -10,6 +11,10 @@ const userCredentialsAreValid = (email, password) => {
 
 const isValidPassword = (password) => {
     return password && password.trim().length >= MIN_PASSWORD_LENGTH;
+};
+
+const isValidName = (name) => {
+    return name && name.trim().length <= MAX_NAME_LENGTH;
 };
 
 const userDetailsAreValid = (email, password, lname, fname) => {
@@ -37,5 +42,6 @@ module.exports = {
     userDetailsAreValid: userDetailsAreValid,
     emailIsConfirmed: emailIsConfirmed,
     isValidEmailAddress: isValidEmailAddress,
-    isValidPassword: isValidPassword
+    isValidPassword: isValidPassword,
+    isValidName: isValidName
 }

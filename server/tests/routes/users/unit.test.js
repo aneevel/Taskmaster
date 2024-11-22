@@ -96,7 +96,8 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "",
-                            "password": "testpassword"
+                            "password": "testpassword",
+                            "lname" : "McTest"
                         })
                         .expect(400)
                         .then((response) => {
@@ -113,7 +114,8 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "test",
-                            "password": "testpassword"
+                            "password": "testpassword",
+                            "lname" : "McTest"
                         })
                         .expect(400)
                         .then((response) => {
@@ -130,7 +132,8 @@ describe('Users', () => {
                         .post(`/users/new`)
                         .send({
                             "email": "aneevel15@gmail.com",
-                            "password": "testpassword"
+                            "password": "testpassword",
+                            "lname" : "McTest"
                         })
                         .expect(400)
                         .then((response) => {
@@ -148,6 +151,7 @@ describe('Users', () => {
                         .send({
                             "email": "test@mctest.com",
                             "password": "",
+                            "lname": "McTest"
                         })
                         .expect(400)
                         .then((response) => {
@@ -165,10 +169,29 @@ describe('Users', () => {
                         .send({
                             "email": "test@mctest.com",
                             "password": "short",
+                            "lname": "McTest"
                         })
                         .expect(400)
                         .then((response) => {
                             expect(response.body.message).toBe("A password of at least 8 characters must be provided");
+                        });
+                });
+            });
+
+            describe('Given no last name provided', () => {
+                
+                it('Should return a 400 error and an error message stating a non-empty last name of less than 50 characters must be provided', async () => {
+                    
+                    await supertest(app)
+                        .post(`/users/new`)
+                        .send({
+                            "email": "test@mctest.com",
+                            "password": "testpassword",
+                            "lname": ""
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("A non-empty last name of less than 50 characters must be provided");
                         });
                 });
             });
