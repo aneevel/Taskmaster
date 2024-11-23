@@ -52,8 +52,21 @@ class User {
         });
     }
 
+    
+
     hasMatchingPassword(hashedPassword) {
         return bcrypt.compare(this.password, hashedPassword);
+    }
+
+    static async deleteUserById(userID) {
+
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(userID);
+        } catch (error) {
+            throw error 
+        }
+        return db.getDatabase().collection('users').deleteMany({_id: uuid});
     }
 }
 

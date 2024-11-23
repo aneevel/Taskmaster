@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const app = require('../../../server');
 
 const existingUserID = '66a2c3b69d5dbcf506d743bb';
+const modifyUserID = '6740f47db863930a2e3554fc';
 const nonexistingUserID = '000000000000000000000000';
 const invalidUserID = '0';
 
@@ -279,5 +280,19 @@ describe('Users', () => {
                     });
             });
         });
+    });
+
+    describe('DELETE User', () => {
+    
+        describe('Given non-existing userID', () => {
+            
+            it('Should return a 204 code', async () => {
+                
+                await supertest(app)
+                    .delete(`/users/${nonexistingUserID}`)
+                    .expect(204)
+            });
+        });
+
     });
 });
