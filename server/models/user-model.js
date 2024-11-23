@@ -58,7 +58,7 @@ class User {
         return bcrypt.compare(this.password, hashedPassword);
     }
 
-    static async deleteUserById(userID) {
+    static async deleteByUserId(userID) {
 
         let uuid;
         try {

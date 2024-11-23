@@ -30,7 +30,6 @@ const createUser = async (req, res, next) => {
 
     let user = new User(req.body.email, req.body.password, req.body.lname, req.body.fname);
     if (await user.existsAlready()) {
-        console.log(user);
         return res.status(400).json({ message: "User with email already exists" });
     }
 
