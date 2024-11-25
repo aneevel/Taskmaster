@@ -397,7 +397,14 @@ describe('Users', () => {
             describe('Given a password that is too long was provided', () => {
                 
                 it('Should return a 400 error and an error message stating a password less than 50 characters must be provided', async () => {
-
+                    
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("A password greater than 8 characters and less than 50 characters must be provided");
+                        });
                 });
             });
 

@@ -1,4 +1,5 @@
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 50;
 const MAX_NAME_LENGTH = 50;
 
 const isEmpty = (value) => {
@@ -10,7 +11,7 @@ const userCredentialsAreValid = (email, password) => {
 };
 
 const isValidPassword = (password) => {
-    return password && password.trim().length >= MIN_PASSWORD_LENGTH;
+    return password && password.trim().length >= MIN_PASSWORD_LENGTH && password.trim().length <= MAX_PASSWORD_LENGTH;
 };
 
 const isValidName = (name) => {
