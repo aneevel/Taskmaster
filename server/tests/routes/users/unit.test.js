@@ -435,6 +435,20 @@ describe('Users', () => {
                         });
                 });
             });
+
+            describe('Given a non-existing user provided', () => {
+
+                it('Should return a 404 code and an error message stating no user with ID was found', async () => {
+                    
+                    await supertest(app)
+                        .patch(`/users/000000000000000000000000`)
+                        .send()
+                        .expect(404)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("No user with ID was found");
+                        });
+                });
+            });
         });
 
         describe('Given valid parameters', () => {

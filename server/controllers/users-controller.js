@@ -105,6 +105,17 @@ const updateUser = async (req, res, next) => {
         return res.status(400).send({"message": "A first name must not exceed 50 characters" });
     }
 
+    try {
+        user = await User.findById(req.params.id);
+    } catch (error) {
+        return next(error);
+    }
+
+    console.log(user);
+    if (!user) {
+        return res.status(404).json({ message: "No user with ID was found" });
+    }
+
     return res.status(200).send();
 }
 
