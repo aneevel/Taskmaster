@@ -425,7 +425,14 @@ describe('Users', () => {
             describe('Given a first name exceeding 50 characters was provided', () => {
                 
                 it('Should return a 400 error and an error message stating a first name must not exceed 50 characters', async () => {
-
+                        
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "fname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("A first name must not exceed 50 characters");
+                        });
                 });
             });
         });

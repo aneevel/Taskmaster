@@ -101,6 +101,10 @@ const updateUser = async (req, res, next) => {
         return res.status(400).send({"message": "A last name must not exceed 50 characters" });
     }
 
+    if (!ValidationUtil.isEmpty(req.body.fname) && !ValidationUtil.isValidName(req.body.fname)) {
+        return res.status(400).send({"message": "A first name must not exceed 50 characters" });
+    }
+
     return res.status(200).send();
 }
 
