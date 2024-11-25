@@ -89,9 +89,15 @@ const updateUser = async (req, res, next) => {
         return res.status(400).send({"message": "This email address is already in use" });
     }
 
-    if (!ValidationUtil.isValidEmailAddress(req.body.email)) {
+    if (!ValidationUtil.isEmpty(req.body.email) && !ValidationUtil.isValidEmailAddress(req.body.email)) {
         return res.status(400).send({"message": "A valid email address must be provided" });
     }
+
+    if (!ValidationUtil.isEmpty(req.body.password) && !ValidationUtil.isValidPassword(req.body.password)) {
+        return res.status(400).send({"message": "A password greater than 8 characters and less than 50 characters must be provided" });
+    }
+
+    return res.status(200).send();
 }
 
 module.exports = {
