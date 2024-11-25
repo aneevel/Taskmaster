@@ -444,8 +444,8 @@ describe('POST Create New Task', () => {
                 it('Should return a 204 status', async () => {
                     await supertest(app)
                         .patch(`/tasks/${updateTaskId}`)
-                        .expect(204)
-                        .send();
+                        .send({})
+                        .expect(204);
                 });
             });
 

@@ -13,7 +13,7 @@ class User {
     }
 
     static findAll() {
-        return db.getDatabase().collection('users').find({}, { projection: { password: 0 } }).toArray();
+        return db.getDatabase().collection('users').find({}).toArray();
     }
 
     static findById(userID) {
@@ -23,7 +23,7 @@ class User {
         } catch (error) {
             throw error;
         }
-        return db.getDatabase().collection('users').findOne({_id: uuid}, { projection: { password: 0 } });
+        return db.getDatabase().collection('users').findOne({_id: uuid});
     }
 
     getUserWithSameEmail() {
@@ -67,6 +67,17 @@ class User {
             throw error 
         }
         return db.getDatabase().collection('users').deleteMany({_id: uuid});
+    }
+
+    async patch(body, id) {
+        let uuid;
+        try {
+            uuid = mongodb.ObjectId.createFromHexString(id);
+        } catch (error) {
+            throw error;
+        }
+        console.log(body);
+        return await db.getDatabase().collection('users').findOneAndUpdate({ "_id": uuid}, {$set: body}, { returnNewDocument: true});
     }
 }
 

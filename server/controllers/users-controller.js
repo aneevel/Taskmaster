@@ -119,7 +119,15 @@ const updateUser = async (req, res, next) => {
         return res.status(404).json({ message: "No user with ID was found" });
     }
 
-    return res.status(200).send();
+    let createdUser = new User(
+        user.email,
+        user.password,
+        user.lname,
+        user.fname
+    );
+    createdUser = await createdUser.patch(req.body, req.params.id);
+
+    return res.status(200).send({ user: createdUser });
 }
 
 module.exports = {

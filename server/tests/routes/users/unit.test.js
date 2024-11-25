@@ -469,7 +469,13 @@ describe('Users', () => {
             describe('Given a valid email', () => {
 
                 it('Should return a 200 code and an updated User with email', async () => {
-
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "email" : "validpatchemail@gmail.com" })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body.user.email).toEqual("validpatchemail@gmail.com");
+                        });
                 });
             });
 
