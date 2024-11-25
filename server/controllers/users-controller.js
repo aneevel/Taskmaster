@@ -85,8 +85,13 @@ const deleteUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
 
     let user = new User(req.body.email);
-    if (user.existsAlready()) 
+    if (await user.existsAlready()) {
         return res.status(400).send({"message": "This email address is already in use" });
+    }
+
+    if (!ValidationUtil.isValidEmailAddress(req.body.email)) {
+        return res.status(400).send({"message": "A valid email address must be provided" });
+    }
 }
 
 module.exports = {

@@ -370,7 +370,14 @@ describe('Users', () => {
             describe('Given an invalid email was provided', () => {
 
                 it('Should return a 400 error and an error message stating a valid email address must be provided', async () => {
-
+                    
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "email": "invalidemail" })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("A valid email address must be provided");
+                        });
                 });
             });
 
