@@ -97,6 +97,10 @@ const updateUser = async (req, res, next) => {
         return res.status(400).send({"message": "A password greater than 8 characters and less than 50 characters must be provided" });
     }
 
+    if (!ValidationUtil.isEmpty(req.body.lname) && !ValidationUtil.isValidName(req.body.lname)) {
+        return res.status(400).send({"message": "A last name must not exceed 50 characters" });
+    }
+
     return res.status(200).send();
 }
 

@@ -412,6 +412,13 @@ describe('Users', () => {
                 
                 it('Should return a 400 error and an error message stating a last name must not exceed 50 characters', async () => {
 
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "lname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("A last name must not exceed 50 characters");
+                        });
                 });
             });
 
