@@ -348,4 +348,97 @@ describe('Users', () => {
         });
 
     });
+
+    describe('PATCH User', () => {
+        
+        describe('Given invalid parameters', () => {
+            
+            describe('Given an already existing email was provided', () => {
+
+                it('Should return a 400 error and an error message stating an email address that is not already in use must be provided', async () => {
+                    
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({ "email": "aneevel15@gmail.com" })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toEqual("This email address is already in use");
+                        });
+                });
+            });
+
+            describe('Given an invalid email was provided', () => {
+
+                it('Should return a 400 error and an error message stating a valid email address must be provided', async () => {
+
+                });
+            });
+
+            describe('Given a password that is too short was provided', () => {
+                
+                it('Should return a 400 error and an error message stating password greater than 8 characters must be provided', async () => {
+
+                });
+            });
+
+            describe('Given a password that is too long was provided', () => {
+                
+                it('Should return a 400 error and an error message stating a password less than 50 characters must be provided', async () => {
+
+                });
+            });
+
+            describe('Given a last name exceeding 50 characters was provided', () => {
+                
+                it('Should return a 400 error and an error message stating a last name must not exceed 50 characters', async () => {
+
+                });
+            });
+
+            describe('Given a first name exceeding 50 characters was provided', () => {
+                
+                it('Should return a 400 error and an error message stating a first name must not exceed 50 characters', async () => {
+
+                });
+            });
+        });
+
+        describe('Given valid parameters', () => {
+
+            describe('Given no params to patch', () => {
+
+                it('Should return a 204 code and a message stating no parameters were provided to patch', async () => {
+
+                });
+            });
+
+            describe('Given a valid email', () => {
+
+                it('Should return a 200 code and an updated User with email', async () => {
+
+                });
+            });
+
+            describe('Given a valid password', () => {
+
+                it('Should return a 200 code and an updated User with password', async () => {
+
+                });
+            });
+
+            describe('Given a valid first name', () => {
+                
+                it('Should return a 200 code and an updated User with first name', async () => {
+
+                });
+            });
+
+            describe('Given a valid last name', () => {
+
+                it('Should return a 200 code and an updated User with last name', async () => {
+
+                });
+            });
+        });
+    });
 });

@@ -82,9 +82,17 @@ const deleteUser = async (req, res, next) => {
     return res.status(204).send();
 }
 
+const updateUser = async (req, res, next) => {
+
+    let user = new User(req.body.email);
+    if (user.existsAlready()) 
+        return res.status(400).send({"message": "This email address is already in use" });
+}
+
 module.exports = {
     getAllUsers: getAllUsers,
     getUserById: getUserById,
     createUser: createUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    updateUser: updateUser
 };
