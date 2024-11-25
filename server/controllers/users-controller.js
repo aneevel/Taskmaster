@@ -40,7 +40,7 @@ const createUser = async (req, res, next) => {
         return next(error);
     }
 
-    return res.status(201).json({ "message": "User created", id: userID});
+    return res.status(201).json({ message: "User created", id: userID});
 }
 
 const getAllUsers = async (req, res, next) => {
@@ -84,25 +84,29 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 
+    if (Object.keys(req.body).length === 0) {
+        return res.status(204).send();
+    }
+
     let user = new User(req.body.email);
     if (await user.existsAlready()) {
-        return res.status(400).send({"message": "This email address is already in use" });
+        return res.status(400).json({message: "This email address is already in use" });
     }
 
     if (!ValidationUtil.isEmpty(req.body.email) && !ValidationUtil.isValidEmailAddress(req.body.email)) {
-        return res.status(400).send({"message": "A valid email address must be provided" });
+        return res.status(400).json({message: "A valid email address must be provided" });
     }
 
     if (!ValidationUtil.isEmpty(req.body.password) && !ValidationUtil.isValidPassword(req.body.password)) {
-        return res.status(400).send({"message": "A password greater than 8 characters and less than 50 characters must be provided" });
+        return res.status(400).json({message: "A password greater than 8 characters and less than 50 characters must be provided" });
     }
 
     if (!ValidationUtil.isEmpty(req.body.lname) && !ValidationUtil.isValidName(req.body.lname)) {
-        return res.status(400).send({"message": "A last name must not exceed 50 characters" });
+        return res.status(400).json({message: "A last name must not exceed 50 characters" });
     }
 
     if (!ValidationUtil.isEmpty(req.body.fname) && !ValidationUtil.isValidName(req.body.fname)) {
-        return res.status(400).send({"message": "A first name must not exceed 50 characters" });
+        return res.status(400).json({message: "A first name must not exceed 50 characters" });
     }
 
     try {
@@ -111,7 +115,6 @@ const updateUser = async (req, res, next) => {
         return next(error);
     }
 
-    console.log(user);
     if (!user) {
         return res.status(404).json({ message: "No user with ID was found" });
     }

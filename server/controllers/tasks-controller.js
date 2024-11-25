@@ -115,7 +115,7 @@ const patchTask = async (req, res, next) => {
     }
 
     if (Object.keys(req.body).length === 0) {
-        return res.status(204).json({ message: "No parameters provided to patch" });
+        return res.status(204).send();
     }
 
     if (req.body.description != null && req.body.description !== "" && req.body.description.length > MAX_DESCRIPTION_LENGTH) {

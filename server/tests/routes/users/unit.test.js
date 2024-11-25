@@ -442,7 +442,9 @@ describe('Users', () => {
                     
                     await supertest(app)
                         .patch(`/users/000000000000000000000000`)
-                        .send()
+                        .send({
+                            "fname": "Alec"
+                        })
                         .expect(404)
                         .then((response) => {
                             expect(response.body.message).toEqual("No user with ID was found");
@@ -456,7 +458,11 @@ describe('Users', () => {
             describe('Given no params to patch', () => {
 
                 it('Should return a 204 code and a message stating no parameters were provided to patch', async () => {
-
+                    
+                    await supertest(app)
+                        .patch(`/users/${existingUserID}`)
+                        .send({})
+                        .expect(204);
                 });
             });
 
