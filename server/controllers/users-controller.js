@@ -33,9 +33,14 @@ const createUser = async (req, res, next) => {
         return res.status(400).json({ message: "User with email already exists" });
     }
 
-    await user.signup();
+    let userID;
+    try {
+        userID = await user.signup();
+    } catch (error) {
+        return next(error);
+    }
 
-    return res.status(201).json({ "message": "User created", id: user});
+    return res.status(201).json({ "message": "User created", id: userID});
 }
 
 const getAllUsers = async (req, res, next) => {

@@ -41,7 +41,7 @@ class User {
     async signup() {
         const encryptedPassword = await bcrypt.hash(this.password, 12);
 
-        await db.getDatabase().collection('users').insertOne({
+        return await db.getDatabase().collection('users').insertOne({
             email: this.email,
             password: encryptedPassword,
             lname: this.lname,

@@ -10,6 +10,13 @@ jest.mock('../../../middleware/validate-jwt', () => jest.fn((req, res, next) => 
     return next(null);
 }));
 
+beforeEach(async () => {
+
+    // Cleans up before we do any adding
+   await supertest(app)
+        .delete(`/users/${nonexistingUserID}`);
+});
+
 describe('Users', () => {
 
     describe('GET ALL Users', () => {
@@ -265,6 +272,7 @@ describe('Users', () => {
             
             it('Should return a 201 code and a valid User object', async () => {
                 
+                let user;
                 await supertest(app)
                     .post(`/users/new`)
                     .send({
@@ -275,9 +283,14 @@ describe('Users', () => {
                     })
                     .expect(201)
                     .then((response) => {
+                        user = response.body;
                         expect(response.body.id).toBeTruthy();
                         expect(response.body.message).toBe("User created");
                     });
+                
+                await supertest(app)
+                    .delete(`/users/${user.id.insertedId}`);
+
             });
         });
     });
@@ -291,6 +304,46 @@ describe('Users', () => {
                 await supertest(app)
                     .delete(`/users/${nonexistingUserID}`)
                     .expect(204)
+            });
+        });
+
+        describe('Given invalid userID', () => {
+
+            it('Should return a 500 code and an error message stating hex string must be 24 characters', async () => {
+
+                await supertest(app)
+                    .delete(`/users/0`)
+                    .expect(500)
+                    .then((response) => {
+                        expect(response.body.message).toBe("hex string must be 24 characters");
+                    });
+            });
+        });
+
+        describe('Given valid, existing userID', () => {
+            
+            it('Should return a 204 code and delete the user', async () => {
+                
+                let user;
+                await supertest(app)
+                    .post(`/users/new`)
+                    .send({
+                        "email": "deletetest@email.com",
+                        "password": "validpassword",
+                        "lname": "User",
+                        "fname": "Valid"
+                    })
+                    .then((response) => {
+                        user = response.body
+                    });
+
+                await supertest(app)
+                    .delete(`/users/${user.id.insertedId}`)
+                    .expect(204);
+
+                await supertest(app)
+                    .get(`/users/${user.id.insertedId}`)
+                    .expect(404);
             });
         });
 
