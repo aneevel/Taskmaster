@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const app = require('../../../server');
+const bcrypt = require('bcrypt');
 
 const existingUserID = '66a2c3b69d5dbcf506d743bb';
 const modifyUserID = '66a2c3b69d5dbcf506d743bb';
@@ -488,7 +489,7 @@ describe('Users', () => {
                         .send({ "password" : "testpassword" })
                         .expect(200)
                         .then((response) => {
-                            expect(response.body.user.password).toEqual("testpassword");
+                            expect(bcrypt.compare(response.body.user.password, "testpassword")).toBeTruthy();
                         });
                 });
             });
@@ -496,14 +497,26 @@ describe('Users', () => {
             describe('Given a valid first name', () => {
                 
                 it('Should return a 200 code and an updated User with first name', async () => {
-
+                    await supertest(app)
+                        .patch(`/users/${modifyUserID}`)
+                        .send({ "fname" : "Validfirstname" })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body.user.fname).toEqual("Validfirstname");
+                        });
                 });
             });
 
             describe('Given a valid last name', () => {
 
                 it('Should return a 200 code and an updated User with last name', async () => {
-
+                    await supertest(app)
+                        .patch(`/users/${modifyUserID}`)
+                        .send({ "lname" : "Validlastname" })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body.user.lname).toEqual("Validlastname");
+                        });
                 });
             });
         });

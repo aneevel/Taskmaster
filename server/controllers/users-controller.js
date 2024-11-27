@@ -126,7 +126,10 @@ const updateUser = async (req, res, next) => {
         user.lname,
         user.fname
     );
-    req.body.password = await bcrypt.hash(req.body.password, 12);
+    
+    if (!ValidationUtil.isEmpty(req.body.password)) 
+        req.body.password = await bcrypt.hash(req.body.password, 12);
+
     createdUser = await createdUser.patch(req.body, req.params.id);
 
     return res.status(200).send({ user: createdUser });
