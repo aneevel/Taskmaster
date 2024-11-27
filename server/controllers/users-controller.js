@@ -1,5 +1,6 @@
 const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
+const bcrypt = require('bcrypt');
 
 const createUser = async (req, res, next) => {
 
@@ -125,6 +126,7 @@ const updateUser = async (req, res, next) => {
         user.lname,
         user.fname
     );
+    req.body.password = await bcrypt.hash(req.body.password, 12);
     createdUser = await createdUser.patch(req.body, req.params.id);
 
     return res.status(200).send({ user: createdUser });

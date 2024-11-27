@@ -76,7 +76,6 @@ class User {
         } catch (error) {
             throw error;
         }
-        console.log(body);
         return await db.getDatabase().collection('users').findOneAndUpdate({ "_id": uuid}, {$set: body}, { returnNewDocument: true});
     }
 }

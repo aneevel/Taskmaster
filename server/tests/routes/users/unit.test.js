@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const app = require('../../../server');
 
 const existingUserID = '66a2c3b69d5dbcf506d743bb';
-const modifyUserID = '6740f47db863930a2e3554fc';
+const modifyUserID = '66a2c3b69d5dbcf506d743bb';
 const nonexistingUserID = '000000000000000000000000';
 const invalidUserID = '0';
 
@@ -358,7 +358,7 @@ describe('Users', () => {
                 it('Should return a 400 error and an error message stating an email address that is not already in use must be provided', async () => {
                     
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "email": "aneevel15@gmail.com" })
                         .expect(400)
                         .then((response) => {
@@ -372,7 +372,7 @@ describe('Users', () => {
                 it('Should return a 400 error and an error message stating a valid email address must be provided', async () => {
                     
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "email": "invalidemail" })
                         .expect(400)
                         .then((response) => {
@@ -385,7 +385,7 @@ describe('Users', () => {
                 
                 it('Should return a 400 error and an error message stating password greater than 8 characters must be provided', async () => {
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "password": "short" })
                         .expect(400)
                         .then((response) => {
@@ -399,7 +399,7 @@ describe('Users', () => {
                 it('Should return a 400 error and an error message stating a password less than 50 characters must be provided', async () => {
                     
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
                         .expect(400)
                         .then((response) => {
@@ -413,7 +413,7 @@ describe('Users', () => {
                 it('Should return a 400 error and an error message stating a last name must not exceed 50 characters', async () => {
 
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "lname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
                         .expect(400)
                         .then((response) => {
@@ -427,7 +427,7 @@ describe('Users', () => {
                 it('Should return a 400 error and an error message stating a first name must not exceed 50 characters', async () => {
                         
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "fname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
                         .expect(400)
                         .then((response) => {
@@ -460,7 +460,7 @@ describe('Users', () => {
                 it('Should return a 204 code and a message stating no parameters were provided to patch', async () => {
                     
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({})
                         .expect(204);
                 });
@@ -470,7 +470,7 @@ describe('Users', () => {
 
                 it('Should return a 200 code and an updated User with email', async () => {
                     await supertest(app)
-                        .patch(`/users/${existingUserID}`)
+                        .patch(`/users/${modifyUserID}`)
                         .send({ "email" : "validpatchemail@gmail.com" })
                         .expect(200)
                         .then((response) => {
@@ -482,7 +482,14 @@ describe('Users', () => {
             describe('Given a valid password', () => {
 
                 it('Should return a 200 code and an updated User with password', async () => {
-
+                    
+                    await supertest(app)
+                        .patch(`/users/${modifyUserID}`)
+                        .send({ "password" : "testpassword" })
+                        .expect(200)
+                        .then((response) => {
+                            expect(response.body.user.password).toEqual("testpassword");
+                        });
                 });
             });
 
