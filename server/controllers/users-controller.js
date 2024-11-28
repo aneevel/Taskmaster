@@ -1,6 +1,7 @@
 const User = require('../models/user-model');
 const ValidationUtil = require('../utility/validation');
 const bcrypt = require('bcrypt');
+const mongodb = require('mongodb');
 
 const createUser = async (req, res, next) => {
 
@@ -89,13 +90,18 @@ const updateUser = async (req, res, next) => {
         return res.status(204).send();
     }
 
-    let user = new User(req.body.email);
-    if (await user.existsAlready()) {
-        return res.status(400).json({message: "This email address is already in use" });
-    }
-
-    if (!ValidationUtil.isEmpty(req.body.email) && !ValidationUtil.isValidEmailAddress(req.body.email)) {
-        return res.status(400).json({message: "A valid email address must be provided" });
+    if (!ValidationUtil.isEmpty(req.body.email)) {
+        if (ValidationUtil.isValidEmailAddress(req.body.email)) {
+            let user = new User(req.body.email);
+            let compareUser = await user.getUserWithSameEmail();
+            let givenUser = await User.findById(req.params.id);
+            if (JSON.stringify(compareUser) != JSON.stringify(givenUser)) {
+                console.log(`Error: That email already exists`);
+                return res.status(400).json({message: "This email address is already in use" });
+            }
+        } else {
+            return res.status(400).json({message: "A valid email address must be provided" });
+        }
     }
 
     if (!ValidationUtil.isEmpty(req.body.password) && !ValidationUtil.isValidPassword(req.body.password)) {
@@ -110,6 +116,7 @@ const updateUser = async (req, res, next) => {
         return res.status(400).json({message: "A first name must not exceed 50 characters" });
     }
 
+    let user;
     try {
         user = await User.findById(req.params.id);
     } catch (error) {
@@ -117,8 +124,7 @@ const updateUser = async (req, res, next) => {
     }
 
     if (!user) {
-        return res.status(404).json({ message: "No user with ID was found" });
-    }
+        return res.status(404).json({ message: "No user with ID was found" }); }
 
     let createdUser = new User(
         user.email,

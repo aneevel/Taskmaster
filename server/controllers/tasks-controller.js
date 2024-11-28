@@ -50,7 +50,7 @@ const createTask = async (req, res, next) => {
     }
 
     try {
-        User.findById(req.body.userID)
+        await User.findById(req.body.userID)
     } catch (error) {
         return res.status(404).json({ message: "User with userID does not exist" });
     }

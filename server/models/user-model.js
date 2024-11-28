@@ -12,22 +12,22 @@ class User {
         this.admin = false;
     }
 
-    static findAll() {
-        return db.getDatabase().collection('users').find({}).toArray();
+    static async findAll() {
+        return await db.getDatabase().collection('users').find({}).toArray();
     }
 
-    static findById(userID) {
+    static async findById(userID) {
         let uuid;
         try {
             uuid = mongodb.ObjectId.createFromHexString(userID);
         } catch (error) {
             throw error;
         }
-        return db.getDatabase().collection('users').findOne({_id: uuid});
+        return await db.getDatabase().collection('users').findOne({_id: uuid});
     }
 
-    getUserWithSameEmail() {
-        return db.getDatabase().collection('users').findOne({ email: this.email });
+    async getUserWithSameEmail() {
+        return await db.getDatabase().collection('users').findOne({ email: this.email });
     }
 
     async existsAlready() {
@@ -64,7 +64,7 @@ class User {
         try {
             uuid = mongodb.ObjectId.createFromHexString(userID);
         } catch (error) {
-            throw error 
+            throw error;
         }
         return db.getDatabase().collection('users').deleteMany({_id: uuid});
     }
