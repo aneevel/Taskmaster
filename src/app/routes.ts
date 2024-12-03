@@ -1,9 +1,6 @@
 import { Routes } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
-import { DailyComponent } from "./daily/daily.component";
-import { WeeklyComponent } from "./weekly/weekly.component";
-import { MonthlyComponent } from "./monthly/monthly.component";
-import { OneOffComponent } from "./one-off/one-off.component";
+import { TasksComponent } from "./tasks/tasks.component";
 import { AccountComponent } from "./account/account.component";
 import { UsersComponent } from "./user/users/users.component";
 import { LoginComponent } from "./login/login.component";
@@ -21,27 +18,9 @@ const routeConfig: Routes = [
     loadComponent: () => import('./features/callback/callback.component').then(mod => mod.CallbackComponent)
   },
   {
-    path: "tasks/daily",
-    component: DailyComponent,
-    title: "Daily Tasks",
-    canActivate: [authGuard]
-  },
-  {
-    path: "tasks/weekly",
-    component: WeeklyComponent,
-    title: "Weekly Tasks",
-    canActivate: [authGuard]
-  },
-  {
-    path: "tasks/monthly",
-    component: MonthlyComponent,
-    title: "Monthly Tasks",
-    canActivate: [authGuard]
-  },
-  {
-    path: "tasks/one-off",
-    component: OneOffComponent,
-    title: "One-Off Tasks",
+    path: "tasks",
+    component: TasksComponent,
+    title: "User Tasks",
     canActivate: [authGuard]
   },
   {
@@ -55,9 +34,8 @@ const routeConfig: Routes = [
     component: LoginComponent,
     title: "Login",
   },
-
   {
-    path: "signup",
+    path: "register",
     component: RegisterComponent,
   },
   {
