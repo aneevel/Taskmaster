@@ -80,8 +80,12 @@ describe('UserService', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('expires_at', jasmine.any(String));
   });
 
-  it('should log user out when requested', () => {
+  it('should log user out and clear local storage', () => {
+    service.logout();
 
+    expect(localStorage.removeItem).toHaveBeenCalledWith('id_token');
+    expect(localStorage.removeItem).toHaveBeenCalledWith('expires_at');
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
 });
