@@ -14,6 +14,8 @@ export class UserService {
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
 
+    public API_URL: string = environment.api.serverUrl;
+
   constructor(
     private router: Router,
     private http: HttpClient) { 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 
 import { UserService } from './user.service';
@@ -16,15 +16,14 @@ describe('UserService', () => {
         imports: [HttpClientTestingModule],
         providers: [
             UserService,
-            { provide: router, useValue: { navigate: jasmine.createSpy('navigate') } }
+            { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
         ]
     });
-    service = TestBed.inject(UserService);
 
     localStorageMock = {
         getItem: jasmine.createSpy('getItem').and.callFake((key: string) => {
             if (key === 'user') {
-                return JSON.stringify({ "id": "test-id" });
+                return JSON.stringify({ "idToken": "test-id" });
             }
             return null;
         }),
@@ -36,6 +35,13 @@ describe('UserService', () => {
     spyOn(localStorage, 'setItem').and.callFake(localStorageMock.setItem);
     spyOn(localStorage, 'removeItem').and.callFake(localStorageMock.removeItem);
 
+    service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
+    router = TestBed.inject(Router);
+  });
+
+  afterEach(() => {
+     httpMock.verify();
   });
 
   it('should be created', () => {
@@ -43,11 +49,22 @@ describe('UserService', () => {
   });
 
   it('should return a new user with proper credentials', () => {
-    let results = service.register("test@test.email", "testpassword", "test", "testerson");
   });
 
-  it('should authenticate the user', () => {
-    
+  it('should authenticate the user and set up session', () => {
+    const response = { idToken: 'test-id', expiresIn: '3600' };
+
+    service.login('test@test.com', 'testpassword').subscribe(response => {
+        expect(response.idToken).toBe('test-id');
+        expect(response.expiresIn).toBe('3600');
+    });
+
+    const req = httpMock.expectOne(`${service['API_URL']}/login`);
+    expect(req.request.method).toBe('POST');
+    req.flush(response);
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('id_token', 'test-id');
+    expect(localStorage.setItem).toHaveBeenCalledWith('expires_at', jasmine.any(String));
   });
 
   it('should log user out when requested', () => {
