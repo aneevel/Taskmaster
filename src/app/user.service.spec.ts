@@ -48,7 +48,20 @@ describe('UserService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return a new user with proper credentials', () => {
+  it('should register and set session', () => {
+      const response = { idToken: 'test-id', expiresIn: '3600' };
+
+      service.register('test@test.com', 'testpassword', 'First', 'Last').subscribe(response => {
+            expect(response.idToken).toBe('test-id');
+            expect(response.expiresIn).toBe('3600');
+      });
+
+      const req = httpMock.expectOne(`${service['API_URL']}/register`);
+      expect(req.request.method).toBe('POST');
+      req.flush(response);
+
+      expect(localStorage.setItem).toHaveBeenCalledWith('id_token', 'test-id');
+      expect(localStorage.setItem).toHaveBeenCalledWith('expires_at', jasmine.any(String));
   });
 
   it('should authenticate the user and set up session', () => {
