@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 
 import { UserService } from './user.service';
 
@@ -12,7 +13,11 @@ describe('UserService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule]
+        imports: [HttpClientTestingModule],
+        providers: [
+            UserService,
+            { provide: router, useValue: { navigate: jasmine.createSpy('navigate') } }
+        ]
     });
     service = TestBed.inject(UserService);
 
@@ -30,6 +35,7 @@ describe('UserService', () => {
     spyOn(localStorage, 'getItem').and.callFake(localStorageMock.getItem);
     spyOn(localStorage, 'setItem').and.callFake(localStorageMock.setItem);
     spyOn(localStorage, 'removeItem').and.callFake(localStorageMock.removeItem);
+
   });
 
   it('should be created', () => {
