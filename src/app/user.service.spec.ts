@@ -5,6 +5,10 @@ import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
+  let httpMock: HttpTestingController;
+  let router: Router;
+
+  let localStorageMock: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,6 +19,18 @@ describe('UserService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should return a new user with proper credentials', () => {
+    let results = service.register("test@test.email", "testpassword", "test", "testerson");
+  });
+
+  it('should authenticate the user', () => {
+    
+  });
+
+  it('should log user out when requested', () => {
+
   });
 
 });

@@ -52,7 +52,7 @@ export class UserService {
     }
 
     public isLoggedIn() {
-        return moment().isBefore(this.getExpiration());
+        return this.userValue != null && moment().isBefore(this.getExpiration());
     }
 
     isLoggedOut() {

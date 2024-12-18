@@ -4,6 +4,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 
 import { of } from 'rxjs';
 
+import { UserService } from '../user.service';
 import { LoginComponent } from './login.component';
 import routes from "../routes";
 
@@ -11,11 +12,22 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
+  const userServiceStub: jasmine.SpyObj<UserService> = jasmine.createSpyObj(
+      'userService',
+      ['login']
+  );
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes(routes),
           LoginComponent,
-        HttpClientTestingModule]
+        HttpClientTestingModule],
+      providers: [
+          {
+              provide: UserService,
+              useValue: userServiceStub 
+          }
+      ]
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
@@ -35,5 +47,9 @@ describe('LoginComponent', () => {
 
         fixture.nativeElement.querySelector('button').click();
         expect(userServiceStub.login.calls.any()).toBeTruthy();
+        expect(userServiceStub.login).toHaveBeenCalledWith(
+            email.value,
+            password.value 
+        );
   });
 });
