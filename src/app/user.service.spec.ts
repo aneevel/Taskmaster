@@ -15,6 +15,21 @@ describe('UserService', () => {
         imports: [HttpClientTestingModule]
     });
     service = TestBed.inject(UserService);
+
+    localStorageMock = {
+        getItem: jasmine.createSpy('getItem').and.callFake((key: string) => {
+            if (key === 'user') {
+                return JSON.stringify({ "id": "test-id" });
+            }
+            return null;
+        }),
+        setItem: jasmine.createSpy('setItem'),
+        removeItem: jasmine.createSpy('removeItem'),
+    };
+
+    spyOn(localStorage, 'getItem').and.callFake(localStorageMock.getItem);
+    spyOn(localStorage, 'setItem').and.callFake(localStorageMock.setItem);
+    spyOn(localStorage, 'removeItem').and.callFake(localStorageMock.removeItem);
   });
 
   it('should be created', () => {
