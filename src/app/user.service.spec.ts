@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 import { UserService } from './user.service';
 
@@ -86,6 +87,24 @@ describe('UserService', () => {
     expect(localStorage.removeItem).toHaveBeenCalledWith('id_token');
     expect(localStorage.removeItem).toHaveBeenCalledWith('expires_at');
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
+  });
+
+  it('should return true if user is logged in', () => {
+      service.login('test@test.com', 'testpassword');
+
+      const expirationTime = moment().add(1, 'hour').valueOf();
+      localStorage.setItem('expires_at', JSON.stringify(expirationTime));
+
+      const result = service.isLoggedIn();
+      expect(result).toBeTrue();
+  });
+
+  it('should return false if user is logged out', () => {
+      const expirationTime = moment().subtract(1, 'hour').valueOf();
+      localStorage.setItem('expires_at', JSON.stringify(expirationTime));
+
+      const result = service.isLoggedIn();
+      expect(result).toBeFalse();
   });
 
 });

@@ -57,10 +57,6 @@ export class UserService {
         return this.userValue != null && moment().isBefore(this.getExpiration());
     }
 
-    isLoggedOut() {
-        return !this.isLoggedIn();
-    }
-
     getExpiration() {
         const expiration = localStorage.getItem("expires_at");
         const expiresAt = JSON.parse(expiration!);
