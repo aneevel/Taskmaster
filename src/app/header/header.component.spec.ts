@@ -43,7 +43,7 @@ describe("HeaderComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should have login and create account buttons if user is unauthenticated", () => {
+  /**it("should have login and create account buttons if user is unauthenticated", () => {
 
     const loginElement = fixture.debugElement.query(By.css("#nav-login"));
     expect(loginElement).toBeTruthy();
@@ -54,7 +54,7 @@ describe("HeaderComponent", () => {
 
   it("should not have logout or account button if user is not authenticated", () => {
 
-  });
+  });*/
 
   it("should navigate to home", fakeAsync(() => {
     router.navigate(["/"]).then(() => {

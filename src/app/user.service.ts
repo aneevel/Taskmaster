@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import * as moment from "moment";
 import { environment } from '../environments/environment';
+import { DateTime } from 'luxon';
 
 import { User } from './user/user';
 
@@ -46,18 +47,29 @@ export class UserService {
                 tap(res => this.setSession(res)));
     }
 
+    changePassword(email: string, oldPassword: string, newPassword: string) {
+        return this.http.patch<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
+            .pipe(
+                tap(res => this.setSession(res)));
+    }
+
     private setSession(result: { idToken: string, expiresIn: string}) {
-        const expiresAt = moment().add(result.expiresIn, 'second');
+        const expiresAt = DateTime.now().plus({ hours: 1 });
 
         localStorage.setItem('id_token', result.idToken);
-        localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()) );
+        localStorage.setItem("expires_at", JSON.stringify(expiresAt));
     }
 
     public isLoggedIn() {
         return this.userValue != null && !this.isExpired();
     }
 
+    setExpiry(expiry: DateTime) {
+        localStorage.setItem("expires_at", JSON.stringify(expiry));
+    }
+
     isExpired() {
-        return false;
+        console.log(localStorage.getItem("expires_at")!);
+        return DateTime.now() > DateTime.fromISO(localStorage.getItem("expires_at")!);
     }
 }

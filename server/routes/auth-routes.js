@@ -10,4 +10,6 @@ router.post('/login', authController.login);
 
 router.post('/logout', authController.logout);
 
+router.patch('/change-password', authController.changePassword);
+
 module.exports = router;

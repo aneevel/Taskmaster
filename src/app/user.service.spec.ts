@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { UserService } from './user.service';
 
@@ -110,6 +110,37 @@ describe('UserService', () => {
 
     const result = service.isLoggedIn();
     expect(result).toBeFalse();
+  });
+
+  it('should change password when provided', () => {
+      const response = { idToken: 'test-id', expiresIn: '3600' };
+
+      service.changePassword('test@test.com', 'testpassword', 'newpassword').subscribe(response => {
+            expect(response.idToken).toBe('test-id');
+            expect(response.expiresIn).toBe('3600');
+      });
+
+      const req = httpMock.expectOne(`${service['API_URL']}/changePassword`);
+      expect(req.request.method).toBe('PATCH');
+      req.flush(response);
+  });
+
+  it('should expire user if their expiry time has passed', () => {
+    const response = { idToken: 'test-id', expiresIn: '3600' };
+
+    service.login('test@test.com', 'testpassword').subscribe(response => {
+        expect(response.idToken).toBe('test-id');
+        expect(response.expiresIn).toBe('3600');
+    });
+
+    const req = httpMock.expectOne(`${service['API_URL']}/login`);
+    expect(req.request.method).toBe('POST');
+    req.flush(response);
+
+    service.setExpiry(DateTime.now());
+
+    const result = service.isLoggedIn();
+    expect(result).toBeFalsy();
   });
 
 });
