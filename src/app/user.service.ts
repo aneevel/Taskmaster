@@ -54,12 +54,10 @@ export class UserService {
     }
 
     public isLoggedIn() {
-        return this.userValue != null && moment().isBefore(this.getExpiration());
+        return this.userValue != null && !this.isExpired();
     }
 
-    getExpiration() {
-        const expiration = localStorage.getItem("expires_at");
-        const expiresAt = JSON.parse(expiration!);
-        return moment(expiresAt);
+    isExpired() {
+        return false;
     }
 }

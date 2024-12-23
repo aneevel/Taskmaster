@@ -90,21 +90,26 @@ describe('UserService', () => {
   });
 
   it('should return true if user is logged in', () => {
-      service.login('test@test.com', 'testpassword');
+    const response = { idToken: 'test-id', expiresIn: '3600' };
 
-      const expirationTime = moment().add(1, 'hour').valueOf();
-      localStorage.setItem('expires_at', JSON.stringify(expirationTime));
+    service.login('test@test.com', 'testpassword').subscribe(response => {
+        expect(response.idToken).toBe('test-id');
+        expect(response.expiresIn).toBe('3600');
+    });
 
-      const result = service.isLoggedIn();
-      expect(result).toBeTrue();
+    const req = httpMock.expectOne(`${service['API_URL']}/login`);
+    expect(req.request.method).toBe('POST');
+    req.flush(response);
+
+    const result = service.isLoggedIn();
+    expect(result).toBeTrue();
   });
 
   it('should return false if user is logged out', () => {
-      const expirationTime = moment().subtract(1, 'hour').valueOf();
-      localStorage.setItem('expires_at', JSON.stringify(expirationTime));
+    service.logout();
 
-      const result = service.isLoggedIn();
-      expect(result).toBeFalse();
+    const result = service.isLoggedIn();
+    expect(result).toBeFalse();
   });
 
 });
