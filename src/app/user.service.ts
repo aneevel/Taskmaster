@@ -69,7 +69,6 @@ export class UserService {
     }
 
     isExpired() {
-        console.log(localStorage.getItem("expires_at")!);
-        return DateTime.now() > DateTime.fromISO(localStorage.getItem("expires_at")!);
+        return DateTime.now() > DateTime.fromISO(JSON.parse(localStorage.getItem("expires_at")!));
     }
 }

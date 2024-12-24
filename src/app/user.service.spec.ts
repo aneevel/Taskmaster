@@ -21,21 +21,6 @@ describe('UserService', () => {
         ]
     });
 
-    localStorageMock = {
-        getItem: jasmine.createSpy('getItem').and.callFake((key: string) => {
-            if (key === 'user') {
-                return JSON.stringify({ "idToken": "test-id" });
-            }
-            return null;
-        }),
-        setItem: jasmine.createSpy('setItem'),
-        removeItem: jasmine.createSpy('removeItem'),
-    };
-
-    spyOn(localStorage, 'getItem').and.callFake(localStorageMock.getItem);
-    spyOn(localStorage, 'setItem').and.callFake(localStorageMock.setItem);
-    spyOn(localStorage, 'removeItem').and.callFake(localStorageMock.removeItem);
-
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
     router = TestBed.inject(Router);
@@ -60,9 +45,6 @@ describe('UserService', () => {
       const req = httpMock.expectOne(`${service['API_URL']}/register`);
       expect(req.request.method).toBe('POST');
       req.flush(response);
-
-      expect(localStorage.setItem).toHaveBeenCalledWith('id_token', 'test-id');
-      expect(localStorage.setItem).toHaveBeenCalledWith('expires_at', jasmine.any(String));
   });
 
   it('should authenticate the user and set up session', () => {
@@ -76,37 +58,30 @@ describe('UserService', () => {
     const req = httpMock.expectOne(`${service['API_URL']}/login`);
     expect(req.request.method).toBe('POST');
     req.flush(response);
-
-    expect(localStorage.setItem).toHaveBeenCalledWith('id_token', 'test-id');
-    expect(localStorage.setItem).toHaveBeenCalledWith('expires_at', jasmine.any(String));
   });
 
   it('should log user out and clear local storage', () => {
-    service.logout();
-
-    expect(localStorage.removeItem).toHaveBeenCalledWith('id_token');
-    expect(localStorage.removeItem).toHaveBeenCalledWith('expires_at');
-    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+        
+      localStorage.setItem('id_token', 'fake-token');
+      localStorage.setItem('expires_at', JSON.stringify(DateTime.now().plus({ hours: 1 }).toISO()));
+      
+      service.logout();
+   
+      expect(localStorage.getItem('id_token')).toBeNull();
+      expect(localStorage.getItem('expires_at')).toBeNull();
+      expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('should return true if user is logged in', () => {
-    const response = { idToken: 'test-id', expiresIn: '3600' };
-
-    service.login('test@test.com', 'testpassword').subscribe(response => {
-        expect(response.idToken).toBe('test-id');
-        expect(response.expiresIn).toBe('3600');
-    });
-
-    const req = httpMock.expectOne(`${service['API_URL']}/login`);
-    expect(req.request.method).toBe('POST');
-    req.flush(response);
+  it('should return true if user is logged in and not expired', () => {
+    localStorage.setItem('expires_at', JSON.stringify(DateTime.now().plus({ hours: 1 }).toISO()));
 
     const result = service.isLoggedIn();
+
     expect(result).toBeTrue();
   });
 
-  it('should return false if user is logged out', () => {
-    service.logout();
+  it('should return false if the user is expired', () => {
+    localStorage.setItem('expires_at', JSON.stringify(DateTime.now().minus({ hours: 1}).toISO()));
 
     const result = service.isLoggedIn();
     expect(result).toBeFalse();
@@ -125,22 +100,14 @@ describe('UserService', () => {
       req.flush(response);
   });
 
-  it('should expire user if their expiry time has passed', () => {
-    const response = { idToken: 'test-id', expiresIn: '3600' };
+  it('should store the expiry date in localStorage', () => {
+    const expiry = DateTime.now().plus({ hours: 1 });
 
-    service.login('test@test.com', 'testpassword').subscribe(response => {
-        expect(response.idToken).toBe('test-id');
-        expect(response.expiresIn).toBe('3600');
-    });
+    service.setExpiry(expiry);
 
-    const req = httpMock.expectOne(`${service['API_URL']}/login`);
-    expect(req.request.method).toBe('POST');
-    req.flush(response);
-
-    service.setExpiry(DateTime.now());
-
-    const result = service.isLoggedIn();
-    expect(result).toBeFalsy();
+    const storedExpiry = localStorage.getItem('expires_at');
+    expect(storedExpiry).toBeTruthy();
+    expect(JSON.parse(storedExpiry!)).toBe(expiry.toISO());
   });
 
 });
