@@ -10,8 +10,6 @@ describe('UserService', () => {
   let httpMock: HttpTestingController;
   let router: Router;
 
-  let localStorageMock: any;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
