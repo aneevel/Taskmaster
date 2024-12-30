@@ -28,4 +28,14 @@ export class UserTasksService {
     setTasks(result: Task[]) {
        localStorage.setItem('tasks', JSON.stringify(result)); 
     }
+
+    addTask(task: Task) {
+        let currentTasks = [];
+
+        // TS is kinda dumb sometimes lol
+        if (!localStorage.getItem('tasks'))
+            currentTasks = JSON.parse(localStorage.getItem('tasks')!);
+        currentTasks.push(task);
+        localStorage.setItem('tasks', JSON.stringify(currentTasks));
+    }
 }

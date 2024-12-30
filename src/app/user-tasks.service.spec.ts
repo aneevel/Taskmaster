@@ -69,7 +69,7 @@ describe('UserTasksService', () => {
     const response = { tasks: [] };
 
     service.getTasks('test-id').subscribe(response => {
-        expect(response.tasks).toBeInstanceOf(Array);
+        expect(response).toBeInstanceOf(Array);
     });
 
     const req = httpMock.expectOne(`${service['API_URL']}/tasks/test-id`);
