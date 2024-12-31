@@ -1,19 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 
 import { CreateTaskComponent } from './create-task.component';
 import { By } from '@angular/platform-browser';
-import { DynamicDialogComponent, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 describe('CreateTaskComponent', () => {
   let component: CreateTaskComponent;
   let fixture: ComponentFixture<CreateTaskComponent>;
+  let httpMock: HttpTestingController;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CreateTaskComponent],
+      imports: [CreateTaskComponent, HttpClientTestingModule],
       providers: [DynamicDialogRef, 
-        DynamicDialogConfig]
+        DynamicDialogConfig,
+        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
+      ]
     });
+
+    httpMock = TestBed.inject(HttpTestingController);
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(CreateTaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

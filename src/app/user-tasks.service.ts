@@ -20,13 +20,13 @@ export class UserTasksService {
     }
 
     getTasks(userID: string) {
-        return this.http.post<Task[]>(`${environment.api.serverUrl}/tasks/${userID}`, {})
+        return this.http.get<{ tasks: Task[] }>(`${environment.api.serverUrl}/tasks/${userID}`, {})
             .pipe(
-                tap(res => this.setTasks(res)));
+                tap(res => this.setTasks(res.tasks)));
     }
 
     setTasks(result: Task[]) {
-       localStorage.setItem('tasks', JSON.stringify(result)); 
+        localStorage.setItem('tasks', JSON.stringify(result)); 
     }
 
     addTask(task: Task) {
