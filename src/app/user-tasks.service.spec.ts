@@ -71,15 +71,22 @@ describe('UserTasksService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(response);
 
-    //expect(localStorage.setItem).toHaveBeenCalledWith('tasks');
-  });
-
-  it('should fallback to local storage if API is unavailable', () => {
-
+    expect(localStorage.setItem).toHaveBeenCalledWith('tasks', '[]');
   });
 
   it('should delete task from local storage and call API', () => {
+      const response = { status: 204, body: {} };
+    
+      service.deleteTask('test-id').subscribe(response => {
+          expect(response.status).toBe(204);
+      });
 
+      const req = httpMock.expectOne(`${service['API_URL']}/tasks/test-id`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(response);
+
+      // Under the hood, this is calling setItem to only remove 'one' task'
+      expect(localStorage.setItem).toHaveBeenCalled(); 
   });
 
   it('should update task in local storage and call API', () => {

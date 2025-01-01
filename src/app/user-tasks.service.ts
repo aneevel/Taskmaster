@@ -9,14 +9,14 @@ import { environment } from '../environments/environment';
 })
 export class UserTasksService {
     private tasksSubject: BehaviorSubject<Task[]>;
-    public tasks: Observable<Task[]>;
+    public tasks$: Observable<Task[]>;
 
     public API_URL: string = environment.api.serverUrl;
 
     constructor(
         private http: HttpClient) { 
             this.tasksSubject = new BehaviorSubject<Task[]>(JSON.parse(localStorage.getItem('tasks') || '[]'));
-            this.tasks = this.tasksSubject.asObservable();
+            this.tasks$ = this.tasksSubject.asObservable();
     }
 
     getTasks(userID: string) {
@@ -27,6 +27,20 @@ export class UserTasksService {
 
     setTasks(result: Task[]) {
         localStorage.setItem('tasks', JSON.stringify(result)); 
+    }
+
+    deleteTask(taskID: string) {
+        this.removeTask(taskID);
+        return this.http.delete<{ status: Number, body: string}>(`${environment.api.serverUrl}/tasks/${taskID}`, {});
+    }
+
+    removeTask(taskID: string) {
+        let currentTasks = [];
+
+        if (!localStorage.getItem('tasks'))
+            currentTasks = JSON.parse(localStorage.getItem('tasks')!);
+        currentTasks.filter((task: Task) => task.id !== taskID);
+        localStorage.setItem('tasks', JSON.stringify(currentTasks));
     }
 
     addTask(task: Task) {
