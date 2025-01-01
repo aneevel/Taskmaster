@@ -1,55 +1,60 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Task } from './task';
-import { environment } from '../environments/environment';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { ApiGatewayService } from './api-gateway.service';
+import { Task } from './models/task.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserTasksService {
-    private tasksSubject: BehaviorSubject<Task[]>;
-    public tasks$: Observable<Task[]>;
+    private tasksSubject = new BehaviorSubject<Task[]>([]);
+    public tasks$ = this.tasksSubject.asObservable();
 
-    public API_URL: string = environment.api.serverUrl;
+    constructor(private apiGateway: ApiGatewayService) {}
 
-    constructor(
-        private http: HttpClient) { 
-            this.tasksSubject = new BehaviorSubject<Task[]>(JSON.parse(localStorage.getItem('tasks') || '[]'));
-            this.tasks$ = this.tasksSubject.asObservable();
+    loadUserTasks(userId: string): Observable<Task[]> {
+        return this.apiGateway.getUserTasks(userId).pipe(
+            tap(tasks => this.tasksSubject.next(tasks))
+        );
     }
 
-    getTasks(userID: string) {
-        return this.http.get<{ tasks: Task[] }>(`${environment.api.serverUrl}/tasks/${userID}`, {})
-            .pipe(
-                tap(res => this.setTasks(res.tasks)));
+    createTask(userId: string, taskData: { title: string; description?: string }): Observable<Task> {
+        return this.apiGateway.createTask({
+            userId,
+            title: taskData.title,
+            description: taskData.description,
+            completed: false
+        }).pipe(
+            tap(newTask => {
+                const currentTasks = this.tasksSubject.value;
+                this.tasksSubject.next([...currentTasks, newTask]);
+            })
+        );
     }
 
-    setTasks(result: Task[]) {
-        localStorage.setItem('tasks', JSON.stringify(result)); 
+    updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
+        return this.apiGateway.updateTask(taskId, updates).pipe(
+            tap(updatedTask => {
+                const currentTasks = this.tasksSubject.value;
+                const index = currentTasks.findIndex(t => t.id === taskId);
+                if (index !== -1) {
+                    currentTasks[index] = updatedTask;
+                    this.tasksSubject.next([...currentTasks]);
+                }
+            })
+        );
     }
 
-    deleteTask(taskID: string) {
-        this.removeTask(taskID);
-        return this.http.delete<{ status: Number, body: string}>(`${environment.api.serverUrl}/tasks/${taskID}`, {});
+    deleteTask(taskId: string): Observable<boolean> {
+        return this.apiGateway.deleteTask(taskId).pipe(
+            tap(() => {
+                const currentTasks = this.tasksSubject.value;
+                this.tasksSubject.next(currentTasks.filter(t => t.id !== taskId));
+            })
+        );
     }
 
-    removeTask(taskID: string) {
-        let currentTasks = [];
-
-        if (!localStorage.getItem('tasks'))
-            currentTasks = JSON.parse(localStorage.getItem('tasks')!);
-        currentTasks.filter((task: Task) => task.id !== taskID);
-        localStorage.setItem('tasks', JSON.stringify(currentTasks));
-    }
-
-    addTask(task: Task) {
-        let currentTasks = [];
-
-        // TS is kinda dumb sometimes lol
-        if (!localStorage.getItem('tasks'))
-            currentTasks = JSON.parse(localStorage.getItem('tasks')!);
-        currentTasks.push(task);
-        localStorage.setItem('tasks', JSON.stringify(currentTasks));
+    getTasks$(): Observable<Task[]> {
+        return this.tasks$;
     }
 }
