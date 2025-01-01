@@ -1,4 +1,0 @@
-[
-    { "id": 0, "lname": "Admin", "fname": "Taskmaster", "email": "admin@taskmaster.com", "confirmed": true, "admin": true, "tasks": null }
-    ,{ "id": 1, "lname": "Neevel", "fname": "Alec", "email": "aneevel15@gmail.com", "confirmed": true, "admin": true, "tasks": null }
-]
