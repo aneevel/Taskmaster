@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ApiGatewayService } from './api-gateway.service';
 import { Task } from './models/task.model';
 import { environment } from 'src/environments/environment';
+import { firstValueFrom } from 'rxjs';
 
 describe('ApiGatewayService', () => {
   let service: ApiGatewayService;
@@ -27,31 +28,29 @@ describe('ApiGatewayService', () => {
   });
 
   describe('Health Check', () => {
-    it('should get API status', (done) => {
+    it('should get API status', async () => {
       const mockStatus = 200;
-
-      service.getAPIStatus().subscribe(status => {
-        expect(status).toBe(mockStatus);
-        done();
-      });
+      const statusPromise = firstValueFrom(service.getAPIStatus());
 
       const req = httpMock.expectOne(`${API_URL}/health`);
       expect(req.request.method).toBe('GET');
       req.flush(mockStatus);
+
+      const status = await statusPromise;
+      expect(status).toBe(mockStatus);
     });
 
-    it('should update status subject when health check runs', (done) => {
+    it('should update status subject when health check runs', async () => {
       const mockStatus = 200;
-
-      service.getStatus$().subscribe(status => {
-        expect(status).toBe(mockStatus);
-        done();
-      });
+      const statusPromise = firstValueFrom(service.getStatus$());
 
       service.getAPIStatus().subscribe();
 
       const req = httpMock.expectOne(`${API_URL}/health`);
       req.flush(mockStatus);
+
+      const status = await statusPromise;
+      expect(status).toBe(mockStatus);
     });
 
     it('should perform periodic health checks', fakeAsync(() => {
@@ -79,21 +78,20 @@ describe('ApiGatewayService', () => {
       completed: false
     };
 
-    it('should get user tasks', (done) => {
+    it('should get user tasks', async () => {
       const userId = 'user1';
       const mockResponse = { success: true, tasks: [mockTask] };
-
-      service.getUserTasks(userId).subscribe(tasks => {
-        expect(tasks).toEqual([mockTask]);
-        done();
-      });
+      const tasksPromise = firstValueFrom(service.getUserTasks(userId));
 
       const req = httpMock.expectOne(`${API_URL}/tasks/${userId}`);
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
+
+      const tasks = await tasksPromise;
+      expect(tasks).toEqual([mockTask]);
     });
 
-    it('should create task', (done) => {
+    it('should create task', async () => {
       const newTask = {
         userId: 'user1',
         title: 'Test Task',
@@ -101,62 +99,57 @@ describe('ApiGatewayService', () => {
         completed: false
       };
       const mockResponse = { success: true, message: 'Created', task: mockTask };
-
-      service.createTask(newTask).subscribe(task => {
-        expect(task).toEqual(mockTask);
-        done();
-      });
+      const taskPromise = firstValueFrom(service.createTask(newTask));
 
       const req = httpMock.expectOne(`${API_URL}/tasks`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(newTask);
       req.flush(mockResponse);
+
+      const task = await taskPromise;
+      expect(task).toEqual(mockTask);
     });
 
-    it('should update task', (done) => {
+    it('should update task', async () => {
       const updates = { completed: true };
       const mockResponse = { 
         success: true, 
         message: 'Updated', 
         task: { ...mockTask, ...updates }
       };
-
-      service.updateTask(mockTask.id, updates).subscribe(task => {
-        expect(task.completed).toBe(true);
-        done();
-      });
+      const taskPromise = firstValueFrom(service.updateTask(mockTask.id, updates));
 
       const req = httpMock.expectOne(`${API_URL}/tasks/${mockTask.id}`);
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(updates);
       req.flush(mockResponse);
+
+      const task = await taskPromise;
+      expect(task.completed).toBe(true);
     });
 
-    it('should delete task', (done) => {
+    it('should delete task', async () => {
       const mockResponse = { success: true, message: 'Deleted' };
-
-      service.deleteTask(mockTask.id).subscribe(success => {
-        expect(success).toBe(true);
-        done();
-      });
+      const deletePromise = firstValueFrom(service.deleteTask(mockTask.id));
 
       const req = httpMock.expectOne(`${API_URL}/tasks/${mockTask.id}`);
       expect(req.request.method).toBe('DELETE');
       req.flush(mockResponse);
+
+      const success = await deletePromise;
+      expect(success).toBe(true);
     });
 
-    it('should throw error on failed API response', (done) => {
+    it('should throw error on failed API response', async () => {
       const mockErrorResponse = { success: false, message: 'Error occurred' };
-
-      service.getUserTasks('user1').subscribe({
-        error: (error) => {
-          expect(error.message).toBe('Error occurred');
-          done();
-        }
-      });
+      const taskPromise = firstValueFrom(service.getUserTasks('user1'));
 
       const req = httpMock.expectOne(`${API_URL}/tasks/user1`);
       req.flush(mockErrorResponse);
+
+      await expectAsync(taskPromise).toBeRejectedWith(
+        jasmine.objectContaining({ message: 'Error occurred' })
+      );
     });
   });
 
