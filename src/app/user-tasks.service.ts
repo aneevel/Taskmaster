@@ -7,7 +7,7 @@ import { Task } from './models/task.model';
     providedIn: 'root'
 })
 export class UserTasksService {
-    private tasksSubject = new BehaviorSubject<Task[]>([]);
+    protected tasksSubject = new BehaviorSubject<Task[]>([]);
     public tasks$ = this.tasksSubject.asObservable();
 
     constructor(private apiGateway: ApiGatewayService) {}
