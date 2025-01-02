@@ -24,6 +24,7 @@ import { UserService } from "../user.service";
   ],
 })
 export class HeaderComponent {
+  isAuthenticated$ = this.userService.isAuthenticated$;
 
   constructor(private userService: UserService) {
 

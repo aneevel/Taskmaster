@@ -8,35 +8,35 @@
       <a class="nav-item" id="nav-home" [routerLink]="['/']"
         ><p-button label="Home" class="mr-2"></p-button
       ></a>
-      <a *ngIf="this.isLoggedIn()" class="nav-item" id="nav-daily" [routerLink]="['/tasks/daily']"
+      <a *ngIf="isAuthenticated$ | async" class="nav-item" id="nav-daily" [routerLink]="['/tasks/daily']"
         ><p-button label="Daily" class="mr-2"></p-button
       ></a>
-      <a *ngIf="this.isLoggedIn()" class="nav-item" id="nav-weekly" [routerLink]="['/tasks/weekly']"
+      <a *ngIf="isAuthenticated$ | async" class="nav-item" id="nav-weekly" [routerLink]="['/tasks/weekly']"
         ><p-button label="Weekly" class="mr-2"></p-button
       ></a>
-      <a *ngIf="this.isLoggedIn()" class="nav-item" id="nav-monthly" [routerLink]="['/tasks/monthly']"
+      <a *ngIf="isAuthenticated$ | async" class="nav-item" id="nav-monthly" [routerLink]="['/tasks/monthly']"
         ><p-button label="Monthly" class="mr-2"></p-button
       ></a>
-      <a *ngIf="this.isLoggedIn()" class="nav-item" id="nav-one-off" [routerLink]="['/tasks/one-off']"
+      <a *ngIf="isAuthenticated$ | async" class="nav-item" id="nav-one-off" [routerLink]="['/tasks/one-off']"
         ><p-button label="One-Off"></p-button
       ></a>
     </div>
     <div id="nav-account-routes" class="p-toolbar-group-end">
-      <a *ngIf="this.isLoggedIn()" class="nav-item" id="nav-account" [routerLink]="['/user/account']"
-        ><p-button label="Account"></p-button
-      ></a>
-      <ng-container>
-          <li *ngIf="!this.isLoggedIn()" class='nav-item'>
-            <app-signup-button></app-signup-button>
-          </li>
-          <li *ngIf="!this.isLoggedIn()" class='nav-item'>
-            <app-login-button></app-login-button>
-          </li>
+      <ng-container *ngIf="isAuthenticated$ | async">
+        <a class="nav-item" id="nav-account" [routerLink]="['/user/account']"
+          ><p-button label="Account"></p-button
+        ></a>
+        <li class='nav-item'>
+          <app-logout-button (click)="logout()"></app-logout-button>
+        </li>
       </ng-container>
-      <ng-container>
-          <li *ngIf="this.isLoggedIn()" class='nav-item'>
-              <app-logout-button (click)="logout()"></app-logout-button>
-            </li>
+      <ng-container *ngIf="!(isAuthenticated$ | async)">
+        <li class='nav-item'>
+          <app-signup-button></app-signup-button>
+        </li>
+        <li class='nav-item'>
+          <app-login-button></app-login-button>
+        </li>
       </ng-container>
     </div>
   </p-toolbar>
