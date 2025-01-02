@@ -1,30 +1,45 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Router } from '@angular/router';
-
 import { CreateTaskComponent } from './create-task.component';
 import { By } from '@angular/platform-browser';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { UserTasksService } from '../user-tasks.service';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ApiGatewayService } from '../api-gateway.service';
 
 describe('CreateTaskComponent', () => {
   let component: CreateTaskComponent;
   let fixture: ComponentFixture<CreateTaskComponent>;
-  let httpMock: HttpTestingController;
-  let router: Router;
+  let userTasksService: jasmine.SpyObj<UserTasksService>;
+  let dialogRef: jasmine.SpyObj<DynamicDialogRef>;
 
   beforeEach(() => {
+    const userTasksSpy = jasmine.createSpyObj('UserTasksService', ['createTask']);
+    const dialogRefSpy = jasmine.createSpyObj('DynamicDialogRef', ['close']);
+
     TestBed.configureTestingModule({
-      imports: [CreateTaskComponent, HttpClientTestingModule],
-      providers: [DynamicDialogRef, 
-        DynamicDialogConfig,
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
+      imports: [
+        CreateTaskComponent,
+        ReactiveFormsModule,
+        CalendarModule,
+        DropdownModule,
+        HttpClientTestingModule
+      ],
+      providers: [
+        { provide: UserTasksService, useValue: userTasksSpy },
+        { provide: DynamicDialogRef, useValue: dialogRefSpy },
+        { provide: DynamicDialogConfig, useValue: { data: { occurrence: 'daily' } } },
+        ApiGatewayService
       ]
     });
 
-    httpMock = TestBed.inject(HttpTestingController);
-    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(CreateTaskComponent);
     component = fixture.componentInstance;
+    userTasksService = TestBed.inject(UserTasksService) as jasmine.SpyObj<UserTasksService>;
+    dialogRef = TestBed.inject(DynamicDialogRef) as jasmine.SpyObj<DynamicDialogRef>;
+    
     fixture.detectChanges();
   });
 
