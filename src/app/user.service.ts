@@ -18,14 +18,21 @@ export class UserService {
 
     public API_URL: string = environment.api.serverUrl;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient) { 
-        this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user') || '{}'));
+    constructor(
+        private router: Router,
+        private http: HttpClient
+    ) { 
+        // Initialize with null user to indicate not authenticated
+        this.userSubject = new BehaviorSubject<User>(null!);
         this.user = this.userSubject.asObservable();
         this.isAuthenticated$ = this.user.pipe(
-            map(user => this.isLoggedIn())
+            map(user => !!user && !this.isExpired())
         );
+
+        const storedUser = localStorage.getItem('user');
+        if (storedUser && !this.isExpired()) {
+            this.userSubject.next(JSON.parse(storedUser));
+        }
     }
 
     public get userValue(): User {
