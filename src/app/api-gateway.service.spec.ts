@@ -58,37 +58,36 @@ describe('ApiGatewayService', () => {
   });
 
   describe('Health Check', () => {
-    it('should get API health status', async () => {
-      const statusPromise = firstValueFrom(service.getAPIStatus());
+    it('should get API health status', fakeAsync(() => {
+      let receivedStatus: any = null;
+      
+      service.getAPIStatus().subscribe(status => {
+        receivedStatus = status;
+      });
 
-      // Handle initial health check from constructor
-      const initReq = httpMock.expectOne(`${API_URL}/api/health`);
-      initReq.flush(mockHealthStatus);
-
-      // Handle the actual test request
       const req = httpMock.expectOne(`${API_URL}/api/health`);
       expect(req.request.method).toBe('GET');
       req.flush(mockHealthStatus);
 
-      const status = await statusPromise;
-      expect(status).toEqual(mockHealthStatus);
-    });
+      tick();
 
-    it('should update status subject when health check runs', async () => {
-      const statusPromise = firstValueFrom(service.getStatus$());
+      expect(receivedStatus).toEqual(mockHealthStatus);
+    }));
 
-      // Handle initial health check from constructor
-      const initReq = httpMock.expectOne(`${API_URL}/api/health`);
-      initReq.flush(mockHealthStatus);
+    it('should update status subject when health check runs', fakeAsync(() => {
+      let statusUpdates: any[] = [];
+      service.getStatus$().subscribe(status => statusUpdates.push(status));
 
       service.getAPIStatus().subscribe();
 
       const req = httpMock.expectOne(`${API_URL}/api/health`);
       req.flush(mockHealthStatus);
 
-      const status = await statusPromise;
-      expect(status).toEqual(mockHealthStatus);
-    });
+      tick(); // Process any pending async operations
+
+      expect(statusUpdates).toContain(mockHealthStatus);
+      expect(statusUpdates.length).toBe(2); // Initial null + updated status
+    }));
 
     it('should perform periodic health checks', fakeAsync(() => {
       (service as any).startHealthCheck();
