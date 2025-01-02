@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Task } from './models/task.model';
+import { HealthStatus } from './models/health.model';
 
 interface TaskResponse {
     success: boolean;
@@ -17,22 +18,17 @@ interface TaskActionResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ApiGatewayService implements OnDestroy {
-
-    private currentStatus = 0;
-    private statusSubject = new BehaviorSubject<number>(0);
+    private currentStatus: HealthStatus | null = null;
+    private statusSubject = new BehaviorSubject<HealthStatus | null>(null);
     private status$ = this.statusSubject.asObservable();
     private healthCheckInterval: any;
 
     public API_URL: string = environment.api.serverUrl;
 
     constructor(private http: HttpClient) {
-        this.statusSubject = new BehaviorSubject<number>(this.currentStatus);
-        this.status$ = this.statusSubject.asObservable();
-        
-        // Start health checks when service is created
         this.startHealthCheck();
     }
 
@@ -47,14 +43,13 @@ export class ApiGatewayService implements OnDestroy {
     }
 
     ngOnDestroy() {
-        // Clean up interval when service is destroyed
         if (this.healthCheckInterval) {
             clearInterval(this.healthCheckInterval);
         }
     }
 
-    getAPIStatus(): Observable<number> {
-        return this.http.get<number>(`${this.API_URL}/health`)
+    getAPIStatus(): Observable<HealthStatus> {
+        return this.http.get<HealthStatus>(`${this.API_URL}/api/health`)
             .pipe(
                 tap(status => {
                     this.currentStatus = status;
@@ -63,7 +58,7 @@ export class ApiGatewayService implements OnDestroy {
             );
     }
 
-    public getStatus$(): Observable<number> {
+    public getStatus$(): Observable<HealthStatus | null> {
         return this.status$;
     }
 
