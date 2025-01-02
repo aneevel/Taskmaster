@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
+const db = require('../data/database');
 
 const signup = async (req, res, next) => {
 
@@ -116,8 +118,62 @@ const logout = async (req, res, next) => {
     res.sendStatus(204);
 }
 
+const changePassword = async (req, res, next) => {
+    const { email, oldPassword, newPassword } = req.body;
+
+    try {
+        if (!email || !oldPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email, current password, and new password are required'
+            });
+        }
+
+        const user = await db.getDb().collection('users').findOne({ email: email });
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        const passwordsMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!passwordsMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Current password is incorrect'
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        await db.getDb().collection('users').updateOne(
+            { email: email },
+            { $set: { password: hashedPassword } }
+        );
+
+        const token = jwt.sign(
+            { userId: user._id.toString(), email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Password updated successfully',
+            idToken: token,
+            expiresIn: '3600'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     signup: signup,
     login: login,
-    logout: logout
+    logout: logout,
+    changePassword: changePassword
 };
