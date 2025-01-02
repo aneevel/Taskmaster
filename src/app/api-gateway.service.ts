@@ -1,9 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Task } from './models/task.model';
 import { HealthStatus } from './models/health.model';
+import { InjectionToken } from '@angular/core';
+
+export const AUTO_START_HEALTH_CHECK = new InjectionToken<boolean>('AUTO_START_HEALTH_CHECK');
 
 interface TaskResponse {
     success: boolean;
@@ -30,7 +33,7 @@ export class ApiGatewayService implements OnDestroy {
 
     constructor(
         private http: HttpClient,
-        private autoStartHealthCheck: boolean = true
+        @Optional() @Inject(AUTO_START_HEALTH_CHECK) private autoStartHealthCheck: boolean = true
     ) {
         if (autoStartHealthCheck) {
             this.startHealthCheck();

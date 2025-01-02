@@ -8,6 +8,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ApiGatewayService } from '../api-gateway.service';
+import { HttpClient } from '@angular/common/http';
+import { AUTO_START_HEALTH_CHECK } from '../api-gateway.service';
 
 describe('CreateTaskComponent', () => {
   let component: CreateTaskComponent;
@@ -31,6 +33,7 @@ describe('CreateTaskComponent', () => {
         { provide: UserTasksService, useValue: userTasksSpy },
         { provide: DynamicDialogRef, useValue: dialogRefSpy },
         { provide: DynamicDialogConfig, useValue: { data: { occurrence: 'daily' } } },
+        { provide: AUTO_START_HEALTH_CHECK, useValue: false },
         ApiGatewayService
       ]
     });
