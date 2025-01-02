@@ -28,44 +28,64 @@ describe('ApiGatewayService', () => {
   });
 
   describe('Health Check', () => {
-    it('should get API status', async () => {
-      const mockStatus = 200;
+    const mockHealthStatus = {
+      status: 'UP' as const,
+      timestamp: new Date().toISOString(),
+      services: {
+        database: {
+          status: 'UP' as const,
+          responseTime: 50,
+          lastChecked: new Date().toISOString()
+        }
+      },
+      system: {
+        uptime: 1000,
+        memoryUsage: {
+          total: 8000000000,
+          free: 4000000000,
+          used: 4000000000
+        },
+        cpuLoad: 1.5
+      },
+      version: '1.0.0'
+    };
+
+    it('should get API health status', async () => {
       const statusPromise = firstValueFrom(service.getAPIStatus());
 
-      const req = httpMock.expectOne(`${API_URL}/health`);
+      const req = httpMock.expectOne(`${API_URL}/api/health`);
       expect(req.request.method).toBe('GET');
-      req.flush(mockStatus);
+      req.flush(mockHealthStatus);
 
       const status = await statusPromise;
-      expect(status).toBe(mockStatus);
+      expect(status).toEqual(mockHealthStatus);
     });
 
     it('should update status subject when health check runs', async () => {
-      const mockStatus = 200;
       const statusPromise = firstValueFrom(service.getStatus$());
 
       service.getAPIStatus().subscribe();
 
-      const req = httpMock.expectOne(`${API_URL}/health`);
-      req.flush(mockStatus);
+      const req = httpMock.expectOne(`${API_URL}/api/health`);
+      req.flush(mockHealthStatus);
 
       const status = await statusPromise;
-      expect(status).toBe(mockStatus);
+      expect(status).toEqual(mockHealthStatus);
     });
 
     it('should perform periodic health checks', fakeAsync(() => {
       service.getStatus$().subscribe();
       
       // Initial check
-      const firstReq = httpMock.expectOne(`${API_URL}/health`);
-      firstReq.flush(200);
+      const firstReq = httpMock.expectOne(`${API_URL}/api/health`);
+      firstReq.flush(mockHealthStatus);
 
       // Fast forward 30 seconds
       tick(30000);
       
       // Should have made another request
-      const secondReq = httpMock.expectOne(`${API_URL}/health`);
-      secondReq.flush(200);
+      const secondReq = httpMock.expectOne(`${API_URL}/api/health`);
+      secondReq.flush(mockHealthStatus);
     }));
   });
 
