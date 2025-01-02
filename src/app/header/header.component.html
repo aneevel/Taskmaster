@@ -32,7 +32,9 @@
       </ng-container>
       <ng-container *ngIf="!(isAuthenticated$ | async)">
         <li class='nav-item'>
-          <app-signup-button></app-signup-button>
+          <a [routerLink]="['/register']">
+            <p-button label="Create Account"></p-button>
+          </a>
         </li>
         <li class='nav-item'>
           <app-login-button></app-login-button>

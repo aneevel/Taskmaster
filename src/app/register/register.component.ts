@@ -10,7 +10,7 @@ import { User } from '../models/user.model';
   selector: 'app-register', standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
     registerForm: FormGroup = this.formBuilder.group({
