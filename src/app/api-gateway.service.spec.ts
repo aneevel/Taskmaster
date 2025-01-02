@@ -91,6 +91,7 @@ describe('ApiGatewayService', () => {
     });
 
     it('should perform periodic health checks', fakeAsync(() => {
+      (service as any).startHealthCheck();
       service.getStatus$().subscribe();
       
       const firstReq = httpMock.expectOne(`${API_URL}/api/health`);

@@ -38,10 +38,8 @@ export class ApiGatewayService implements OnDestroy {
     }
 
     private startHealthCheck(interval: number = 30000) {
-        // Initial check
         this.getAPIStatus().subscribe();
         
-        // Set up recurring checks
         this.healthCheckInterval = setInterval(() => {
             this.getAPIStatus().subscribe();
         }, interval);
@@ -113,5 +111,9 @@ export class ApiGatewayService implements OnDestroy {
                 }),
                 map(response => response.success)
             );
+    }
+
+    public startMonitoring(interval?: number) {
+        this.startHealthCheck(interval);
     }
 }
