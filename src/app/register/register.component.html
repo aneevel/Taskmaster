@@ -16,16 +16,18 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="fname">First Name: </label>
-                    <input id="fname" type="text" formControlName="fname" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['fname'].errors }"/>
-                    <div *ngIf="submitted && form['fname'].errors" class="invalid-feedback">
+                    <input id="fname" type="text" formControlName="fname" class="form-control" [ngClass]="{ 'is-invalid': (submitted || form['fname'].dirty) && form['fname'].errors }"/>
+                    <div *ngIf="(submitted || form['fname'].dirty) && form['fname'].errors" class="invalid-feedback">
                         <div *ngIf="form['fname'].errors['required']">A first name is required</div>
+                        <div *ngIf="form['fname'].errors['maxlength']">First name cannot exceed 50 characters</div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="lname">Last Name: </label>
-                    <input id="lname" type="text" formControlName="lname" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['lname'].errors }"/>
-                    <div *ngIf="submitted && form['lname'].errors" class="invalid-feedback">
+                    <input id="lname" type="text" formControlName="lname" class="form-control" [ngClass]="{ 'is-invalid': (submitted || form['lname'].dirty) && form['lname'].errors }"/>
+                    <div *ngIf="(submitted || form['lname'].dirty) && form['lname'].errors" class="invalid-feedback">
                         <div *ngIf="form['lname'].errors['required']">A last name is required</div>
+                        <div *ngIf="form['lname'].errors['maxlength']">Last name cannot exceed 50 characters</div>
                     </div>
                 </div>
             </div>
