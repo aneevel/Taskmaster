@@ -11,6 +11,28 @@ describe('ApiGatewayService', () => {
   let httpMock: HttpTestingController;
   const API_URL = environment.api.serverUrl;
 
+  const mockHealthStatus = {
+    status: 'UP' as const,
+    timestamp: new Date().toISOString(),
+    services: {
+      database: {
+        status: 'UP' as const,
+        responseTime: 50,
+        lastChecked: new Date().toISOString()
+      }
+    },
+    system: {
+      uptime: 1000,
+      memoryUsage: {
+        total: 8000000000,
+        free: 4000000000,
+        used: 4000000000
+      },
+      cpuLoad: 1.5
+    },
+    version: '1.0.0'
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -36,28 +58,6 @@ describe('ApiGatewayService', () => {
   });
 
   describe('Health Check', () => {
-    const mockHealthStatus = {
-      status: 'UP' as const,
-      timestamp: new Date().toISOString(),
-      services: {
-        database: {
-          status: 'UP' as const,
-          responseTime: 50,
-          lastChecked: new Date().toISOString()
-        }
-      },
-      system: {
-        uptime: 1000,
-        memoryUsage: {
-          total: 8000000000,
-          free: 4000000000,
-          used: 4000000000
-        },
-        cpuLoad: 1.5
-      },
-      version: '1.0.0'
-    };
-
     it('should get API health status', async () => {
       const statusPromise = firstValueFrom(service.getAPIStatus());
 
@@ -199,10 +199,18 @@ describe('ApiGatewayService', () => {
   });
 
   describe('Cleanup', () => {
-    it('should clear interval on destroy', () => {
+    it('should clear interval on destroy', fakeAsync(() => {
       const clearIntervalSpy = spyOn(window, 'clearInterval');
+      service.startMonitoring();
+
+      // Handle the initial health check request
+      const req = httpMock.expectOne(`${API_URL}/api/health`);
+      req.flush(mockHealthStatus);
+
       service.ngOnDestroy();
+      
       expect(clearIntervalSpy).toHaveBeenCalled();
-    });
+      discardPeriodicTasks();
+    }));
   });
 });
