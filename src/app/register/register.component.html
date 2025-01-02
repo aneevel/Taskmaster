@@ -4,9 +4,12 @@
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label for="email">Email: </label>
-                <input id="email" type="email" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['username'].errors }"/>
-                <div *ngIf="submitted && form['username'].errors" class="invalid-feedback">
+                <input id="email" type="email" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': (submitted || form['username'].touched) && form['username'].errors }"/>
+                <div *ngIf="(submitted || form['username'].touched) && form['username'].errors" class="invalid-feedback">
                     <div *ngIf="form['username'].errors['required']">A valid email address is required!</div>
+                    <div *ngIf="form['username'].errors['email'] || form['username'].errors['pattern']">
+                        Please enter a valid email address (e.g., user@example.com)
+                    </div>
                 </div>
             </div>
 
