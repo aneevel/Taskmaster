@@ -28,8 +28,13 @@ export class ApiGatewayService implements OnDestroy {
 
     public API_URL: string = environment.api.serverUrl;
 
-    constructor(private http: HttpClient) {
-        this.startHealthCheck();
+    constructor(
+        private http: HttpClient,
+        private autoStartHealthCheck: boolean = true
+    ) {
+        if (autoStartHealthCheck) {
+            this.startHealthCheck();
+        }
     }
 
     private startHealthCheck(interval: number = 30000) {

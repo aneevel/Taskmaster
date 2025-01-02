@@ -1,9 +1,10 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ApiGatewayService } from './api-gateway.service';
 import { Task } from './models/task.model';
 import { environment } from 'src/environments/environment';
 import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 describe('ApiGatewayService', () => {
   let service: ApiGatewayService;
@@ -13,7 +14,13 @@ describe('ApiGatewayService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ApiGatewayService]
+      providers: [
+        {
+          provide: ApiGatewayService,
+          useFactory: (http: HttpClient) => new ApiGatewayService(http, false),
+          deps: [HttpClient]
+        }
+      ]
     });
     service = TestBed.inject(ApiGatewayService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -21,6 +28,7 @@ describe('ApiGatewayService', () => {
 
   afterEach(() => {
     httpMock.verify();
+    service.ngOnDestroy();
   });
 
   it('should be created', () => {
@@ -53,6 +61,11 @@ describe('ApiGatewayService', () => {
     it('should get API health status', async () => {
       const statusPromise = firstValueFrom(service.getAPIStatus());
 
+      // Handle initial health check from constructor
+      const initReq = httpMock.expectOne(`${API_URL}/api/health`);
+      initReq.flush(mockHealthStatus);
+
+      // Handle the actual test request
       const req = httpMock.expectOne(`${API_URL}/api/health`);
       expect(req.request.method).toBe('GET');
       req.flush(mockHealthStatus);
@@ -63,6 +76,10 @@ describe('ApiGatewayService', () => {
 
     it('should update status subject when health check runs', async () => {
       const statusPromise = firstValueFrom(service.getStatus$());
+
+      // Handle initial health check from constructor
+      const initReq = httpMock.expectOne(`${API_URL}/api/health`);
+      initReq.flush(mockHealthStatus);
 
       service.getAPIStatus().subscribe();
 
@@ -76,16 +93,15 @@ describe('ApiGatewayService', () => {
     it('should perform periodic health checks', fakeAsync(() => {
       service.getStatus$().subscribe();
       
-      // Initial check
       const firstReq = httpMock.expectOne(`${API_URL}/api/health`);
       firstReq.flush(mockHealthStatus);
 
-      // Fast forward 30 seconds
       tick(30000);
       
-      // Should have made another request
       const secondReq = httpMock.expectOne(`${API_URL}/api/health`);
       secondReq.flush(mockHealthStatus);
+
+      discardPeriodicTasks();
     }));
   });
 
