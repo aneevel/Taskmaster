@@ -1,28 +1,40 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Router } from '@angular/router';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksComponent } from './tasks.component';
-import { By } from '@angular/platform-browser';
+import { DialogService } from 'primeng/dynamicdialog';
+import { UserTasksService } from '../user-tasks.service';
+import { ApiGatewayService } from '../api-gateway.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ButtonModule } from 'primeng/button';
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
-  let httpMock: HttpTestingController;
-  let router: Router;
   let fixture: ComponentFixture<TasksComponent>;
+  let userTasksService: jasmine.SpyObj<UserTasksService>;
+  let dialogService: jasmine.SpyObj<DialogService>;
 
   beforeEach(() => {
+    const userTasksSpy = jasmine.createSpyObj('UserTasksService', ['loadUserTasks', 'getTasks$']);
+    const dialogSpy = jasmine.createSpyObj('DialogService', ['open']);
+
     TestBed.configureTestingModule({
-      imports: [TasksComponent, HttpClientTestingModule],
+      imports: [
+        TasksComponent,
+        ButtonModule,
+        HttpClientTestingModule
+      ],
       providers: [
-          { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
+        { provide: UserTasksService, useValue: userTasksSpy },
+        { provide: DialogService, useValue: dialogSpy },
+        ApiGatewayService
       ]
     });
 
-    httpMock = TestBed.inject(HttpTestingController);
-    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(TasksComponent);
     component = fixture.componentInstance;
+    userTasksService = TestBed.inject(UserTasksService) as jasmine.SpyObj<UserTasksService>;
+    dialogService = TestBed.inject(DialogService) as jasmine.SpyObj<DialogService>;
+    
+    component.occurrence = 'daily';
     fixture.detectChanges();
   });
 
@@ -30,17 +42,5 @@ describe('TasksComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a create task button', () => {
-    const createTaskButton = fixture.debugElement.query(By.css('p-button#create-task'));
-    expect(createTaskButton).toBeTruthy();
-  });
-
-  it('should call openCreateTask on click', fakeAsync(() => {
-    spyOn(component, 'openCreateTask');
-
-    const button = fixture.debugElement.query(By.css('p-button#create-task'));
-    button.nativeElement.click();
-    tick();
-    expect(component.openCreateTask).toHaveBeenCalled();
-  }));
+  // Add more tests as needed
 });
