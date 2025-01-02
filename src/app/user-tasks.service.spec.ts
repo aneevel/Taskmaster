@@ -44,7 +44,7 @@ describe('UserTasksService', () => {
       apiGatewayMock.getUserTasks.and.returnValue(of(mockTasks));
 
       const tasks = await firstValueFrom(service.loadUserTasks('user1'));
-      const currentTasks = await firstValueFrom(service.tasks$);
+      const currentTasks = await firstValueFrom(service.getTasks$());
 
       expect(tasks).toEqual(mockTasks);
       expect(currentTasks).toEqual(mockTasks);
@@ -60,7 +60,7 @@ describe('UserTasksService', () => {
         title: 'Test Task',
         description: 'Test Description'
       }));
-      const currentTasks = await firstValueFrom(service.tasks$);
+      const currentTasks = await firstValueFrom(service.getTasks$());
 
       expect(newTask).toEqual(mockTask);
       expect(currentTasks).toContain(mockTask);
@@ -78,11 +78,12 @@ describe('UserTasksService', () => {
       const updatedTask = { ...mockTask, completed: true };
       apiGatewayMock.updateTask.and.returnValue(of(updatedTask));
 
-      // First add a task to the subject
-      service.tasksSubject.next([mockTask]);
+      // First load initial task
+      apiGatewayMock.getUserTasks.and.returnValue(of([mockTask]));
+      await firstValueFrom(service.loadUserTasks('user1'));
 
       const result = await firstValueFrom(service.updateTask('1', { completed: true }));
-      const currentTasks = await firstValueFrom(service.tasks$);
+      const currentTasks = await firstValueFrom(service.getTasks$());
 
       expect(result).toEqual(updatedTask);
       expect(currentTasks[0].completed).toBe(true);
@@ -94,11 +95,12 @@ describe('UserTasksService', () => {
     it('should delete task and remove from tasks subject', async () => {
       apiGatewayMock.deleteTask.and.returnValue(of(true));
 
-      // First add a task to the subject
-      service.tasksSubject.next([mockTask]);
+      // First load initial task
+      apiGatewayMock.getUserTasks.and.returnValue(of([mockTask]));
+      await firstValueFrom(service.loadUserTasks('user1'));
 
       const result = await firstValueFrom(service.deleteTask('1'));
-      const currentTasks = await firstValueFrom(service.tasks$);
+      const currentTasks = await firstValueFrom(service.getTasks$());
 
       expect(result).toBe(true);
       expect(currentTasks.length).toBe(0);
@@ -108,10 +110,10 @@ describe('UserTasksService', () => {
 
   describe('getTasks$', () => {
     it('should return the tasks observable', async () => {
-      service.tasksSubject.next([mockTask]);
+      apiGatewayMock.getUserTasks.and.returnValue(of([mockTask]));
+      await firstValueFrom(service.loadUserTasks('user1'));
       
       const tasks = await firstValueFrom(service.getTasks$());
-      
       expect(tasks).toEqual([mockTask]);
     });
   });
