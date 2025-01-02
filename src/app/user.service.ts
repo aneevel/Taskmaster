@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
 import * as moment from "moment";
 import { environment } from '../environments/environment';
 import { DateTime } from 'luxon';
@@ -14,6 +14,7 @@ import { User } from './models/user.model';
 export class UserService {
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
+    public isAuthenticated$: Observable<boolean>;
 
     public API_URL: string = environment.api.serverUrl;
 
@@ -22,6 +23,9 @@ export class UserService {
     private http: HttpClient) { 
         this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user') || '{}'));
         this.user = this.userSubject.asObservable();
+        this.isAuthenticated$ = this.user.pipe(
+            map(user => this.isLoggedIn())
+        );
     }
 
     public get userValue(): User {
