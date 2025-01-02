@@ -1,5 +1,10 @@
 <div class="register-container">
     <h2 class="register-header">Sign Up</h2>
+    <div *ngIf="errorMessage" class="alert alert-danger error-message">
+        <i class="pi pi-exclamation-triangle"></i>
+        <strong>Registration Error:</strong> User signup process unavailable. Please contact Taskmaster support with your error.
+        <div class="error-details">Error Code: {{ errorMessage }}</div>
+    </div>
     <div class="register-form">
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="form-group">

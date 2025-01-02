@@ -96,4 +96,24 @@
     min-height: 100vh;
     background-color: #f8f9fa;
     padding: 1rem;
+}
+
+.error-message {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-details {
+    font-size: 0.8em;
+    margin-top: 8px;
+    color: #721c24;
+}
+
+.pi-exclamation-triangle {
+    font-size: 1.2em;
+    color: #721c24;
 } 

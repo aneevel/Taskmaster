@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   loading = false;
   submitted = false;
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -58,6 +59,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.errorMessage = '';
 
     if (this.registerForm.invalid) {
       return;
@@ -78,7 +80,7 @@ export class RegisterComponent implements OnInit {
         });
       },
       error: error => {
-        console.error('Registration failed:', error);
+        this.errorMessage = error.message || 'Registration failed. Please try again later.';
         this.loading = false;
       }
     });
