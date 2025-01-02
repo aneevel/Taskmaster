@@ -5,6 +5,7 @@ import { UserTasksService } from '../user-tasks.service';
 import { ApiGatewayService } from '../api-gateway.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ButtonModule } from 'primeng/button';
+import { HttpClient } from '@angular/common/http';
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
@@ -25,7 +26,11 @@ describe('TasksComponent', () => {
       providers: [
         { provide: UserTasksService, useValue: userTasksSpy },
         { provide: DialogService, useValue: dialogSpy },
-        ApiGatewayService
+        {
+          provide: ApiGatewayService,
+          useFactory: (http: HttpClient) => new ApiGatewayService(http, false),
+          deps: [HttpClient]
+        }
       ]
     });
 
