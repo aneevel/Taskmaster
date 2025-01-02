@@ -113,8 +113,6 @@ const logout = async (req, res, next) => {
         return next(error);
     }
 
-    // Remove token
-    // await user.removeJwtToken
     res.sendStatus(204);
 }
 

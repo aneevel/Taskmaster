@@ -8,6 +8,13 @@ import { DateTime } from 'luxon';
 
 import { User } from './models/user.model';
 
+interface RegisterRequest {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -52,10 +59,18 @@ export class UserService {
         this.router.navigate(['/login']);
     }
 
-    register(email: string, password: string, fname: string, lname: string) {
-        return this.http.post<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/register`, { email, password, fname, lname })
-            .pipe(
-                tap(res => this.setSession(res)));
+    register(data: RegisterRequest) {
+        return this.http.post<{ idToken: string, expiresIn: string}>(
+            `${this.API_URL}/register`, 
+            {
+                email: data.email,
+                password: data.password,
+                fname: data.firstName,
+                lname: data.lastName
+            }
+        ).pipe(
+            tap(res => this.setSession(res))
+        );
     }
 
     changePassword(email: string, oldPassword: string, newPassword: string) {
