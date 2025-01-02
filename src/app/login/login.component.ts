@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { first } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-login', standalone: true,

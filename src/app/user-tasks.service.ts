@@ -18,12 +18,21 @@ export class UserTasksService {
         );
     }
 
-    createTask(userId: string, taskData: { title: string; description?: string }): Observable<Task> {
+    createTask(userId: string, taskData: { 
+        title: string; 
+        description?: string;
+        priority: string;
+        dueDate: Date;
+        occurrence: string;
+    }): Observable<Task> {
         return this.apiGateway.createTask({
             userId,
             title: taskData.title,
             description: taskData.description,
-            completed: false
+            completed: false,
+            priority: taskData.priority,
+            dueDate: taskData.dueDate,
+            occurrence: taskData.occurrence
         }).pipe(
             tap(newTask => {
                 const currentTasks = this.tasksSubject.value;

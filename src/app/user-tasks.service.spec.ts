@@ -14,7 +14,12 @@ describe('UserTasksService', () => {
     userId: 'user1',
     title: 'Test Task',
     description: 'Test Description',
-    completed: false
+    completed: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    priority: 'Medium',
+    dueDate: new Date(),
+    occurrence: 'daily'
   };
 
   beforeEach(() => {
@@ -58,7 +63,10 @@ describe('UserTasksService', () => {
 
       const newTask = await firstValueFrom(service.createTask('user1', {
         title: 'Test Task',
-        description: 'Test Description'
+        description: 'Test Description',
+        priority: 'Medium',
+        dueDate: new Date(),
+        occurrence: 'daily'
       }));
       const currentTasks = await firstValueFrom(service.getTasks$());
 
@@ -68,7 +76,10 @@ describe('UserTasksService', () => {
         userId: 'user1',
         title: 'Test Task',
         description: 'Test Description',
-        completed: false
+        completed: false,
+        priority: 'Medium',
+        dueDate: jasmine.any(Date),
+        occurrence: 'daily'
       });
     });
   });

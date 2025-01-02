@@ -6,7 +6,7 @@ import * as moment from "moment";
 import { environment } from '../environments/environment';
 import { DateTime } from 'luxon';
 
-import { User } from './user/user';
+import { User } from './models/user.model';
 
 @Injectable({
   providedIn: 'root'

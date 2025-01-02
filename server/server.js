@@ -16,6 +16,7 @@ const userRoutes = require('./routes/users-routes');
 const authRoutes = require('./routes/auth-routes');
 const tasksRoutes = require('./routes/tasks-routes');
 const refreshRoutes = require('./routes/refresh-routes');
+const utilityRoutes = require('./routes/utility-routes');
 
 const sessionConfig = createSessionConfig();
 
@@ -60,6 +61,7 @@ app.use(authRoutes);
 app.use(tasksRoutes);
 app.use(userRoutes);
 app.use('/refresh', refreshRoutes);
+app.use('/api', utilityRoutes);
 app.use(error.error);
 
 db.connectToDatabase().then(() => {

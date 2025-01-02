@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DateTime } from 'luxon';
 
 import { UserService } from './user.service';
+import { User } from './models/user.model';
 
 describe('UserService', () => {
   let service: UserService;

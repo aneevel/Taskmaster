@@ -3,8 +3,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { UserTasksService } from '../user-tasks.service';
-import { Task } from '../task';
+import { Task } from '../models/task.model';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -35,19 +36,18 @@ export class CreateTaskComponent {
     private config: DynamicDialogConfig,
   ) { }
 
-  saveTask() : Task {
-
-    // TODO: Add validation so we don't add empty tasks
-    const newTask: Task = { 
-      id: 'null',
-      description: this.taskForm.controls['description'].value,
-      priority: this.taskForm.controls['priority'].value,
-      dueDate: this.taskForm.controls['dueDate'].value,
-      occurrence: this.config.data.occurrence,
+  saveTask(): Observable<Task> {
+    const newTask = { 
+        title: this.taskForm.controls['description'].value,
+        description: this.taskForm.controls['description'].value,
+        occurrence: this.config.data.occurrence,
+        priority: this.taskForm.controls['priority'].value,
+        dueDate: this.taskForm.controls['dueDate'].value,
     };
-    this.userTasks.addTask(newTask);
-    this.closeDialog();
-    return newTask; 
+
+    return this.userTasks.createTask('user1', newTask).pipe(
+        tap(() => this.closeDialog())
+    );
   }
 
   closeDialog() {

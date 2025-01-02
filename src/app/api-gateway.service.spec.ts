@@ -75,7 +75,12 @@ describe('ApiGatewayService', () => {
       userId: 'user1',
       title: 'Test Task',
       description: 'Test Description',
-      completed: false
+      completed: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      priority: 'Medium',
+      dueDate: new Date(),
+      occurrence: 'daily'
     };
 
     it('should get user tasks', async () => {
@@ -96,7 +101,10 @@ describe('ApiGatewayService', () => {
         userId: 'user1',
         title: 'Test Task',
         description: 'Test Description',
-        completed: false
+        completed: false,
+        priority: 'Medium',
+        dueDate: new Date(),
+        occurrence: 'daily'
       };
       const mockResponse = { success: true, message: 'Created', task: mockTask };
       const taskPromise = firstValueFrom(service.createTask(newTask));

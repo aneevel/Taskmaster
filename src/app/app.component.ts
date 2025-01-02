@@ -5,7 +5,6 @@ import { HeaderComponent } from "./header/header.component";
 import { FooterComponent } from "./footer/footer.component";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
-import { UsersComponent } from "./user/users/users.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -16,7 +15,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeaderComponent, 
     FooterComponent,
     HttpClientModule,
-    UsersComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule

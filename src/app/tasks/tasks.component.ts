@@ -5,6 +5,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateTaskComponent } from '../create-task/create-task.component';
 import { UserTasksService } from '../user-tasks.service';
 import { TaskItemComponent } from '../task-item/task-item.component';
+import { User } from '../models/user.model';
 
 @Component({
   standalone: true,
