@@ -1,99 +1,118 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
-import { UserService } from './user.service';
 import { UserTasksService } from './user-tasks.service';
+import { ApiGatewayService } from './api-gateway.service';
+import { Task } from './models/task.model';
+import { of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
-describe('UserTasksService', () => {    
+describe('UserTasksService', () => {
   let service: UserTasksService;
-  let httpMock: HttpTestingController;
-  let userService: UserService;
+  let apiGatewayMock: jasmine.SpyObj<ApiGatewayService>;
 
-  let localStorageMock: any;
+  const mockTask: Task = {
+    id: '1',
+    userId: 'user1',
+    title: 'Test Task',
+    description: 'Test Description',
+    completed: false
+  };
 
   beforeEach(() => {
+    apiGatewayMock = jasmine.createSpyObj('ApiGatewayService', [
+      'getUserTasks',
+      'createTask',
+      'updateTask',
+      'deleteTask'
+    ]);
+
     TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule],
-        providers: [
-            UserTasksService,
-            UserService
-        ]
+      providers: [
+        UserTasksService,
+        { provide: ApiGatewayService, useValue: apiGatewayMock }
+      ]
     });
     service = TestBed.inject(UserTasksService);
-    userService = TestBed.inject(UserService);
-    httpMock = TestBed.inject(HttpTestingController);
-
-    localStorageMock = {
-        getItem: jasmine.createSpy('getItem').and.callFake((key: string) => {
-            if (key === 'user') {
-                return JSON.stringify({ 'idToken': 'test-id' });
-            } else if (key === 'tasks') {
-                return JSON.stringify(
-                    [
-                        { '_id': '1', 
-                        'description': 'A test description',
-                        'priority': 'High',
-                        'dueDate': '11-01-2025',
-                        'occurrence': 'Daily',
-                        'userID': 'test-id' 
-                        }
-                    ]
-                );
-            } else {
-                return null;
-            }
-        }),
-        setItem: jasmine.createSpy('setItem'),
-        removeItem: jasmine.createSpy('removeItem'),
-    };
-
-    spyOn(localStorage, 'getItem').and.callFake(localStorageMock.getItem);
-    spyOn(localStorage, 'setItem').and.callFake(localStorageMock.setItem);
-    spyOn(localStorage, 'removeItem').and.callFake(localStorageMock.removeItem);
-  });
-
-  afterEach(() => {
-      httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should receive tasks for user and set them in local storage', () => {
-    const response = { tasks: [] };
+  describe('loadUserTasks', () => {
+    it('should load tasks and update tasks subject', async () => {
+      const mockTasks = [mockTask];
+      apiGatewayMock.getUserTasks.and.returnValue(of(mockTasks));
 
-    service.getTasks('test-id').subscribe(response => {
-        expect(response.tasks).toBeInstanceOf(Array);
+      const tasks = await firstValueFrom(service.loadUserTasks('user1'));
+      const currentTasks = await firstValueFrom(service.tasks$);
+
+      expect(tasks).toEqual(mockTasks);
+      expect(currentTasks).toEqual(mockTasks);
+      expect(apiGatewayMock.getUserTasks).toHaveBeenCalledWith('user1');
     });
-
-    const req = httpMock.expectOne(`${service['API_URL']}/tasks/test-id`);
-    expect(req.request.method).toBe('GET');
-    req.flush(response);
-
-    expect(localStorage.setItem).toHaveBeenCalledWith('tasks', '[]');
   });
 
-  it('should delete task from local storage and call API', () => {
-      const response = { status: 204, body: {} };
-    
-      service.deleteTask('test-id').subscribe(response => {
-          expect(response.status).toBe(204);
+  describe('createTask', () => {
+    it('should create task and add to tasks subject', async () => {
+      apiGatewayMock.createTask.and.returnValue(of(mockTask));
+
+      const newTask = await firstValueFrom(service.createTask('user1', {
+        title: 'Test Task',
+        description: 'Test Description'
+      }));
+      const currentTasks = await firstValueFrom(service.tasks$);
+
+      expect(newTask).toEqual(mockTask);
+      expect(currentTasks).toContain(mockTask);
+      expect(apiGatewayMock.createTask).toHaveBeenCalledWith({
+        userId: 'user1',
+        title: 'Test Task',
+        description: 'Test Description',
+        completed: false
       });
-
-      const req = httpMock.expectOne(`${service['API_URL']}/tasks/test-id`);
-      expect(req.request.method).toBe('DELETE');
-      req.flush(response);
-
-      // Under the hood, this is calling setItem to only remove 'one' task'
-      expect(localStorage.setItem).toHaveBeenCalled(); 
+    });
   });
 
-  it('should update task in local storage and call API', () => {
+  describe('updateTask', () => {
+    it('should update task and update tasks subject', async () => {
+      const updatedTask = { ...mockTask, completed: true };
+      apiGatewayMock.updateTask.and.returnValue(of(updatedTask));
 
+      // First add a task to the subject
+      service.tasksSubject.next([mockTask]);
+
+      const result = await firstValueFrom(service.updateTask('1', { completed: true }));
+      const currentTasks = await firstValueFrom(service.tasks$);
+
+      expect(result).toEqual(updatedTask);
+      expect(currentTasks[0].completed).toBe(true);
+      expect(apiGatewayMock.updateTask).toHaveBeenCalledWith('1', { completed: true });
+    });
   });
 
-  it('should create task in local storage and call API', () => {
+  describe('deleteTask', () => {
+    it('should delete task and remove from tasks subject', async () => {
+      apiGatewayMock.deleteTask.and.returnValue(of(true));
 
+      // First add a task to the subject
+      service.tasksSubject.next([mockTask]);
+
+      const result = await firstValueFrom(service.deleteTask('1'));
+      const currentTasks = await firstValueFrom(service.tasks$);
+
+      expect(result).toBe(true);
+      expect(currentTasks.length).toBe(0);
+      expect(apiGatewayMock.deleteTask).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('getTasks$', () => {
+    it('should return the tasks observable', async () => {
+      service.tasksSubject.next([mockTask]);
+      
+      const tasks = await firstValueFrom(service.getTasks$());
+      
+      expect(tasks).toEqual([mockTask]);
+    });
   });
 });
