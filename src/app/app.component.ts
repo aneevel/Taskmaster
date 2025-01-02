@@ -6,6 +6,7 @@ import { FooterComponent } from "./footer/footer.component";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserService } from "./user.service";
 
 @Component({
   selector: "app-root",
@@ -24,4 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class AppComponent {
   title = "Taskmaster";
+  isAuthenticated$ = this.userService.isAuthenticated$;
+
+  constructor(private userService: UserService) {}
 }
