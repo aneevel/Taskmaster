@@ -64,13 +64,17 @@ const signup = async (req, res, next) => {
             });
         }
 
-        await user.signup();
+        console.log('Creating new user...');
+        const result = await user.signup();
+        console.log('User creation result:', result);  // See what MongoDB returns
         
         res.status(200).json({ 
             success: true,
-            message: "User created"
+            message: "User created",
+            id: result.insertedId  // Make sure we're returning this
         });
     } catch (error) {
+        console.error('Error in signup:', error);
         next(error);
     }
 };
