@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const bcrypt = require('bcrypt');
-const db = require('../data/database');
 
 const signup = async (req, res, next) => {
 
@@ -91,9 +89,6 @@ const login = async (req, res, next) => {
             { expiresIn: '12h' }       
     );
 
-
-    // await WRITE TO DB SESSIONS
-
     res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     res.status(200).json({ accessToken });
 }
@@ -121,49 +116,54 @@ const logout = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
     const { email, oldPassword, newPassword } = req.body;
 
-    try {
-        if (!email || !oldPassword || !newPassword) {
-            return res.status(400).json({
-                success: false,
-                message: 'Email, current password, and new password are required'
-            });
-        }
+    if (!email || !oldPassword || !newPassword) {
+        return res.status(400).json({
+            success: false,
+            message: 'Email, current password, and new password are required'
+        });
+    }
 
-        const user = await db.getDb().collection('users').findOne({ email: email });
-        
-        if (!user) {
+    try {
+        const user = new User(email, oldPassword);
+        const existingUser = await user.getUserWithSameEmail();
+
+        if (!existingUser) {
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
             });
         }
 
-        const passwordsMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!passwordsMatch) {
+        const passwordIsCorrect = await user.hasMatchingPassword(
+            existingUser.password
+        );
+
+        if (!passwordIsCorrect) {
             return res.status(401).json({
                 success: false,
                 message: 'Current password is incorrect'
             });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        await User.updatePassword(email, newPassword);
 
-        await db.getDb().collection('users').updateOne(
-            { email: email },
-            { $set: { password: hashedPassword } }
+        const accessToken = jwt.sign(
+            { username: email, role: 'user' },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '30s' }
         );
 
-        const token = jwt.sign(
-            { userId: user._id.toString(), email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+        const refreshToken = jwt.sign(
+            { username: email, role: 'user' },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: '12h' }
         );
 
-        res.status(200).json({
+        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+        res.status(200).json({ 
             success: true,
             message: 'Password updated successfully',
-            idToken: token,
-            expiresIn: '3600'
+            accessToken 
         });
 
     } catch (error) {

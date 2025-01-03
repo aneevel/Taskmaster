@@ -78,6 +78,29 @@ class User {
         }
         return await db.getDatabase().collection('users').findOneAndUpdate({ "_id": uuid}, {$set: body}, { returnNewDocument: true});
     }
+
+    static async updatePassword(email, newPassword) {
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        
+        const result = await db.getDb().collection('users').updateOne(
+            { email: email },
+            { $set: { password: hashedPassword } }
+        );
+
+        if (result.matchedCount === 0) {
+            const error = new Error('Could not find user.');
+            error.code = 404;
+            throw error;
+        }
+
+        if (result.modifiedCount === 0) {
+            const error = new Error('Could not update password.');
+            error.code = 500;
+            throw error;
+        }
+
+        return result.modifiedCount === 1;
+    }
 }
 
 module.exports = User;
