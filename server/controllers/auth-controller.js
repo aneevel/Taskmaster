@@ -6,7 +6,6 @@ const path = require('path');
 require('dotenv').config();
 
 const signup = async (req, res, next) => {
-
     if (req.body.email == null 
         || req.body.password == null 
         || req.body.lname == null 
@@ -17,23 +16,43 @@ const signup = async (req, res, next) => {
         });
     }
 
+    // Validate email format
+    if (!req.body.email || !ValidationUtil.isValidEmail(req.body.email)) {
+        return res.status(400).json({
+            success: false,
+            message: "A valid, non-existing email must be provided"
+        });
+    }
+
+    // Validate password length
+    if (!req.body.password || req.body.password.length < 8) {
+        return res.status(400).json({
+            success: false,
+            message: "A password of at least 8 characters must be provided"
+        });
+    }
+
+    // Validate name lengths
+    if (!req.body.fname || req.body.fname.length > 50) {
+        return res.status(400).json({
+            success: false,
+            message: "A non-empty first name of less than 50 characters must be provided"
+        });
+    }
+
+    if (!req.body.lname || req.body.lname.length > 50) {
+        return res.status(400).json({
+            success: false,
+            message: "A non-empty last name of less than 50 characters must be provided"
+        });
+    }
+
     const user = new User(
         req.body.email,
         req.body.password,
         req.body.lname,
         req.body.fname
     );
-
-    if (
-        !ValidationUtil.userDetailsAreValid(
-            req.body.email,
-            req.body.password,
-            req.body.lname,
-            req.body.fname
-        ) 
-    ) {
-        return res.status(400).send("Unable to validate user details");
-    }
 
     try {
         const existsAlready = await user.existsAlready();
@@ -46,15 +65,15 @@ const signup = async (req, res, next) => {
         }
 
         await user.signup();
+        
+        res.status(200).json({ 
+            success: true,
+            message: "User created"
+        });
     } catch (error) {
-        return next(error);
+        next(error);
     }
-
-    res.status(200).json({ 
-        success: true,
-        message: "User created"
-    });
-}
+};
 
 const login = async (req, res, next) => {
 

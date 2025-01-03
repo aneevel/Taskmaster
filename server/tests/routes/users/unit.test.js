@@ -78,227 +78,6 @@ describe('Users', () => {
         });
     });
 
-    describe('POST User', () => {
-        
-        describe('Given invalid parameters', () => {
-            
-            describe('Given no parameters were provided', () => {
-                it('Should return a 400 error and an error message stating improper params supplied', async () => {
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({})
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body).toEqual({
-                                success: false,
-                                message: "Improper params supplied"
-                            });
-                        });
-                });
-            });
-
-            describe('Given no email was provided', () => {
-                
-                it('Should return a 400 error and an error message stating a valid, non-existing email must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "",
-                            "password": "testpassword",
-                            "lname" : "McTest",
-                            "fname" : "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A valid, non-existing email must be provided");
-                        });
-                });
-            });
-
-            describe('Given an invalid email was provided', () => {
-                
-                it('Should return a 400 error and an error message stating a valid, non-existing email must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test",
-                            "password": "testpassword",
-                            "lname" : "McTest",
-                            "fname" : "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A valid, non-existing email must be provided");
-                        });
-                });
-            });
-
-            describe('Given an email that already exists for an user', () => {
-                it('Should return a 400 error with appropriate message', async () => {
-                    const email = "aneevel15@gmail.com";
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": email,
-                            "password": "testpassword",
-                            "lname" : "McTest",
-                            "fname" : "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body).toEqual({
-                                success: false,
-                                message: `User with email ${email} already exists`
-                            });
-                        });
-                });
-            });
-
-            describe('Given no password was provided', () => {
-                
-                it('Should return a 400 error and an error message stating a password of at least 8 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "",
-                            "lname": "McTest",
-                            "fname": "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A password of at least 8 characters must be provided");
-                        });
-                });
-            });
-
-            describe('Given a too short password was provided', () => {
-                
-                it('Should return a 400 error and an error message stating a password of at least 8 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "short",
-                            "lname": "McTest",
-                            "fname": "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A password of at least 8 characters must be provided");
-                        });
-                });
-            });
-
-            describe('Given no last name provided', () => {
-                
-                it('Should return a 400 error and an error message stating a non-empty last name of less than 50 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "testpassword",
-                            "lname": "",
-                            "fname": "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A non-empty last name of less than 50 characters must be provided");
-                        });
-                });
-            });
-
-            describe('Given too long of a last name provided', () => {
-                
-                it('Should return a 400 error and an error message stating a non-empty last name of less than 50 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "testpassword",
-                            "lname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                            "fname": "Davey"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A non-empty last name of less than 50 characters must be provided");
-                        });
-                });
-            });
-
-            describe('Given no first name provided', () => {
-                
-                it('Should return a 400 error and an error message stating a non-empty first name of less than 50 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "testpassword",
-                            "lname": "McTest",
-                            "fname": ""
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A non-empty first name of less than 50 characters must be provided");
-                        });
-                });
-            });
-
-            describe('Given too long first name provided', () => {
-                
-                it('Should return a 400 error and an error message stating a non-empty first name of less than 50 characters must be provided', async () => {
-                    
-                    await supertest(app)
-                        .post(`/users/new`)
-                        .send({
-                            "email": "test@mctest.com",
-                            "password": "testpassword",
-                            "lname": "McTest",
-                            "fname": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                        })
-                        .expect(400)
-                        .then((response) => {
-                            expect(response.body.message).toBe("A non-empty first name of less than 50 characters must be provided");
-                        });
-                });
-            });
-        });
-
-        describe('Given valid parameters', () => {
-            it('Should return a 200 code and success message', async () => {
-                let user;
-                await supertest(app)
-                    .post(`/users/new`)
-                    .send({
-                        "email": "valid@email.com",
-                        "password": "validpassword",
-                        "lname": "User",
-                        "fname": "Valid"
-                    })
-                    .expect(200)
-                    .then((response) => {
-                        expect(response.body).toEqual({
-                            success: true,
-                            message: "User created"
-                        });
-                    });
-                
-                // Cleanup if needed
-                if (user && user.id) {
-                    await supertest(app)
-                        .delete(`/users/${user.id.insertedId}`);
-                }
-            });
-        });
-    });
-
     describe('DELETE User', () => {
     
         describe('Given non-existing userID', () => {
@@ -522,6 +301,152 @@ describe('Users', () => {
                         });
                 });
             });
+        });
+    });
+});
+
+describe('User Registration', () => {
+    describe('Given invalid parameters', () => {
+        it('Should return a 400 error when no parameters provided', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({})
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "Improper params supplied"
+                    });
+                });
+        });
+
+        it('Should return a 400 error when email is empty', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "",
+                    "password": "testpassword",
+                    "lname": "McTest",
+                    "fname": "Davey"
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "A valid, non-existing email must be provided"
+                    });
+                });
+        });
+
+        it('Should return a 400 error when email is invalid', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "test",
+                    "password": "testpassword",
+                    "lname": "McTest",
+                    "fname": "Davey"
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "A valid, non-existing email must be provided"
+                    });
+                });
+        });
+
+        it('Should return a 400 error when email already exists', async () => {
+            const email = "aneevel15@gmail.com";
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": email,
+                    "password": "testpassword",
+                    "lname": "McTest",
+                    "fname": "Davey"
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: `User with email ${email} already exists`
+                    });
+                });
+        });
+
+        it('Should return a 400 error when password is too short', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "test@mctest.com",
+                    "password": "short",
+                    "lname": "McTest",
+                    "fname": "Davey"
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "A password of at least 8 characters must be provided"
+                    });
+                });
+        });
+
+        it('Should return a 400 error when first name is too long', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "test@mctest.com",
+                    "password": "testpassword",
+                    "lname": "McTest",
+                    "fname": "a".repeat(51)
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "A non-empty first name of less than 50 characters must be provided"
+                    });
+                });
+        });
+
+        it('Should return a 400 error when last name is too long', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "test@mctest.com",
+                    "password": "testpassword",
+                    "lname": "a".repeat(51),
+                    "fname": "Davey"
+                })
+                .expect(400)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: false,
+                        message: "A non-empty last name of less than 50 characters must be provided"
+                    });
+                });
+        });
+    });
+
+    describe('Given valid parameters', () => {
+        it('Should return a 200 code and success message', async () => {
+            await supertest(app)
+                .post('/register')
+                .send({
+                    "email": "valid@email.com",
+                    "password": "validpassword",
+                    "lname": "User",
+                    "fname": "Valid"
+                })
+                .expect(200)
+                .then((response) => {
+                    expect(response.body).toEqual({
+                        success: true,
+                        message: "User created"
+                    });
+                });
         });
     });
 });
