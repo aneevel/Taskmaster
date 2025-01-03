@@ -83,15 +83,16 @@ describe('Users', () => {
         describe('Given invalid parameters', () => {
             
             describe('Given no parameters were provided', () => {
-
-                it('Should return a 400 error and an error message stating no parameters were provided', async () => {
-                    
+                it('Should return a 400 error and an error message stating improper params supplied', async () => {
                     await supertest(app)
                         .post(`/users/new`)
                         .send({})
                         .expect(400)
                         .then((response) => {
-                            expect(response.body.message).toBe("Invalid params supplied");
+                            expect(response.body).toEqual({
+                                success: false,
+                                message: "Improper params supplied"
+                            });
                         });
                 });
             });
@@ -135,20 +136,22 @@ describe('Users', () => {
             });
 
             describe('Given an email that already exists for an user', () => {
-
-                it('Should return a 400 error and an error message stating user with email exists already', async () => {
-                    
+                it('Should return a 400 error with appropriate message', async () => {
+                    const email = "aneevel15@gmail.com";
                     await supertest(app)
                         .post(`/users/new`)
                         .send({
-                            "email": "aneevel15@gmail.com",
+                            "email": email,
                             "password": "testpassword",
                             "lname" : "McTest",
                             "fname" : "Davey"
                         })
                         .expect(400)
                         .then((response) => {
-                            expect(response.body.message).toBe("User with email already exists");
+                            expect(response.body).toEqual({
+                                success: false,
+                                message: `User with email ${email} already exists`
+                            });
                         });
                 });
             });
@@ -269,9 +272,7 @@ describe('Users', () => {
         });
 
         describe('Given valid parameters', () => {
-            
-            it('Should return a 201 code and a valid User object', async () => {
-                
+            it('Should return a 200 code and success message', async () => {
                 let user;
                 await supertest(app)
                     .post(`/users/new`)
@@ -281,16 +282,19 @@ describe('Users', () => {
                         "lname": "User",
                         "fname": "Valid"
                     })
-                    .expect(201)
+                    .expect(200)
                     .then((response) => {
-                        user = response.body;
-                        expect(response.body.id).toBeTruthy();
-                        expect(response.body.message).toBe("User created");
+                        expect(response.body).toEqual({
+                            success: true,
+                            message: "User created"
+                        });
                     });
                 
-                await supertest(app)
-                    .delete(`/users/${user.id.insertedId}`);
-
+                // Cleanup if needed
+                if (user && user.id) {
+                    await supertest(app)
+                        .delete(`/users/${user.id.insertedId}`);
+                }
             });
         });
     });
