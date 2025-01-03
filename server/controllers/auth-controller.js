@@ -11,7 +11,10 @@ const signup = async (req, res, next) => {
         || req.body.password == null 
         || req.body.lname == null 
         || req.body.fname == null) {
-        return res.status(400).send("Improper params supplied");
+        return res.status(400).json({
+            success: false,
+            message: "Improper params supplied"
+        });
     }
 
     const user = new User(
@@ -36,7 +39,10 @@ const signup = async (req, res, next) => {
         const existsAlready = await user.existsAlready();
 
         if (existsAlready) {
-            return res.status(400).send("User exists already");
+            return res.status(400).json({
+                success: false,
+                message: `User with email ${req.body.email} already exists`
+            });
         }
 
         await user.signup();
@@ -44,7 +50,10 @@ const signup = async (req, res, next) => {
         return next(error);
     }
 
-    res.status(200).send({ message: "User created"});
+    res.status(200).json({ 
+        success: true,
+        message: "User created"
+    });
 }
 
 const login = async (req, res, next) => {
