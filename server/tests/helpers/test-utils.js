@@ -12,8 +12,12 @@ async function createTestUser(email = 'test@example.com') {
             fname: 'User'
         });
     
-    console.log('Registration response:', response.body);
-    return response.body;
+    console.log('Registration response status:', response.status);
+    console.log('Registration response body:', JSON.stringify(response.body, null, 2));
+    return {
+        ...response.body,
+        id: response.body.id
+    };
 }
 
 module.exports = {

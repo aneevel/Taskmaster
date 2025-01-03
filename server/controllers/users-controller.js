@@ -59,15 +59,19 @@ const getAllUsers = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
     try {
+        console.log('Getting user with ID:', req.params.id);
         const user = await User.findById(req.params.id);
         if (!user) {
+            console.log('No user found');
             return res.status(404).json({
                 success: false,
                 message: "No user with ID exists"
             });
         }
+        console.log('Found user:', user);
         res.status(200).json(user);
     } catch (error) {
+        console.error('Error in getUserById:', error);
         next(error);
     }
 };

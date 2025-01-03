@@ -209,7 +209,8 @@ describe('User Registration', () => {
                 .then((response) => {
                     expect(response.body).toEqual({
                         success: true,
-                        message: "User created"
+                        message: "User created",
+                        id: expect.stringMatching(/^[0-9a-fA-F]{24}$/)
                     });
                 });
         });
