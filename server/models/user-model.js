@@ -28,6 +28,11 @@ class User {
         return await db.getDatabase().collection('users').findOne({_id: uuid});
     }
 
+    static async findByEmail(email) {
+        const result = await db.getDatabase().collection('users').findOne({ email: email });
+        return result;
+    }
+
     async getUserWithSameEmail() {
         console.log('Looking up user by email:', this.email);
         const result = await db.getDatabase().collection('users').findOne({ email: this.email });

@@ -124,7 +124,7 @@ const updateUser = async (req, res, next) => {
             });
         }
 
-        const updatedUser = await user.patch(req.body);
+        const updatedUser = await user.patch(req.body, req.params.id);
         return res.status(200).json({
             success: true,
             user: updatedUser
