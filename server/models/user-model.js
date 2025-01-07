@@ -17,31 +17,41 @@ class User {
     }
 
     static async findById(userID) {
+        console.log('Finding user by ID:', userID);  // Debug log
         let uuid;
         try {
             uuid = mongodb.ObjectId.createFromHexString(userID);
         } catch (error) {
+            console.error('Error creating ObjectId:', error);  // Debug log
             throw error;
         }
         return await db.getDatabase().collection('users').findOne({_id: uuid});
     }
 
     async getUserWithSameEmail() {
-        return await db.getDatabase().collection('users').findOne({ email: this.email });
+        console.log('Looking up user by email:', this.email);
+        const result = await db.getDatabase().collection('users').findOne({ email: this.email });
+        console.log('Database lookup result:', result);
+        return result;
     }
 
     async existsAlready() {
+        console.log('Checking if user exists:', this.email);
         const existingUser = await this.getUserWithSameEmail();
+        console.log('Existing user check result:', existingUser);
         if (existingUser == null) {
+            console.log('No existing user found');
             return false;
         }
+        console.log('User already exists');
         return true;
     }
 
     async signup() {
+        console.log('Signing up user:', this.email);
         const encryptedPassword = await bcrypt.hash(this.password, 12);
 
-        return await db.getDatabase().collection('users').insertOne({
+        const result = await db.getDatabase().collection('users').insertOne({
             email: this.email,
             password: encryptedPassword,
             lname: this.lname,
@@ -50,6 +60,8 @@ class User {
             admin: this.confirmed,
             tasks: this.tasks 
         });
+        console.log('Signup result:', result);
+        return result;
     }
 
     

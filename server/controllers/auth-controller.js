@@ -47,6 +47,20 @@ const signup = async (req, res, next) => {
         });
     }
 
+    if (!ValidationUtil.isValidName(req.body.fname)) {
+        return res.status(400).json({
+            success: false,
+            message: "First name contains inappropriate content or is invalid"
+        });
+    }
+
+    if (!ValidationUtil.isValidName(req.body.lname)) {
+        return res.status(400).json({
+            success: false,
+            message: "Last name contains inappropriate content or is invalid"
+        });
+    }
+
     const user = new User(
         req.body.email,
         req.body.password,
@@ -56,6 +70,7 @@ const signup = async (req, res, next) => {
 
     try {
         const existsAlready = await user.existsAlready();
+        console.log('Checking existence:', req.body.email, existsAlready);
 
         if (existsAlready) {
             return res.status(400).json({
@@ -71,7 +86,7 @@ const signup = async (req, res, next) => {
         res.status(200).json({ 
             success: true,
             message: "User created",
-            id: result.insertedId  // Make sure we're returning this
+            id: result.insertedId  // This is where the ID originates
         });
     } catch (error) {
         console.error('Error in signup:', error);

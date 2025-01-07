@@ -23,6 +23,8 @@ describe('Users', () => {
 
     describe('GET User with ID', () => {
         it('Should return a 200 code and a user object', async () => {
+            console.log('Test user:', testUser);
+            console.log('Using ID:', testUser.id);
             await supertest(app)
                 .get(`/users/${testUser.id}`)
                 .expect(200)

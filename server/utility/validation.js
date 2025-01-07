@@ -1,3 +1,5 @@
+const ContentFilter = require('./content-filter');
+
 class ValidationUtil {
     static MIN_PASSWORD_LENGTH = 8;
     static MAX_PASSWORD_LENGTH = 50;
@@ -19,6 +21,10 @@ class ValidationUtil {
 
     static isValidName(name) {
         if (!name || name.trim().length === 0) {
+            return false;
+        }
+        
+        if (ContentFilter.containsInappropriateContent(name)) {
             return false;
         }
         
