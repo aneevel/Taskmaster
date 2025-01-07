@@ -86,14 +86,23 @@ class User {
         return db.getDatabase().collection('users').deleteMany({_id: uuid});
     }
 
-    async patch(body, id) {
+    static async patch(body, id) {
         let uuid;
         try {
             uuid = mongodb.ObjectId.createFromHexString(id);
         } catch (error) {
             throw error;
         }
-        return await db.getDatabase().collection('users').findOneAndUpdate({ "_id": uuid}, {$set: body}, { returnNewDocument: true});
+        
+        const result = await db.getDatabase().collection('users').findOneAndUpdate(
+            { "_id": uuid },
+            { $set: body },
+            { 
+                returnDocument: 'after'  
+            }
+        );
+        
+        return result;  
     }
 
     static async updatePassword(email, newPassword) {

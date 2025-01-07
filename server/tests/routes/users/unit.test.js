@@ -85,9 +85,8 @@ describe('Users', () => {
                 await supertest(app)
                     .patch(`/users/${testUser.id}`)
                     .send({ email: newEmail })
-                    //.expect(200)
+                    .expect(200)
                     .then((response) => {
-                        console.log(response);
                         expect(response.body.success).toBe(true);
                         expect(response.body.user.email).toEqual(newEmail);
                     });
@@ -128,11 +127,13 @@ describe('Users', () => {
 
             it('Should reject duplicate email', async () => {
                 const otherUser = await createTestUser(`other${Date.now()}@example.com`);
+                console.log(otherUser);
                 await supertest(app)
                     .patch(`/users/${testUser.id}`)
                     .send({ email: otherUser.email })
                     .expect(400)
                     .then((response) => {
+                        console.log(response);
                         expect(response.body).toEqual({
                             success: false,
                             message: "This email address is already in use"

@@ -15,6 +15,7 @@ async function createTestUser(email = 'test@example.com') {
     console.log('Registration response status:', response.status);
     console.log('Registration response body:', JSON.stringify(response.body, null, 2));
     return {
+        email: email,
         ...response.body,
         id: response.body.id
     };
