@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, map } from 'rxjs';
 import * as moment from "moment";
 import { environment } from '../environments/environment';
+import { ApiGatewayService } from './api-gateway.service';
 import { DateTime } from 'luxon';
 
 import { User } from './models/user.model';
@@ -27,7 +28,8 @@ export class UserService {
 
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private apiGateway: ApiGatewayService
     ) { 
         // Initialize with null user to indicate not authenticated
         this.userSubject = new BehaviorSubject<User>(null!);
@@ -36,10 +38,6 @@ export class UserService {
             map(user => !!user && !this.isExpired())
         );
 
-        const storedUser = localStorage.getItem('user');
-        if (storedUser && !this.isExpired()) {
-            this.userSubject.next(JSON.parse(storedUser));
-        }
     }
 
     public get userValue(): User {
@@ -47,20 +45,24 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/login`, { email, password })
+        return this.http.post<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/login`, { email, password })
             .pipe(
-                tap(res => this.setSession(res)));
+                tap(res => {
+                    this.setSession(res);
+                })
+            );
+
     }
 
     logout() {
-        localStorage.removeItem('id_token');
+        localStorage.removeItem('access_token');
         localStorage.removeItem('expires_at');
         this.userSubject.next(null!);
         this.router.navigate(['/login']);
     }
 
     register(data: RegisterRequest) {
-        return this.http.post<{ idToken: string, expiresIn: string}>(
+        return this.http.post<{ accessToken: string, userId: string}>(
             `${this.API_URL}/register`, 
             {
                 email: data.email,
@@ -74,16 +76,18 @@ export class UserService {
     }
 
     changePassword(email: string, oldPassword: string, newPassword: string) {
-        return this.http.patch<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
+        return this.http.patch<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
             .pipe(
                 tap(res => this.setSession(res)));
     }
 
-    private setSession(result: { idToken: string, expiresIn: string}) {
+    private setSession(result: { accessToken: string, userId: string}) {
         const expiresAt = DateTime.now().plus({ hours: 1 });
 
-        localStorage.setItem('id_token', result.idToken);
+        localStorage.setItem('access_token', result.accessToken);
         localStorage.setItem("expires_at", JSON.stringify(expiresAt));
+
+        this.apiGateway.getUser(result.userId).subscribe(user => this.userSubject.next(user));
     }
 
     public isLoggedIn() {

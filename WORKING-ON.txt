@@ -1,0 +1,6 @@
+Was working on making the UserService actually get an user value when logging on. Right now, the User Subject will never actually get an User. 
+The next step is making sure that the API Gateway can grab an user utilizing the existing backend methods. Then it should return that properly 
+crafted user to the UserService, which will set it's subject value to it. 
+
+You should probably also make sure that the idToken is sent for the user, since that should be available in local storage and is not. 
+Actually, local storage might not even be needed. Think about refactoring that out after you get this bullshit running. 

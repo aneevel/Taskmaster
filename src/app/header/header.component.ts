@@ -27,7 +27,6 @@ export class HeaderComponent {
   isAuthenticated$ = this.userService.isAuthenticated$;
 
   constructor(private userService: UserService) {
-
   }
 
   logout() {

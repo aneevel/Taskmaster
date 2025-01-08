@@ -81,12 +81,12 @@ const signup = async (req, res, next) => {
 
         console.log('Creating new user...');
         const result = await user.signup();
-        console.log('User creation result:', result);  // See what MongoDB returns
+        console.log('User creation result:', result);  
         
         res.status(200).json({ 
             success: true,
             message: "User created",
-            id: result.insertedId  // This is where the ID originates
+            id: result.insertedId  
         });
     } catch (error) {
         console.error('Error in signup:', error);
@@ -137,7 +137,11 @@ const login = async (req, res, next) => {
     );
 
     res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-    res.status(200).json({ accessToken });
+    res.status(200).json(
+        { 
+            "accessToken": accessToken,
+            "userId": existingUser._id
+        });
 }
 
 const logout = async (req, res, next) => {

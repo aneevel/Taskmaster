@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Task } from './models/task.model';
 import { HealthStatus } from './models/health.model';
 import { InjectionToken } from '@angular/core';
+import { User } from './models/user.model';
 
 export const AUTO_START_HEALTH_CHECK = new InjectionToken<boolean>('AUTO_START_HEALTH_CHECK');
 
@@ -113,6 +114,20 @@ export class ApiGatewayService implements OnDestroy {
                     }
                 }),
                 map(response => response.success)
+            );
+    }
+
+    getUser(userId: string): Observable<User> {
+        return this.http.get<User>(`${this.API_URL}/users/${userId}`)
+            .pipe(
+                tap(response => {
+                    console.log('hi hi hi');
+                    if (!response) {
+                        console.log("there was no response :(");
+                        throw new Error();
+                    }
+                }),
+                
             );
     }
 
