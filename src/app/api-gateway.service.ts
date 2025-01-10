@@ -121,13 +121,11 @@ export class ApiGatewayService implements OnDestroy {
         return this.http.get<User>(`${this.API_URL}/users/${userId}`)
             .pipe(
                 tap(response => {
-                    console.log('hi hi hi');
                     if (!response) {
                         console.log("there was no response :(");
                         throw new Error();
                     }
                 }),
-                
             );
     }
 
