@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateTaskComponent } from '../create-task/create-task.component';
 import { UserTasksService } from '../user-tasks.service';
 import { TaskItemComponent } from '../task-item/task-item.component';
-import { User } from '../models/user.model';
 
 @Component({
   standalone: true,
@@ -13,6 +13,7 @@ import { User } from '../models/user.model';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
   imports: [ ButtonModule, 
+    PanelModule,
     CommonModule,
     TaskItemComponent],
   providers: [DialogService]
@@ -20,16 +21,12 @@ import { User } from '../models/user.model';
 export class TasksComponent {
 
   ref: DynamicDialogRef | undefined;
-  @Input({ required: true}) occurrence! : string;
 
   constructor(public dialogService: DialogService,
     public userTasksService: UserTasksService) {}
 
   openCreateTask() {
     this.ref = this.dialogService.open(CreateTaskComponent, {
-      data: {
-        occurrence: this.occurrence,
-      },
       header: 'Create A New Task',
       width: '70%',
       contentStyle: { overflow: 'auto' },
