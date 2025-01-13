@@ -39,7 +39,6 @@ describe('TasksComponent', () => {
     userTasksService = TestBed.inject(UserTasksService) as jasmine.SpyObj<UserTasksService>;
     dialogService = TestBed.inject(DialogService) as jasmine.SpyObj<DialogService>;
     
-    component.occurrence = 'daily';
     fixture.detectChanges();
   });
 

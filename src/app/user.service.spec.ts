@@ -4,7 +4,13 @@ import { Router } from '@angular/router';
 import { DateTime } from 'luxon';
 
 import { UserService } from './user.service';
-import { User } from './models/user.model';
+
+interface RegisterRequest {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+}
 
 describe('UserService', () => {
   let service: UserService;
@@ -36,9 +42,11 @@ describe('UserService', () => {
   it('should register and set session', () => {
       const response = { idToken: 'test-id', expiresIn: '3600' };
 
-      service.register('test@test.com', 'testpassword', 'First', 'Last').subscribe(response => {
-            expect(response.idToken).toBe('test-id');
-            expect(response.expiresIn).toBe('3600');
+
+
+      service.register({ email: 'test@test.com', password: 'testpassword', firstName: 'First', lastName: 'Last'}).subscribe(response => {
+            expect(response.userId).toBe('test-id');
+            expect(response.accessToken).toBeTruthy();
       });
 
       const req = httpMock.expectOne(`${service['API_URL']}/register`);
@@ -50,8 +58,8 @@ describe('UserService', () => {
     const response = { idToken: 'test-id', expiresIn: '3600' };
 
     service.login('test@test.com', 'testpassword').subscribe(response => {
-        expect(response.idToken).toBe('test-id');
-        expect(response.expiresIn).toBe('3600');
+        expect(response.userId).toBe('test-id');
+        expect(response.accessToken).toBeTruthy();
     });
 
     const req = httpMock.expectOne(`${service['API_URL']}/login`);
@@ -90,8 +98,8 @@ describe('UserService', () => {
       const response = { idToken: 'test-id', expiresIn: '3600' };
 
       service.changePassword('test@test.com', 'testpassword', 'newpassword').subscribe(response => {
-            expect(response.idToken).toBe('test-id');
-            expect(response.expiresIn).toBe('3600');
+            expect(response.userId).toBe('test-id');
+            expect(response.accessToken).toBeTruthy();
       });
 
       const req = httpMock.expectOne(`${service['API_URL']}/changePassword`);
