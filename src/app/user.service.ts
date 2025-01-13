@@ -88,6 +88,7 @@ export class UserService {
         localStorage.setItem("expires_at", JSON.stringify(expiresAt));
 
         this.apiGateway.getUser(result.userId).subscribe(user => this.userSubject.next(user));
+        console.log(this.userValue);
     }
 
     public isLoggedIn() {

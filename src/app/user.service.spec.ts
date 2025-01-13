@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { DateTime } from 'luxon';
 
 import { UserService } from './user.service';
+import { ApiGatewayService } from './api-gateway.service';
+import { of } from 'rxjs';
 
 interface RegisterRequest {
     email: string;
@@ -17,12 +19,20 @@ describe('UserService', () => {
   let httpMock: HttpTestingController;
   let router: Router;
 
+  const mockedApiGatewayService = jasmine.createSpyObj(
+      'ApiGatewayService',
+      [ 'getUser' ]
+  );
+
+  mockedApiGatewayService.getUser.and.returnValue(of('User'));
+
   beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
         providers: [
             UserService,
-            { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
+            { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+            { provide: ApiGatewayService, useValue: mockedApiGatewayService }
         ]
     });
 
@@ -40,9 +50,7 @@ describe('UserService', () => {
   });
 
   it('should register and set session', () => {
-      const response = { idToken: 'test-id', expiresIn: '3600' };
-
-
+      const response = { userId: 'test-id', accessToken: 'test-token' };
 
       service.register({ email: 'test@test.com', password: 'testpassword', firstName: 'First', lastName: 'Last'}).subscribe(response => {
             expect(response.userId).toBe('test-id');
@@ -51,11 +59,12 @@ describe('UserService', () => {
 
       const req = httpMock.expectOne(`${service['API_URL']}/register`);
       expect(req.request.method).toBe('POST');
+
       req.flush(response);
   });
 
   it('should authenticate the user and set up session', () => {
-    const response = { idToken: 'test-id', expiresIn: '3600' };
+    const response = { userId: 'test-id', accessToken: 'test-token' };
 
     service.login('test@test.com', 'testpassword').subscribe(response => {
         expect(response.userId).toBe('test-id');
@@ -69,18 +78,27 @@ describe('UserService', () => {
 
   it('should log user out and clear local storage', () => {
         
-      localStorage.setItem('id_token', 'fake-token');
+      localStorage.removeItem('user_id');
       localStorage.setItem('expires_at', JSON.stringify(DateTime.now().plus({ hours: 1 }).toISO()));
       
       service.logout();
    
-      expect(localStorage.getItem('id_token')).toBeNull();
+      expect(localStorage.getItem('user_id')).toBeNull();
       expect(localStorage.getItem('expires_at')).toBeNull();
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
   it('should return true if user is logged in and not expired', () => {
-    localStorage.setItem('expires_at', JSON.stringify(DateTime.now().plus({ hours: 1 }).toISO()));
+    const response = { userId: 'test-id', accessToken: 'test-token' };
+
+    service.login('test@test.com', 'testpassword').subscribe(response => {
+        expect(response.userId).toBeTruthy();
+        expect(response.accessToken).toBeTruthy();
+    });
+
+    const req = httpMock.expectOne(`${service['API_URL']}/login`);
+    expect(req.request.method).toBe('POST');
+    req.flush(response);
 
     const result = service.isLoggedIn();
 
@@ -95,7 +113,7 @@ describe('UserService', () => {
   });
 
   it('should change password when provided', () => {
-      const response = { idToken: 'test-id', expiresIn: '3600' };
+      const response = { userId: 'test-id', accessToken: 'test-token' };
 
       service.changePassword('test@test.com', 'testpassword', 'newpassword').subscribe(response => {
             expect(response.userId).toBe('test-id');
