@@ -1,1 +1,8 @@
-<app-tasks></app-tasks>
+<div data-testid="top-level">
+    <ng-container *ngIf="1==1; else elseBlock"> 
+        <app-about></app-about>
+    </ng-container>
+    <ng-template #elseBlock>
+        <app-tasks></app-tasks>
+    </ng-template>
+</div>
