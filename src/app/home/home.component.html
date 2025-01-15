@@ -1,8 +1,8 @@
 <div data-testid="top-level">
-    <ng-container *ngIf="1==1; else elseBlock"> 
-        <app-about></app-about>
-    </ng-container>
-    <ng-template #elseBlock>
+    <ng-container *ngIf="isAuthenticated$ | async; else unauthenticated">
         <app-tasks></app-tasks>
+    </ng-container>
+    <ng-template #unauthenticated>
+        <app-about></app-about>
     </ng-template>
 </div>
