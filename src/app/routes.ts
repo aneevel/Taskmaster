@@ -5,7 +5,7 @@ import { AccountComponent } from "./account/account.component";
 import { UsersComponent } from "./user/users/users.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
-import { authGuard } from "./guards/auth.guard";
+import { AuthGuard } from "./guards/auth.guard";
 
 const routeConfig: Routes = [
   {
@@ -21,13 +21,13 @@ const routeConfig: Routes = [
     path: "tasks",
     component: TasksComponent,
     title: "User Tasks",
-    canActivate: [authGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: "user/account",
     component: AccountComponent,
     title: "Account Overview",
-    canActivate: [authGuard]
+    canActivate: [AuthGuard]
   },
   { 
     path: "login",
