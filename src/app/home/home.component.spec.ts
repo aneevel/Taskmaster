@@ -4,16 +4,24 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from "@angular/core";
 import { By } from '@angular/platform-browser';
 
+import { UserService } from '../user.service';
+
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
+  let userMock: jasmine.SpyObj<UserService>;
 
   beforeEach(() => {
 
+    userMock = jasmine.createSpyObj('UserService', [
+        'isLoggedIn'
+    ]);
+
     TestBed.configureTestingModule({
         imports: [
-            HttpClientTestingModule
+            HttpClientTestingModule,
+            { provide: UserService, useValue: userMock }
         ]
     });
 
@@ -39,6 +47,13 @@ describe('HomeComponent', () => {
         By.css('app-about')
     );
     expect(aboutComponent).toBeTruthy();
+  });
+
+  it('should contain a tasks component if authenticated', () => {
+    const tasksComponent = debugElement.query(
+        By.css('app-tasks')
+    );
+    expect(tasksComponent).toBeTruthy();
   });
 
 });
