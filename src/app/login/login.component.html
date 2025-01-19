@@ -2,8 +2,7 @@
     <h2 class="login-header">Login</h2>
     <div *ngIf="errorMessage" class="alert alert-danger error-message">
         <i class="pi pi-exclamation-triangle"></i>
-        <strong>Login Error:</strong> Unable to log in with provided credentials.
-        <div class="error-details">Error Code: {{ errorMessage }}</div>
+        <strong>Login Error:</strong> {{ errorMessage }}
     </div>
     <div class="register-form">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">

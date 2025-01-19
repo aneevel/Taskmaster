@@ -20,6 +20,7 @@ export class LoginComponent {
     loading = false;
     submitted = false;
     returnUrl: string;
+    errorMessage: string = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -34,6 +35,7 @@ export class LoginComponent {
 
     onSubmit() {
         this.submitted = true;
+        this.errorMessage = '';
 
         if (this.loginForm.invalid) {
             return;
@@ -47,9 +49,7 @@ export class LoginComponent {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    // Replace with some sort of alert/alarm system
-                    console.log(error);
-                    console.log("Error logging on!");
+                    this.errorMessage = 'Login failed. Please check your credentials and try again.';
                     this.loading = false;
                 });
     } 
