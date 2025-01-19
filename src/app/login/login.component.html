@@ -1,26 +1,44 @@
-<div class="card">
-    <h4 class="card-header">Login</h4>
-    <div class="card-body">
+<div class="login-container">
+    <h2 class="login-header">Login</h2>
+    <div *ngIf="errorMessage" class="alert alert-danger error-message">
+        <i class="pi pi-exclamation-triangle"></i>
+        <strong>Login Error:</strong> Unable to log in with provided credentials.
+        <div class="error-details">Error Code: {{ errorMessage }}</div>
+    </div>
+    <div class="register-form">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label for="email">Email: </label>
-                <input id="email" type="email" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['username'].errors }"/>
+                <input 
+                    id="email" 
+                    type="email" 
+                    formControlName="username" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && form['username'].errors }"
+                />
                 <div *ngIf="submitted && form['username'].errors" class="invalid-feedback">
-                    <div *ngIf="form['username'].errors['required']">Username is required!</div>
+                    <div *ngIf="form['username'].errors['required']">Email is required!</div>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="password">Password: </label>
-                <input id="password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"/>
+                <input 
+                    id="password" 
+                    type="password" 
+                    formControlName="password" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"
+                />
                 <div *ngIf="submitted && form['password'].errors" class="invalid-feedback">
                     <div *ngIf="form['password'].errors['required']">Password is required!</div>
                 </div>
             </div>
-            <div class="form-group">
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                </button>
-            </div>
+
+            <button [disabled]="loading" class="register-button">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Login
+            </button>
         </form>
     </div>
 </div>
