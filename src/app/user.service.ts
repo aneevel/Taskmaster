@@ -50,9 +50,11 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/login`, { email, password })
+        return this.http.post<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/login`, { email, password })
             .pipe(
-                tap(res => this.setSession(res)));
+                tap((res) => {
+                    this.setSession(res)
+                }));
     }
 
     logout() {
@@ -63,7 +65,7 @@ export class UserService {
     }
 
     register(data: RegisterRequest) {
-        return this.http.post<{ idToken: string, expiresIn: string}>(
+        return this.http.post<{ accessToken: string, userId: string}>(
             `${this.API_URL}/register`, 
             {
                 email: data.email,
@@ -77,16 +79,21 @@ export class UserService {
     }
 
     changePassword(email: string, oldPassword: string, newPassword: string) {
-        return this.http.patch<{ idToken: string, expiresIn: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
+        return this.http.patch<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
             .pipe(
                 tap(res => this.setSession(res)));
     }
 
-    private setSession(result: { idToken: string, expiresIn: string}) {
+    private setSession(result: { accessToken: string, userId: string}) {
         const expiresAt = DateTime.now().plus({ hours: 1 });
 
-        localStorage.setItem('id_token', result.idToken);
-        localStorage.setItem("expires_at", JSON.stringify(expiresAt));
+        localStorage.setItem('id_token', result.userId);
+        localStorage.setItem('expires_at', JSON.stringify(expiresAt));
+        localStorage.setItem('access_token', result.accessToken);
+
+        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
+            .pipe(
+                tap(res => this.userSubject.next(res)));
     }
 
     public isLoggedIn() {

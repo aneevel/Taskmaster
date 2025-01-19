@@ -80,7 +80,7 @@ export class RegisterComponent implements OnInit {
         });
       },
       error: error => {
-        this.errorMessage = error.message || 'Registration failed. Please try again later.';
+        this.errorMessage = error.error.message || 'Registration failed. Please try again later.';
         this.loading = false;
       }
     });
