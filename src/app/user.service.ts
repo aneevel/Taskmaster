@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map, switchMap } from 'rxjs';
 import { DateTime } from 'luxon';
 import { environment } from '../environments/environment';
 import { User } from './models/user.model';
@@ -50,11 +50,12 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/login`, { email, password })
-            .pipe(
-                tap((res) => {
-                    this.setSession(res)
-                }));
+        return this.http.post<{ accessToken: string, userId: string}>(
+            `${environment.api.serverUrl}/login`, 
+            { email, password }
+        ).pipe(
+            switchMap(res => this.setSession(res))  
+        );
     }
 
     logout() {
@@ -87,15 +88,16 @@ export class UserService {
     private setSession(result: { accessToken: string, userId: string}) {
         const expiresAt = DateTime.now().plus({ hours: 1 });
 
-        this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
-            .pipe(
-                tap(res => {
-                    this.userSubject.next(res)
-                })).subscribe();
-
         localStorage.setItem('id_token', result.userId);
         localStorage.setItem('expires_at', JSON.stringify(expiresAt));
         localStorage.setItem('access_token', result.accessToken);
+
+        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
+            .pipe(
+                tap(res => {
+                    this.userSubject.next(res);
+                })
+            );
     }
 
     public isLoggedIn() {
