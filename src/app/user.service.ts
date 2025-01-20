@@ -87,13 +87,15 @@ export class UserService {
     private setSession(result: { accessToken: string, userId: string}) {
         const expiresAt = DateTime.now().plus({ hours: 1 });
 
+        this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
+            .pipe(
+                tap(res => {
+                    this.userSubject.next(res)
+                })).subscribe();
+
         localStorage.setItem('id_token', result.userId);
         localStorage.setItem('expires_at', JSON.stringify(expiresAt));
         localStorage.setItem('access_token', result.accessToken);
-
-        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
-            .pipe(
-                tap(res => this.userSubject.next(res)));
     }
 
     public isLoggedIn() {
