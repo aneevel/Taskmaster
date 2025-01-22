@@ -29,6 +29,7 @@ export class TasksComponent {
     this.ref = this.dialogService.open(CreateTaskComponent, {
       header: 'Create A New Task',
       width: '70%',
+      height: '50%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       maximizable: false

@@ -19,7 +19,7 @@ export class CreateTaskComponent {
   taskForm = new FormGroup({
     description: new FormControl<string>('', { nonNullable: true }),
     priority: new FormControl<string>('', { nonNullable: true }),
-    dueDate: new FormControl<Date>(new Date(), { nonNullable: true }),
+    dueDate: new FormControl<Date | null>(null),
     occurrence: new FormControl<string>('Once', { nonNullable: true }),
     weeklyDay: new FormControl<string>('Sunday', { nonNullable: true }),
     monthlyDay: new FormControl<Date | null>(null)
@@ -51,6 +51,10 @@ export class CreateTaskComponent {
     return this.taskForm.get('occurrence')?.value === 'Monthly';
   }
 
+  get showDueDate(): boolean {
+    return this.taskForm.get('occurrence')?.value === 'Once';
+  }
+
   adjustMonthlyDate(date: Date): Date {
     const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     if (date.getDate() > lastDayOfMonth) {
@@ -62,6 +66,7 @@ export class CreateTaskComponent {
   saveTask(): Observable<Task> {
     const occurrenceValue = this.taskForm.get('occurrence')?.value ?? 'Once';
     let selectedDate: Date | null | undefined = null;
+    let dueDate: Date | null | undefined = null;
 
     if (occurrenceValue === 'Weekly') {
         const weekDay = this.taskForm.get('weeklyDay')?.value;
@@ -71,15 +76,17 @@ export class CreateTaskComponent {
         if (selectedDate) {
             selectedDate = this.adjustMonthlyDate(selectedDate);
         }
+    } else if (occurrenceValue === 'Once') {
+        dueDate = this.taskForm.get('dueDate')?.value;
     }
 
     const newTask = {
-      title: this.taskForm.controls['description'].value,
-      description: this.taskForm.controls['description'].value,
-      occurrence: occurrenceValue,
-      priority: this.taskForm.controls['priority'].value,
-      dueDate: this.taskForm.controls['dueDate'].value,
-      recurringDate: selectedDate
+        title: this.taskForm.controls['description'].value,
+        description: this.taskForm.controls['description'].value,
+        occurrence: occurrenceValue,
+        priority: this.taskForm.controls['priority'].value,
+        dueDate: dueDate,
+        recurringDate: selectedDate
     };
 
     return this.userTasks.createTask('user1', newTask).pipe(
