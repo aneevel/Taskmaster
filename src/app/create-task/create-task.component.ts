@@ -21,12 +21,21 @@ export class CreateTaskComponent {
     priority: new FormControl<string>('', { nonNullable: true }),
     dueDate: new FormControl<Date>(new Date(), { nonNullable: true }),
     occurrence: new FormControl<string>('Once', { nonNullable: true }),
-    weeklyDay: new FormControl<Date | null>(null),
+    weeklyDay: new FormControl<string>('Sunday', { nonNullable: true }),
     monthlyDay: new FormControl<Date | null>(null)
   });
 
   priorities = ['High', 'Medium', 'Low'];
   occurrences = ['Once', 'Daily', 'Weekly', 'Monthly'];
+  weekDays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
 
   constructor(
     private userTasks: UserTasksService,
@@ -55,12 +64,13 @@ export class CreateTaskComponent {
     let selectedDate: Date | null | undefined = null;
 
     if (occurrenceValue === 'Weekly') {
-      selectedDate = this.taskForm.get('weeklyDay')?.value;
+        const weekDay = this.taskForm.get('weeklyDay')?.value;
+        selectedDate = weekDay ? new Date(weekDay) : null;
     } else if (occurrenceValue === 'Monthly') {
-      selectedDate = this.taskForm.get('monthlyDay')?.value;
-      if (selectedDate) {
-        selectedDate = this.adjustMonthlyDate(selectedDate);
-      }
+        selectedDate = this.taskForm.get('monthlyDay')?.value;
+        if (selectedDate) {
+            selectedDate = this.adjustMonthlyDate(selectedDate);
+        }
     }
 
     const newTask = {

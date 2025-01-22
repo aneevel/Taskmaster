@@ -34,16 +34,12 @@
     </div>
     <div *ngIf="showWeeklyPicker">
         <label for="task-weekly">Day of Week</label>
-        <p-calendar 
+        <p-dropdown 
             id="task-weekly"
             formControlName="weeklyDay"
-            [showIcon]="true"
-            [showTime]="false"
-            [dateFormat]="'DD'"
-            [inline]="true"
-            [selectionMode]="'single'"
-            [firstDayOfWeek]="0">
-        </p-calendar>
+            [options]="weekDays"
+            placeholder="Select Day">
+        </p-dropdown>
     </div>
     <div *ngIf="showMonthlyPicker">
         <label for="task-monthly">Day of Month</label>
