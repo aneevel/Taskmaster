@@ -1,82 +1,89 @@
-<form 
-    [formGroup]="taskForm">
-    <div class="p-inputgroup">
-        <label 
-            for="task-description">
-            Description
-        </label>
-        <input 
-            id="task-description" 
-            pInputTextArea 
-            placeholder="Do a thing..."
-            formControlName="description"/>
-    </div>
-    <div>
-        <label 
-            for="task-priority">
-            Task Priority 
-        </label>
-        <p-dropdown 
-            id="task-priority" 
-            placeholder="Set the Priority"
-            formControlName="priority"
-            [options]="priorities">
-        </p-dropdown>
-    </div>
-    <div>
-        <label for="task-occurrence">Occurrence</label>
-        <p-dropdown 
-            id="task-occurrence" 
-            placeholder="How often?"
-            formControlName="occurrence"
-            [options]="occurrences">
-        </p-dropdown>
-    </div>
-    <div *ngIf="showWeeklyPicker">
-        <label for="task-weekly">Day of Week</label>
-        <p-dropdown 
-            id="task-weekly"
-            formControlName="weeklyDay"
-            [options]="weekDays"
-            placeholder="Select Day">
-        </p-dropdown>
-    </div>
-    <div *ngIf="showMonthlyPicker">
-        <label for="task-monthly">Day of Month</label>
-        <p-calendar 
-            id="task-monthly"
-            formControlName="monthlyDay"
-            [showIcon]="true"
-            [showTime]="false"
-            [dateFormat]="'dd'"
-            [inline]="true"
-            [selectionMode]="'single'"
-            [readonlyInput]="true">
-        </p-calendar>
-    </div>
-    <div *ngIf="showDueDate">
-        <label for="task-due-date">Due Date</label>
-        <p-calendar 
-            id="task-due-date" 
-            dateFormat="dd.mm.yy" 
-            [showIcon]="true"
-            formControlName="dueDate">
-        </p-calendar>
-    </div>
-    <div>
-        <p-button 
-            (onClick)="saveTask()"
-            id="task-save"
-            label="Save"
-            [raised]="true"
-            severity="success">
-        </p-button>
-        <p-button 
-            (onClick)="closeDialog()"
-            id="task-cancel"
-            label="Cancel"
-            [raised]="true"
-            severity="danger">
-        </p-button>
-    </div>
-</form>
+<div class="create-task-container">
+    <h2 class="header">Create A New Task</h2>
+    
+    <form [formGroup]="taskForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="task-description">Description</label>
+                <input 
+                    id="task-description" 
+                    pInputTextArea 
+                    placeholder="Do a thing..."
+                    formControlName="description"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="task-priority">Task Priority</label>
+                <p-dropdown 
+                    id="task-priority" 
+                    placeholder="Set the Priority"
+                    formControlName="priority"
+                    [options]="priorities">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="occurrence-row">
+            <div class="form-group">
+                <label for="task-occurrence">Occurrence</label>
+                <p-dropdown 
+                    id="task-occurrence" 
+                    placeholder="How often?"
+                    formControlName="occurrence"
+                    [options]="occurrences">
+                </p-dropdown>
+            </div>
+
+            <div class="form-group" *ngIf="showWeeklyPicker">
+                <label for="task-weekly">Day of Week</label>
+                <p-dropdown 
+                    id="task-weekly"
+                    formControlName="weeklyDay"
+                    [options]="weekDays"
+                    placeholder="Select Day">
+                </p-dropdown>
+            </div>
+
+            <div class="form-group" *ngIf="showMonthlyPicker">
+                <label for="task-monthly">Day of Month</label>
+                <p-calendar 
+                    id="task-monthly"
+                    formControlName="monthlyDay"
+                    [showIcon]="true"
+                    [showTime]="false"
+                    [dateFormat]="'dd'"
+                    [inline]="false"
+                    [selectionMode]="'single'"
+                    [readonlyInput]="true">
+                </p-calendar>
+            </div>
+
+            <div class="form-group" *ngIf="showDueDate">
+                <label for="task-due-date">Due Date</label>
+                <p-calendar 
+                    id="task-due-date" 
+                    dateFormat="dd.mm.yy" 
+                    [showIcon]="true"
+                    formControlName="dueDate">
+                </p-calendar>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <p-button 
+                (onClick)="saveTask()"
+                id="task-save"
+                label="Save"
+                [raised]="true"
+                severity="success">
+            </p-button>
+            <p-button 
+                (onClick)="closeDialog()"
+                id="task-cancel"
+                label="Cancel"
+                [raised]="true"
+                severity="danger">
+            </p-button>
+        </div>
+    </form>
+</div>
