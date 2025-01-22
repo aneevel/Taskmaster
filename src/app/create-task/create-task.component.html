@@ -24,6 +24,41 @@
         </p-dropdown>
     </div>
     <div>
+        <label for="task-occurrence">Occurrence</label>
+        <p-dropdown 
+            id="task-occurrence" 
+            placeholder="How often?"
+            formControlName="occurrence"
+            [options]="occurrences">
+        </p-dropdown>
+    </div>
+    <div *ngIf="showWeeklyPicker">
+        <label for="task-weekly">Day of Week</label>
+        <p-calendar 
+            id="task-weekly"
+            formControlName="weeklyDay"
+            [showIcon]="true"
+            [showTime]="false"
+            [dateFormat]="'DD'"
+            [inline]="true"
+            [selectionMode]="'single'"
+            [firstDayOfWeek]="0">
+        </p-calendar>
+    </div>
+    <div *ngIf="showMonthlyPicker">
+        <label for="task-monthly">Day of Month</label>
+        <p-calendar 
+            id="task-monthly"
+            formControlName="monthlyDay"
+            [showIcon]="true"
+            [showTime]="false"
+            [dateFormat]="'dd'"
+            [inline]="true"
+            [selectionMode]="'single'"
+            [readonlyInput]="true">
+        </p-calendar>
+    </div>
+    <div>
         <label 
             for="task-due-date">
             Due Date 
