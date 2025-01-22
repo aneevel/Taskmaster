@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { UserTasksService } from '../user-tasks.service';
 import { Task } from '../models/task.model';
@@ -11,7 +12,13 @@ import { Observable, tap } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-create-task',
-  imports: [ DropdownModule, CalendarModule, ReactiveFormsModule, CommonModule ],
+  imports: [ 
+    DropdownModule, 
+    CalendarModule, 
+    ReactiveFormsModule, 
+    CommonModule,
+    InputTextModule
+  ],
   templateUrl: './create-task.component.html',
   styleUrls: ['./create-task.component.scss'],
 })
