@@ -54,11 +54,8 @@
             [readonlyInput]="true">
         </p-calendar>
     </div>
-    <div>
-        <label 
-            for="task-due-date">
-            Due Date 
-        </label>
+    <div *ngIf="showDueDate">
+        <label for="task-due-date">Due Date</label>
         <p-calendar 
             id="task-due-date" 
             dateFormat="dd.mm.yy" 
