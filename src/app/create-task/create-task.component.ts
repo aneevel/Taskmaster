@@ -8,6 +8,7 @@ import { UserTasksService } from '../user-tasks.service';
 import { Task } from '../models/task.model';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Observable, tap } from 'rxjs';
+import { UserService } from '../user.service';
 
 @Component({
   standalone: true,
@@ -48,6 +49,7 @@ export class CreateTaskComponent {
     private userTasks: UserTasksService,
     private readonly dialogRef: DynamicDialogRef,
     private config: DynamicDialogConfig,
+    private userService: UserService
   ) { }
 
   get showWeeklyPicker(): boolean {
@@ -74,6 +76,11 @@ export class CreateTaskComponent {
     const occurrenceValue = this.taskForm.get('occurrence')?.value ?? 'Once';
     let selectedDate: Date | null | undefined = null;
     let dueDate: Date | null | undefined = null;
+    const currentUser = this.userService.userValue;
+
+    if (!currentUser) {
+      throw new Error('No authenticated user found');
+    }
 
     if (occurrenceValue === 'Weekly') {
         const weekDay = this.taskForm.get('weeklyDay')?.value;
@@ -96,7 +103,7 @@ export class CreateTaskComponent {
         recurringDate: selectedDate
     };
 
-    return this.userTasks.createTask('user1', newTask).pipe(
+    return this.userTasks.createTask(currentUser.id, newTask).pipe(
       tap(() => this.closeDialog())
     );
   }
