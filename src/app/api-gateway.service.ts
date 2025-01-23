@@ -82,7 +82,7 @@ export class ApiGatewayService implements OnDestroy {
     }
 
     createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Observable<Task> {
-        return this.http.post<TaskActionResponse>(`${this.API_URL}/tasks`, task)
+        return this.http.post<TaskActionResponse>(`${this.API_URL}/tasks/new`, task)
             .pipe(
                 tap(response => {
                     if (!response.success) {

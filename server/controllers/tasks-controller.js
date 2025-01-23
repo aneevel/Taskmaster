@@ -6,6 +6,7 @@ const MAX_DESCRIPTION_LENGTH = 100;
 
 const createTask = async (req, res, next) => {
     
+    console.log("hiya");
     if (
         req.body == null ||
         req.body.description == null ||

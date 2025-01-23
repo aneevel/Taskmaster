@@ -72,7 +72,7 @@ export class CreateTaskComponent {
     return date;
   }
 
-  saveTask(): Observable<Task> {
+  saveTask() {
     const occurrenceValue = this.taskForm.get('occurrence')?.value ?? 'Once';
     let selectedDate: Date | null | undefined = null;
     let dueDate: Date | null | undefined = null;
@@ -95,17 +95,28 @@ export class CreateTaskComponent {
     }
 
     const newTask = {
+        userId: currentUser.id,
         title: this.taskForm.controls['description'].value,
         description: this.taskForm.controls['description'].value,
         occurrence: occurrenceValue,
         priority: this.taskForm.controls['priority'].value,
         dueDate: dueDate,
-        recurringDate: selectedDate
+        recurringDate: selectedDate,
+        completed: false
     };
 
-    return this.userTasks.createTask(currentUser.id, newTask).pipe(
+    this.userTasks.createTask(currentUser.id, newTask).pipe(
       tap(() => this.closeDialog())
-    );
+    ).subscribe({
+        next: (task) => {
+            console.log('Task created:', task);
+            this.closeDialog();
+        },
+        error: (error) => {
+            console.error('Error creating task:', error);
+            // Handle error
+        }
+    });
   }
 
   closeDialog() {
