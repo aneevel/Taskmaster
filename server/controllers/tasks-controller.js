@@ -5,16 +5,23 @@ const User = require('../models/user-model');
 const MAX_DESCRIPTION_LENGTH = 100;
 
 const createTask = async (req, res, next) => {
-    
-    if (
-        req.body == null ||
-        req.body.description == null ||
-        req.body.priority == null ||
-        req.body.dueDate == null ||
-        req.body.occurrence == null ||
-        req.body.userID == null 
-    ) {
-        return res.status(400).json({ message: "Improper params supplied"});
+    const requiredParams = {
+        description: req.body?.description,
+        priority: req.body?.priority,
+        dueDate: req.body?.dueDate,
+        occurrence: req.body?.occurrence,
+        userID: req.body?.userID
+    };
+
+    const missingParams = Object.entries(requiredParams)
+        .filter(([_, value]) => value == null)
+        .map(([key]) => key);
+
+    if (missingParams.length > 0) {
+        return res.status(400).json({ 
+            message: "Missing required parameters", 
+            missingParams 
+        });
     }
 
     if (req.body.description.trim() === "") {
