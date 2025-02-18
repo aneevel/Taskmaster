@@ -33,15 +33,13 @@ export class UserService {
             map(user => !!user && !this.isExpired())
         );
 
-        // Check local storage on startup
-        this.checkStoredUser();
-    }
-
-    private checkStoredUser() {
-        const storedUser = localStorage.getItem('user');
-        const token = localStorage.getItem('id_token');
-        if (storedUser && token && !this.isExpired()) {
-            this.userSubject.next(JSON.parse(storedUser));
+        const userId = localStorage.getItem('id_token');
+        if (userId && !this.isExpired()) {
+            this.http.get<User>(`${environment.api.serverUrl}/users/${userId}`)
+                .subscribe({
+                    next: (user) => this.userSubject.next(user),
+                    error: () => this.logout()
+                });
         }
     }
 
@@ -99,6 +97,7 @@ export class UserService {
                     this.userSubject.next(res);
                 })
             );
+
     }
 
     public isLoggedIn() {
