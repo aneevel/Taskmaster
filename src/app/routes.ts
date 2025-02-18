@@ -12,6 +12,7 @@ const routeConfig: Routes = [
     path: "",
     component: HomeComponent,
     title: "Home page",
+    canActivate: [AuthGuard]
   },
   {
     path: 'callback',
