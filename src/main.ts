@@ -5,9 +5,10 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import routeConfig from "./app/routes";
 
 import { AppComponent } from "./app/app.component";
-import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { environment } from "./environments/environment.prod";
 import { enableProdMode } from "@angular/core";
+import { AuthInterceptor } from './app/auth.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -18,6 +19,8 @@ bootstrapApplication(AppComponent, {
     provideRouter(routeConfig), 
     provideProtractorTestingSupport(),
     provideNoopAnimations(),
-    provideHttpClient()
+    provideHttpClient(
+      withInterceptors([AuthInterceptor])
+    )
   ]
 }).catch((err) => console.error(err));

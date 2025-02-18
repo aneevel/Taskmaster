@@ -114,7 +114,7 @@ export class CreateTaskComponent {
         },
         error: (error) => {
             console.error('Error creating task:', error);
-            // Handle error
+            this.closeDialog();
         }
     });
   }
