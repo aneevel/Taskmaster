@@ -95,7 +95,7 @@ export class CreateTaskComponent {
     }
 
     const newTask = {
-        userId: currentUser.id,
+        userID: currentUser._id,
         title: this.taskForm.controls['description'].value,
         description: this.taskForm.controls['description'].value,
         occurrence: occurrenceValue,
@@ -105,7 +105,7 @@ export class CreateTaskComponent {
         completed: false
     };
 
-    this.userTasks.createTask(currentUser.id, newTask).pipe(
+    this.userTasks.createTask(currentUser._id, newTask).pipe(
       tap(() => this.closeDialog())
     ).subscribe({
         next: (task) => {

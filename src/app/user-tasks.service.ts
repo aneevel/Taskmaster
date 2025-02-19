@@ -18,9 +18,9 @@ export class UserTasksService {
         );
     }
 
-    createTask(userId: string, task: Omit<Task, 'id' | 'userId' | 'completed' | 'createdAt' | 'updatedAt'>): Observable<Task> {
+    createTask(userID: string, task: Omit<Task, 'id' | 'completed' | 'createdAt' | 'updatedAt'>): Observable<Task> {
         return this.apiGateway.createTask({
-            userId,
+            userID: userID,
             title: task.title,
             description: task.description,
             completed: false,

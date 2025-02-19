@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({ selector: 'app-users',
   template: `<ul>
     <li *ngFor="let user of users$ | async">
-        User #{{ user.id }}: {{ user.lname }}, {{ user.fname }} - Email: {{ user.email }}
+        User #{{ user._id }}: {{ user.lname }}, {{ user.fname }} - Email: {{ user.email }}
     </li>
 </ul>`,
   styleUrls: ['./users.component.scss'],

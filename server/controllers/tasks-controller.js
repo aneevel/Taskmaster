@@ -18,6 +18,7 @@ const createTask = async (req, res, next) => {
         .map(([key]) => key);
 
     if (missingParams.length > 0) {
+        console.log(req.body);
         return res.status(400).json({ 
             message: "Missing required parameters", 
             missingParams 

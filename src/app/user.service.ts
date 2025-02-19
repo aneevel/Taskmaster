@@ -48,7 +48,7 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<{ accessToken: string, userId: string}>(
+        return this.http.post<{ accessToken: string, userID: string}>(
             `${environment.api.serverUrl}/login`, 
             { email, password }
         ).pipe(
@@ -65,7 +65,7 @@ export class UserService {
     }
 
     register(data: RegisterRequest) {
-        return this.http.post<{ accessToken: string, userId: string}>(
+        return this.http.post<{ accessToken: string, userID: string}>(
             `${this.API_URL}/register`, 
             {
                 email: data.email,
@@ -79,25 +79,25 @@ export class UserService {
     }
 
     changePassword(email: string, oldPassword: string, newPassword: string) {
-        return this.http.patch<{ accessToken: string, userId: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
+        return this.http.patch<{ accessToken: string, userID: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
             .pipe(
                 tap(res => this.setSession(res)));
     }
 
-    private setSession(result: { accessToken: string, userId: string}) {
+    private setSession(result: { accessToken: string, userID: string}) {
         const expiresAt = DateTime.now().plus({ hours: 1 });
 
-        localStorage.setItem('id_token', result.userId);
-        localStorage.setItem('expires_at', JSON.stringify(expiresAt));
+        localStorage.setItem('id_token', result.userID);
         localStorage.setItem('access_token', result.accessToken);
+        localStorage.setItem('expires_at', JSON.stringify(expiresAt));
 
-        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
+        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userID}`)
             .pipe(
                 tap(res => {
+                    console.log('User object from server:', res);
                     this.userSubject.next(res);
                 })
             );
-
     }
 
     public isLoggedIn() {
