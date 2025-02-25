@@ -4,7 +4,7 @@
   margin-bottom: 36px;
 }
 
-#tasks-header h2{
+#tasks-header h2 {
   font-size: 1.5rem;
 }
 
@@ -17,4 +17,8 @@
 
 #task-items-overview svg {
   width: 12px;
+}
+
+#tasks-list {
+  list-style: none;
 }
