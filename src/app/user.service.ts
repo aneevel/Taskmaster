@@ -1,114 +1,114 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map, mergeMap } from 'rxjs';
 import { DateTime } from 'luxon';
 import { environment } from '../environments/environment';
 import { User } from './models/user.model';
 
 interface RegisterRequest {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class UserService {
-    private userSubject: BehaviorSubject<User | null>;
-    public user$: Observable<User | null>;
-    public isAuthenticated$: Observable<boolean>;
+  private userSubject: BehaviorSubject<User | null>;
+  public user$: Observable<User | null>;
+  public isAuthenticated$: Observable<boolean>;
 
-    public API_URL: string = environment.api.serverUrl;
+  public API_URL: string = environment.api.serverUrl;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
-        this.userSubject = new BehaviorSubject<User | null>(null);
-        this.user$ = this.userSubject.asObservable();
-        this.isAuthenticated$ = this.user$.pipe(
-            map(user => !!user && !this.isExpired())
-        );
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {
+    this.userSubject = new BehaviorSubject<User | null>(null);
+    this.user$ = this.userSubject.asObservable();
+    this.isAuthenticated$ = this.user$.pipe(
+      map(user => !!user && !this.isExpired())
+    );
 
-        const userId = localStorage.getItem('id_token');
-        if (userId && !this.isExpired()) {
-            this.http.get<User>(`${environment.api.serverUrl}/users/${userId}`)
-                .subscribe({
-                    next: (user) => this.userSubject.next(user),
-                    error: () => this.logout()
-                });
-        }
+    const userId = localStorage.getItem('id_token');
+    if (userId && !this.isExpired()) {
+      this.http.get<User>(`${environment.api.serverUrl}/users/${userId}`)
+        .subscribe({
+          next: (user) => this.userSubject.next(user),
+          error: () => this.logout()
+        });
     }
+  }
 
-    public get userValue(): User | null {
-        return this.userSubject.value;
-    }
+  public get userValue(): User | null {
+    return this.userSubject.value;
+  }
 
-    login(email: string, password: string) {
-        return this.http.post<{ accessToken: string, userID: string}>(
-            `${environment.api.serverUrl}/login`, 
-            { email, password }
-        ).pipe(
-            switchMap(res => this.setSession(res))  
-        );
-    }
+  login(email: string, password: string) {
+    return this.http.post<{ accessToken: string, userId: string }>(
+      `${environment.api.serverUrl}/login`,
+      { email, password }
+    ).pipe(
+      mergeMap(res => this.setSession(res))
+    );
+  }
 
-    logout() {
-        localStorage.removeItem('id_token');
-        localStorage.removeItem('expires_at');
-        localStorage.removeItem('access_token');
-        this.userSubject.next(null!);
-        this.router.navigate(['/login']);
-    }
+  logout() {
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+    localStorage.removeItem('access_token');
+    this.userSubject.next(null!);
+    this.router.navigate(['/login']);
+  }
 
-    register(data: RegisterRequest) {
-        return this.http.post<{ accessToken: string, userID: string}>(
-            `${this.API_URL}/register`, 
-            {
-                email: data.email,
-                password: data.password,
-                fname: data.firstName,
-                lname: data.lastName
-            }
-        ).pipe(
-            tap(res => this.setSession(res))
-        );
-    }
+  register(data: RegisterRequest) {
+    return this.http.post<{ accessToken: string, userId: string }>(
+      `${this.API_URL}/register`,
+      {
+        email: data.email,
+        password: data.password,
+        fname: data.firstName,
+        lname: data.lastName
+      }
+    ).pipe(
+      tap(res => this.setSession(res))
+    );
+  }
 
-    changePassword(email: string, oldPassword: string, newPassword: string) {
-        return this.http.patch<{ accessToken: string, userID: string}>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
-            .pipe(
-                tap(res => this.setSession(res)));
-    }
+  changePassword(email: string, oldPassword: string, newPassword: string) {
+    return this.http.patch<{ accessToken: string, userId: string }>(`${environment.api.serverUrl}/changePassword`, { email, oldPassword, newPassword })
+      .pipe(
+        tap(res => this.setSession(res)));
+  }
 
-    private setSession(result: { accessToken: string, userID: string}) {
-        const expiresAt = DateTime.now().plus({ hours: 1 });
+  private setSession(result: { accessToken: string, userId: string }) {
+    const expiresAt = DateTime.now().plus({ hours: 1 });
 
-        localStorage.setItem('id_token', result.userID);
-        localStorage.setItem('access_token', result.accessToken);
-        localStorage.setItem('expires_at', JSON.stringify(expiresAt));
+    localStorage.setItem('id_token', result.userId);
+    localStorage.setItem('access_token', result.accessToken);
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt));
 
-        return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userID}`)
-            .pipe(
-                tap(res => {
-                    console.log('User object from server:', res);
-                    this.userSubject.next(res);
-                })
-            );
-    }
+    return this.http.get<User>(`${environment.api.serverUrl}/users/${result.userId}`)
+      .pipe(
+        tap(res => {
+          console.log('User object from server:', res);
+          this.userSubject.next(res);
+        })
+      );
+  }
 
-    public isLoggedIn() {
-        return this.userValue != null && !this.isExpired();
-    }
+  public isLoggedIn() {
+    return this.userValue != null && !this.isExpired();
+  }
 
-    setExpiry(expiry: DateTime) {
-        localStorage.setItem("expires_at", JSON.stringify(expiry));
-    }
+  setExpiry(expiry: DateTime) {
+    localStorage.setItem("expires_at", JSON.stringify(expiry));
+  }
 
-    isExpired() {
-        return DateTime.now() > DateTime.fromISO(JSON.parse(localStorage.getItem("expires_at")!));
-    }
+  isExpired() {
+    return DateTime.now() > DateTime.fromISO(JSON.parse(localStorage.getItem("expires_at")!));
+  }
 }

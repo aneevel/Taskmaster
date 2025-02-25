@@ -1,34 +1,24 @@
-<header>
-<div id="header-img">
-    <img src="assets/logo.png" alt="Taskmaster logo"/>
-</div>
-<div class="card">
-  <p-toolbar>
-    <div id="nav-task-routes" class="p-toolbar-group-start">
-      <a class="nav-item" id="nav-home" [routerLink]="['/']"
-        ><p-button label="Home" class="mr-2"></p-button
-      ></a>
+<div>
+  <header>
+    <div id="header-img">
+      <img src="assets/logo.png" alt="Taskmaster logo" />
     </div>
-    <div id="nav-account-routes" class="p-toolbar-group-end">
-      <ng-container *ngIf="isAuthenticated$ | async">
-        <a class="nav-item" id="nav-account" [routerLink]="['/user/account']"
-          ><p-button label="Account"></p-button
-        ></a>
-        <li class='nav-item'>
-          <app-logout-button (click)="logout()"></app-logout-button>
-        </li>
-      </ng-container>
-      <ng-container *ngIf="!(isAuthenticated$ | async)">
-        <li class='nav-item'>
-          <a [routerLink]="['/register']">
-            <p-button label="Create Account"></p-button>
+    <div class="card">
+      <p-toolbar>
+        <div id="nav-task-routes" class="p-toolbar-group-start">
+          <a class="nav-item" id="nav-home" [routerLink]="['/']">
+            <p-button label="Home" class="mr-2"></p-button>
           </a>
-        </li>
-        <li class='nav-item'>
-          <app-login-button></app-login-button>
-        </li>
-      </ng-container>
+        </div>
+        <div id="nav-account-routes" class="p-toolbar-group-end">
+          <ng-container *ngIf="isAuthenticated$ | async; else loginContent">
+            <p-button (click)="logout()">Logout</p-button>
+          </ng-container>
+          <ng-template #loginContent>
+            <p-button routerLink="/login">Login</p-button>
+          </ng-template>
+        </div>
+      </p-toolbar>
     </div>
-  </p-toolbar>
+  </header>
 </div>
-<header>

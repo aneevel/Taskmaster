@@ -10,127 +10,127 @@ import { User } from './models/user.model';
 export const AUTO_START_HEALTH_CHECK = new InjectionToken<boolean>('AUTO_START_HEALTH_CHECK');
 
 interface TaskResponse {
-    success: boolean;
-    tasks: Task[];
-    message?: string;
+  success: boolean;
+  tasks: Task[];
+  message?: string;
 }
 
 interface TaskActionResponse {
-    success: boolean;
-    message: string;
-    task?: Task;
+  success: boolean;
+  message: string;
+  task?: Task;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ApiGatewayService implements OnDestroy {
-    private currentStatus: HealthStatus | null = null;
-    private statusSubject = new BehaviorSubject<HealthStatus | null>(null);
-    private status$ = this.statusSubject.asObservable();
-    private healthCheckInterval: any;
+  private currentStatus: HealthStatus | null = null;
+  private statusSubject = new BehaviorSubject<HealthStatus | null>(null);
+  private status$ = this.statusSubject.asObservable();
+  private healthCheckInterval: any;
 
-    public API_URL: string = environment.api.serverUrl;
+  public API_URL: string = environment.api.serverUrl;
 
-    constructor(
-        private http: HttpClient,
-        @Optional() @Inject(AUTO_START_HEALTH_CHECK) private autoStartHealthCheck: boolean = true
-    ) {
-        if (autoStartHealthCheck) {
-            this.startHealthCheck();
-        }
+  constructor(
+    private http: HttpClient,
+    @Optional() @Inject(AUTO_START_HEALTH_CHECK) private autoStartHealthCheck: boolean = true
+  ) {
+    if (autoStartHealthCheck) {
+      this.startHealthCheck();
     }
+  }
 
-    private startHealthCheck(interval: number = 30000) {
-        this.getAPIStatus().subscribe();
-        
-        this.healthCheckInterval = setInterval(() => {
-            this.getAPIStatus().subscribe();
-        }, interval);
-    }
+  private startHealthCheck(interval: number = 30000) {
+    this.getAPIStatus().subscribe();
 
-    ngOnDestroy() {
-        if (this.healthCheckInterval) {
-            clearInterval(this.healthCheckInterval);
-        }
-    }
+    this.healthCheckInterval = setInterval(() => {
+      this.getAPIStatus().subscribe();
+    }, interval);
+  }
 
-    getAPIStatus(): Observable<HealthStatus> {
-        return this.http.get<HealthStatus>(`${this.API_URL}/api/health`)
-            .pipe(
-                tap(status => {
-                    this.currentStatus = status;
-                    this.statusSubject.next(status);
-                })
-            );
+  ngOnDestroy() {
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval);
     }
+  }
 
-    public getStatus$(): Observable<HealthStatus | null> {
-        return this.status$;
-    }
+  getAPIStatus(): Observable<HealthStatus> {
+    return this.http.get<HealthStatus>(`${this.API_URL}/api/health`)
+      .pipe(
+        tap(status => {
+          this.currentStatus = status;
+          this.statusSubject.next(status);
+        })
+      );
+  }
 
-    getUserTasks(userId: string): Observable<Task[]> {
-        return this.http.get<TaskResponse>(`${this.API_URL}/tasks/${userId}`)
-            .pipe(
-                tap(response => {
-                    if (!response.success) {
-                        throw new Error(response.message);
-                    }
-                }),
-                map(response => response.tasks)
-            );
-    }
+  public getStatus$(): Observable<HealthStatus | null> {
+    return this.status$;
+  }
 
-    createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Observable<Task> {
-        console.log(task);
-        return this.http.post<TaskActionResponse>(`${this.API_URL}/tasks/new`, task)
-            .pipe(
-                tap(response => {
-                    if (!response.success) {
-                        throw new Error(response.message);
-                    }
-                }),
-                map(response => response.task!)
-            );
-    }
+  getUserTasks(userId: string): Observable<Task[]> {
+    return this.http.get<TaskResponse>(`${this.API_URL}/tasks/${userId}`)
+      .pipe(
+        tap(response => {
+          if (!response.success) {
+            throw new Error(response.message);
+          }
+        }),
+        map(response => response.tasks)
+      );
+  }
 
-    updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
-        return this.http.put<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`, updates)
-            .pipe(
-                tap(response => {
-                    if (!response.success) {
-                        throw new Error(response.message);
-                    }
-                }),
-                map(response => response.task!)
-            );
-    }
+  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Observable<Task> {
+    console.log(task);
+    return this.http.post<TaskActionResponse>(`${this.API_URL}/tasks/new`, task)
+      .pipe(
+        tap(response => {
+          if (!response.success) {
+            throw new Error(response.message);
+          }
+        }),
+        map(response => response.task!)
+      );
+  }
 
-    deleteTask(taskId: string): Observable<boolean> {
-        return this.http.delete<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`)
-            .pipe(
-                tap(response => {
-                    if (!response.success) {
-                        throw new Error(response.message);
-                    }
-                }),
-                map(response => response.success)
-            );
-    }
+  updateTask(taskId: string, updates: Partial<Task>): Observable<Task> {
+    return this.http.put<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`, updates)
+      .pipe(
+        tap(response => {
+          if (!response.success) {
+            throw new Error(response.message);
+          }
+        }),
+        map(response => response.task!)
+      );
+  }
 
-    getUser(userId: string): Observable<User> {
-        return this.http.get<User>(`${this.API_URL}/users/${userId}`)
-            .pipe(
-                tap(response => {
-                    if (!response) {
-                        console.log("there was no response :(");
-                        throw new Error();
-                    }
-                }),
-            );
-    }
+  deleteTask(taskId: string): Observable<boolean> {
+    return this.http.delete<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`)
+      .pipe(
+        tap(response => {
+          if (!response.success) {
+            throw new Error(response.message);
+          }
+        }),
+        map(response => response.success)
+      );
+  }
 
-    public startMonitoring(interval?: number) {
-        this.startHealthCheck(interval);
-    }
+  getUser(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/users/${userId}`)
+      .pipe(
+        tap(response => {
+          if (!response) {
+            console.log("there was no response :(");
+            throw new Error();
+          }
+        }),
+      );
+  }
+
+  public startMonitoring(interval?: number) {
+    this.startHealthCheck(interval);
+  }
 }
