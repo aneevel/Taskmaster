@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { ApiGatewayService } from './api-gateway.service';
+import { UserService } from './user.service';
 import { Task } from './models/task.model';
 
 @Injectable({
@@ -10,11 +11,18 @@ export class UserTasksService {
   protected tasksSubject = new BehaviorSubject<Task[]>([]);
   public tasks$ = this.tasksSubject.asObservable();
 
-  constructor(private apiGateway: ApiGatewayService) { }
+  constructor(private apiGateway: ApiGatewayService, private userService: UserService) {
+    const currentUser = this.userService.userValue;
+    if (currentUser) {
+      this.loadUserTasks(currentUser._id).subscribe();
+    }
+  }
 
   loadUserTasks(userId: string): Observable<Task[]> {
     return this.apiGateway.getUserTasks(userId).pipe(
-      tap(tasks => this.tasksSubject.next(tasks))
+      tap(tasks => {
+        this.tasksSubject.next(tasks)
+      })
     );
   }
 

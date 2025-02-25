@@ -9,12 +9,6 @@ import { User } from './models/user.model';
 
 export const AUTO_START_HEALTH_CHECK = new InjectionToken<boolean>('AUTO_START_HEALTH_CHECK');
 
-interface TaskResponse {
-  success: boolean;
-  tasks: Task[];
-  message?: string;
-}
-
 interface TaskActionResponse {
   success: boolean;
   message: string;
@@ -70,14 +64,14 @@ export class ApiGatewayService implements OnDestroy {
   }
 
   getUserTasks(userId: string): Observable<Task[]> {
-    return this.http.get<TaskResponse>(`${this.API_URL}/tasks/${userId}`)
+    return this.http.get<Task[]>(`${this.API_URL}/tasks/${userId}`)
       .pipe(
         tap(response => {
-          if (!response.success) {
-            throw new Error(response.message);
+          if (!response) {
+            throw new Error("Unable to grab tasks!");
           }
         }),
-        map(response => response.tasks),
+        map(response => response),
       );
   }
 
