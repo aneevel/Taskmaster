@@ -12,7 +12,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
-  imports: [ ButtonModule, 
+  imports: [ButtonModule,
     PanelModule,
     CommonModule,
     TaskItemComponent],
@@ -23,13 +23,14 @@ export class TasksComponent {
   ref: DynamicDialogRef | undefined;
 
   constructor(public dialogService: DialogService,
-    public userTasksService: UserTasksService) {}
+    public userTasksService: UserTasksService) { }
 
   openCreateTask() {
     this.ref = this.dialogService.open(CreateTaskComponent, {
       header: 'Create A New Task',
+      modal: true,
       width: '70%',
-      height: '50%',
+      height: '70%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
       maximizable: false

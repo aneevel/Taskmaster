@@ -5,18 +5,17 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { UserTasksService } from '../user-tasks.service';
-import { Task } from '../models/task.model';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { UserService } from '../user.service';
 
 @Component({
   standalone: true,
   selector: 'app-create-task',
-  imports: [ 
-    DropdownModule, 
-    CalendarModule, 
-    ReactiveFormsModule, 
+  imports: [
+    DropdownModule,
+    CalendarModule,
+    ReactiveFormsModule,
     CommonModule,
     InputTextModule
   ],
@@ -83,39 +82,39 @@ export class CreateTaskComponent {
     }
 
     if (occurrenceValue === 'Weekly') {
-        const weekDay = this.taskForm.get('weeklyDay')?.value;
-        selectedDate = weekDay ? new Date(weekDay) : null;
+      const weekDay = this.taskForm.get('weeklyDay')?.value;
+      selectedDate = weekDay ? new Date(weekDay) : null;
     } else if (occurrenceValue === 'Monthly') {
-        selectedDate = this.taskForm.get('monthlyDay')?.value;
-        if (selectedDate) {
-            selectedDate = this.adjustMonthlyDate(selectedDate);
-        }
+      selectedDate = this.taskForm.get('monthlyDay')?.value;
+      if (selectedDate) {
+        selectedDate = this.adjustMonthlyDate(selectedDate);
+      }
     } else if (occurrenceValue === 'Once') {
-        dueDate = this.taskForm.get('dueDate')?.value;
+      dueDate = this.taskForm.get('dueDate')?.value;
     }
 
     const newTask = {
-        userID: currentUser._id,
-        title: this.taskForm.controls['description'].value,
-        description: this.taskForm.controls['description'].value,
-        occurrence: occurrenceValue,
-        priority: this.taskForm.controls['priority'].value,
-        dueDate: dueDate,
-        recurringDate: selectedDate,
-        completed: false
+      userID: currentUser._id,
+      title: this.taskForm.controls['description'].value,
+      description: this.taskForm.controls['description'].value,
+      occurrence: occurrenceValue,
+      priority: this.taskForm.controls['priority'].value,
+      dueDate: dueDate,
+      recurringDate: selectedDate,
+      completed: false
     };
 
     this.userTasks.createTask(currentUser._id, newTask).pipe(
       tap(() => this.closeDialog())
     ).subscribe({
-        next: (task) => {
-            console.log('Task created:', task);
-            this.closeDialog();
-        },
-        error: (error) => {
-            console.error('Error creating task:', error);
-            this.closeDialog();
-        }
+      next: (task) => {
+        console.log('Task created:', task);
+        this.closeDialog();
+      },
+      error: (error) => {
+        console.error('Error creating task:', error);
+        this.closeDialog();
+      }
     });
   }
 

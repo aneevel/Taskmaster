@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 2.5rem;
   padding: 2rem;
-  height: 110%;
+  height: 120%;
 }
 
 .header {
@@ -29,9 +29,11 @@
     font-weight: 500;
   }
 
-  input, p-dropdown, p-calendar {
+  input,
+  p-dropdown,
+  p-calendar {
     width: 100%;
-    height: 2.5rem;
+    height: 3.5rem;
   }
 }
 
