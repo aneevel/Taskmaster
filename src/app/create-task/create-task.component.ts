@@ -93,12 +93,22 @@ export class CreateTaskComponent {
       dueDate = this.taskForm.get('dueDate')?.value;
     }
 
+    let priorityIndex;
+    const priorityValue = this.taskForm.controls['priority'].value;
+    if (priorityValue === 'High')
+      priorityIndex = "1";
+    else if (priorityValue === 'Medium')
+      priorityIndex = "2";
+    else
+      priorityIndex = "3";
+
+
     const newTask = {
       userID: currentUser._id,
       title: this.taskForm.controls['description'].value,
       description: this.taskForm.controls['description'].value,
       occurrence: occurrenceValue,
-      priority: this.taskForm.controls['priority'].value,
+      priority: priorityIndex,
       dueDate: dueDate,
       recurringDate: selectedDate,
       completed: false
