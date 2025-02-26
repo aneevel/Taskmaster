@@ -10,7 +10,6 @@ import { User } from './models/user.model';
 export const AUTO_START_HEALTH_CHECK = new InjectionToken<boolean>('AUTO_START_HEALTH_CHECK');
 
 interface TaskActionResponse {
-  success: boolean;
   message: string;
   task?: Task;
 }
@@ -75,7 +74,7 @@ export class ApiGatewayService implements OnDestroy {
       );
   }
 
-  createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Observable<Task> {
+  createTask(task: Omit<Task, '_id' | 'createdAt' | 'updatedAt'>): Observable<Task> {
     return this.http.post<TaskActionResponse>(`${this.API_URL}/tasks/new`, task)
       .pipe(
         tap(response => {
@@ -91,24 +90,16 @@ export class ApiGatewayService implements OnDestroy {
     return this.http.put<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`, updates)
       .pipe(
         tap(response => {
-          if (!response.success) {
-            throw new Error(response.message);
+          if (!response) {
+            throw new Error(response);
           }
         }),
         map(response => response.task!)
       );
   }
 
-  deleteTask(taskId: string): Observable<boolean> {
-    return this.http.delete<TaskActionResponse>(`${this.API_URL}/tasks/${taskId}`)
-      .pipe(
-        tap(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-        }),
-        map(response => response.success)
-      );
+  deleteTask(taskId: string): Observable<null> {
+    return this.http.delete<null>(`${this.API_URL}/tasks/${taskId}`)
   }
 
   getUser(userId: string): Observable<User> {

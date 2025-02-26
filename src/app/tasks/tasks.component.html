@@ -11,9 +11,9 @@
     </div>
   </div>
   <ul id="tasks-list">
-    <li *ngFor="let task of this.userTasksService.tasks$ | async">
-      <app-task-item [description]="task.description!" [priority]="task.priority" [dueDate]="task.dueDate!"
-        [occurrence]="task.occurrence">
+    <li *ngFor="let task of this.userTasksService.getTasks$() | async">
+      <app-task-item [id]="task._id" [description]="task.description!" [priority]="task.priority"
+        [dueDate]="task.dueDate!" [occurrence]="task.occurrence">
       </app-task-item>
     </li>
   </ul>

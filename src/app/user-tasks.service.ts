@@ -26,7 +26,7 @@ export class UserTasksService {
     );
   }
 
-  createTask(userID: string, task: Omit<Task, 'id' | 'completed' | 'createdAt' | 'updatedAt'>): Observable<Task> {
+  createTask(userID: string, task: Omit<Task, '_id' | 'completed' | 'createdAt' | 'updatedAt'>): Observable<Task> {
     return this.apiGateway.createTask({
       userID: userID,
       title: task.title,
@@ -47,7 +47,7 @@ export class UserTasksService {
     return this.apiGateway.updateTask(taskId, updates).pipe(
       tap(updatedTask => {
         const currentTasks = this.tasksSubject.value;
-        const index = currentTasks.findIndex(t => t.id === taskId);
+        const index = currentTasks.findIndex(t => t._id === taskId);
         if (index !== -1) {
           currentTasks[index] = updatedTask;
           this.tasksSubject.next([...currentTasks]);
@@ -56,11 +56,11 @@ export class UserTasksService {
     );
   }
 
-  deleteTask(taskId: string): Observable<boolean> {
+  deleteTask(taskId: string): Observable<null> {
     return this.apiGateway.deleteTask(taskId).pipe(
       tap(() => {
         const currentTasks = this.tasksSubject.value;
-        this.tasksSubject.next(currentTasks.filter(t => t.id !== taskId));
+        this.tasksSubject.next(currentTasks.filter(t => t._id !== taskId));
       })
     );
   }
