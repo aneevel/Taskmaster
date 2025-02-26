@@ -74,7 +74,7 @@ export class CreateTaskComponent {
   saveTask() {
     const occurrenceValue = this.taskForm.get('occurrence')?.value ?? 'Once';
     let selectedDate: Date | null | undefined = null;
-    let dueDate: Date | null | undefined = null;
+    let dueDate: Date;
     const currentUser = this.userService.userValue;
 
     if (!currentUser) {
@@ -89,9 +89,9 @@ export class CreateTaskComponent {
       if (selectedDate) {
         selectedDate = this.adjustMonthlyDate(selectedDate);
       }
-    } else if (occurrenceValue === 'Once') {
-      dueDate = this.taskForm.get('dueDate')?.value;
     }
+    dueDate = this.taskForm.get('dueDate')!.value!;
+
 
     let priorityIndex;
     const priorityValue = this.taskForm.controls['priority'].value;

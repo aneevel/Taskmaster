@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,10 +8,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './task-item.component.html',
   styleUrls: ['./task-item.component.scss']
 })
-export class TaskItemComponent {
+export class TaskItemComponent implements OnInit {
 
-    @Input({ required: true }) description!: string;
-    @Input({ required: true }) priority!: string;
-    @Input({ required: true }) dueDate!: Date;
-    @Input({ required: true }) occurrence!: string; 
+  dateString: string = "";
+
+  @Input({ required: true }) description!: string;
+  @Input({ required: true }) priority!: string;
+  @Input({ required: true }) dueDate!: Date;
+  @Input({ required: true }) occurrence!: string;
+
+  ngOnInit() {
+    this.dateString = new Date(this.dueDate.toString().slice(1, -1)).toLocaleDateString();
+  }
 }

@@ -7,6 +7,6 @@ export interface Task {
   createdAt: Date;
   updatedAt?: Date;
   priority: string;
-  dueDate?: Date | null;
+  dueDate: Date;
   occurrence: string;
 } 
